@@ -6,7 +6,7 @@ def entry_point_factory(module: str, commands: List[Tuple[str, str, str]], direc
     buffer = []
     for i in commands:
         command, script, _ = i
-        new_command = f"cml-{module}-{command}={directory}.entry_points.{script}:main"
+        new_command = f"cml-{module}-{command}=camel.{directory}.entry_points.{script}:main"
         buffer.append(new_command)
 
     buffer.append(f"cml-{module}={directory}.entry_points.help:main")
