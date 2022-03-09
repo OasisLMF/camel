@@ -9,13 +9,13 @@ def main():
     print_logo_image()
     try:
         current_profile = Profile.get_cached_profile().name
-        print(f"current profile: {current_profile}")
+        print(f"\ncurrent profile: {current_profile}")
     except:
-        print("current profile: None")
-    print("available profiles:")
+        print("\ncurrent profile: None")
+    print("\navailable profiles:")
     for profile in Profile.get_profiles():
         print(profile)
-    print("available commands:")
+    print("\navailable commands:")
     print(colored(f"cml-profile => manages the profile", 'yellow'))
     print(colored(f"cml-ssh => manages ssh configurations", 'yellow'))
     print(colored(f"cml-terra => manages terraform builds", 'yellow'))
