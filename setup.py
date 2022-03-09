@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
-from camel.interface.components.camel_logo import print_camel_image
+from camel.storage.components.profile import Profile
 
 
-print_camel_image()
+Profile.create_storage()
 
 setup(
    name='camel',
