@@ -1,6 +1,15 @@
-from camel.storage.factory import profile_factory
+from camel.storage.components.profile import Profile
+from termcolor import colored
 
 
-def main():
-    for i in profile_factory(help=True):
-        print(i)
+def profile():
+    try:
+        current_profile = Profile.get_cached_profile().name
+        print(f"\ncurrent profile: {current_profile}")
+    except:
+        print("\ncurrent profile: None")
+    print("\navailable profiles:")
+    for profile in Profile.get_profiles():
+        print(profile)
+    print("\navailable commands:")
+    print(colored(f"cml-profile-create => creates a new profile", 'yellow'))

@@ -1,11 +1,9 @@
 from setuptools import setup, find_packages
 from camel.storage.components.profile import Profile
-from camel.storage.factory import profile_factory
+
 
 Profile.create_storage()
 
-entry_points = profile_factory()
-entry_points.append("cml=camel.interface.entry_points.main_interface:main")
 
 setup(
    name='camel',
@@ -24,6 +22,10 @@ setup(
        "termcolor"
    ],
    entry_points={
-       "console_scripts": entry_points
+       "console_scripts": [
+          "cml=camel.interface.entry_points.main_interface:main",
+          "cml-profile=camel.storage.entry_points.help:profile",
+          "cml-profile-create=camel.storage.entry_points.create_profile:main",
+       ]
    },
 )
