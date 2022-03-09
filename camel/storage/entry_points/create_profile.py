@@ -1,4 +1,18 @@
+import argparse
+import os
+
+from camel.storage.components.profile import Profile
 
 
 def main():
-    pass
+    args_parser = argparse.ArgumentParser()
+    args_parser.add_argument('--name', action='store', type=str, required=False)
+    args = args_parser.parse_args()
+
+    print(f"creating profile with name: {args.name}")
+    new_profile = Profile(name=args.name)
+    if os.path.isdir(new_profile.profile_base_path):
+        raise ValueError(f"profile with the name {new_profile.name} already exists")
+    new_profile.create_profile()
+    print("profile created")
+
