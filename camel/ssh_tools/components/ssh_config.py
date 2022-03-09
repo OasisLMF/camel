@@ -32,6 +32,9 @@ class SshConfig(dict):
             self.update(data)
 
     def write(self) -> None:
+        placeholder = {}
+        for key in self.keys():
+            placeholder[key] = self[key]
         with open(self.config_path, "w") as file:
             yaml.dump(self, file, default_flow_style=False)
 
