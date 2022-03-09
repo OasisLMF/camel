@@ -25,8 +25,7 @@ class SshConfig(dict):
         :return: None
         """
         if os.path.isdir(self.config_path) is False:
-            fp = open(self.config_path, "w")
-            fp.close()
+            self.write()
 
         with open(self.config_path, "r") as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
