@@ -28,6 +28,6 @@ def main():
     change_permissions = Popen(f"chmod 600 {key_path}", shell=True)
     change_permissions.wait()
 
-    config.add_ssh_config(name=args.name, ip_address=args.ip_address,
+    config.add_ssh_config(name=args.name, ip_address=args.ip,
                           vpn=args.vpn, key=args.key, username=args.username)
     config.write()

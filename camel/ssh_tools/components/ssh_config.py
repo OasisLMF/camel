@@ -36,7 +36,7 @@ class SshConfig(dict):
         for key in self.keys():
             placeholder[key] = self[key]
         with open(self.config_path, "w") as file:
-            yaml.dump(placeholder, file)
+            yaml.dump(placeholder, file, default_flow_style=False)
 
     def add_ssh_config(self, name: str, ip_address: str, vpn: bool, key: str, username: str) -> None:
         self[name] = {
