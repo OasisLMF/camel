@@ -42,7 +42,7 @@ class Profile:
 
     @classmethod
     def get_profiles(cls):
-        return [x.split("/") for x in glob(Profile.ROOT_PATH + "/*/", recursive=True)]
+        return [x.split("/")[-2] for x in glob(Profile.ROOT_PATH + "/*/", recursive=True)]
 
     @property
     def profile_base_path(self) -> str:
