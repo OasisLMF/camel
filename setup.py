@@ -2,6 +2,8 @@ from setuptools import setup, find_packages
 from camel.interface.components.camel_logo import print_camel_image
 
 
+print_camel_image()
+
 setup(
    name='camel',
    version='0.1.0',
@@ -26,5 +28,3 @@ setup(
         ]
    },
 )
-
-print_camel_image()
