@@ -24,7 +24,7 @@ class SshConfig(dict):
         Reads the config file based off the self.config_path file. File needs to be in yml.
         :return: None
         """
-        if os.path.isdir(self.config_path) is False:
+        if os.path.exists(self.config_path) is False:
             self.write()
 
         with open(self.config_path, "r") as file:
@@ -32,11 +32,8 @@ class SshConfig(dict):
             self.update(data)
 
     def write(self) -> None:
-        placeholder = {}
-        for key in self.keys():
-            placeholder[key] = self[key]
         with open(self.config_path, "w") as file:
-            yaml.dump(placeholder, file, default_flow_style=False)
+            yaml.dump(self, file, default_flow_style=False)
 
     def add_ssh_config(self, name: str, ip_address: str, vpn: bool, key: str, username: str) -> None:
         self[name] = {
