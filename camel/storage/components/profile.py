@@ -5,7 +5,7 @@ from pathlib import Path
 
 class Profile:
 
-    ROOT_PATH: str = str(Path.home()) + ".camel_storage/"
+    ROOT_PATH: str = str(Path.home()) + "/.camel_storage/"
 
     def __init__(self, name: str) -> None:
         self.name: str = name
