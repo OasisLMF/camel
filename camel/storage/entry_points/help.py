@@ -12,4 +12,6 @@ def profile():
     for profile in Profile.get_profiles():
         print(profile)
     print("\navailable commands:")
-    print(colored(f"cml-profile-create => creates a new profile", 'yellow'))
+    print(colored(f"cml-profile-create => creates a new profile: args: --name: the name of the file involved", 'yellow'))
+    print(colored(f"cml-profile-switch => creates a new profile: args: --name: the name of the file involved", 'yellow'))
+    print(colored(f"cml-profile-delete => creates a new profile: args: --name: the name of the file involved", 'yellow'))

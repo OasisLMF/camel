@@ -1,4 +1,5 @@
 import os
+import shutil
 from glob import glob
 from pathlib import Path
 
@@ -18,7 +19,7 @@ class Profile:
         os.mkdir(self.configs_path)
 
     def delete_profile(self):
-        pass
+        shutil.rmtree(self.profile_base_path)
 
     def cache_profile_name(self) -> None:
         current_directory = str(os.path.dirname(os.path.realpath(__file__)))
@@ -41,7 +42,7 @@ class Profile:
 
     @classmethod
     def get_profiles(cls):
-        return glob(Profile.ROOT_PATH + "/*/", recursive=True)
+        return [x.split("/")[-1] for x in glob(Profile.ROOT_PATH + "/*/", recursive=True)]
 
     @property
     def profile_base_path(self) -> str:
