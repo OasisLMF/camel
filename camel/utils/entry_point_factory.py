@@ -9,7 +9,7 @@ def entry_point_factory(module: str, commands: List[Tuple[str, str, str]], direc
         new_command = f"cml-{module}-{command}={directory}.entry_points.{script}:main"
         buffer.append(new_command)
 
-    buffer.append(f"cml-{module}={module}.entry_points.help:main")
+    buffer.append(f"cml-{module}={directory}.entry_points.help:main")
     return buffer
 
 
