@@ -33,6 +33,8 @@ setup(
           "cml-ssh-add=camel.ssh_tools.entry_points.add_ssh:main",
           "cml-ssh-delete=camel.ssh_tools.entry_points.delete_ssh:main",
           "cml-ssh-get=camel.ssh_tools.entry_points.get_all_ssh:main",
+          "cml-ssh-add=camel.ssh_tools.entry_points.key_add:main",
+          "cml-ssh-enter=camel.ssh_tools.entry_points.ssh_enter:main",
        ]
    },
 )

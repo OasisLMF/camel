@@ -22,7 +22,8 @@ def main():
 
     key_name = ssh_profile["key"]
     username = ssh_profile["username"]
+    ip_address = ssh_profile["ip_address"]
 
     key_path = profile.keys_path + f"/{key_name}"
 
-    ssh_process = Popen(f"ssh ", shell=True)
+    ssh_process = Popen(f"ssh -A -i {key_path} {username}@{ip_address}", shell=True)
