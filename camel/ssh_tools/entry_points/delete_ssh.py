@@ -6,7 +6,8 @@ from camel.storage.components.profile import Profile
 
 def main():
     args_parser = argparse.ArgumentParser()
-    args_parser.add_argument('--name', action='store', type=str, required=True)
+    args_parser.add_argument('--name', action='store', type=str, required=True,
+                             help="the name of the SSH config to be deleted")
     args = args_parser.parse_args()
 
     profile = Profile.get_cached_profile()

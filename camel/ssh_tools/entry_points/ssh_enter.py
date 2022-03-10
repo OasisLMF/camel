@@ -8,7 +8,8 @@ from subprocess import Popen
 
 def main():
     args_parser = argparse.ArgumentParser()
-    args_parser.add_argument('--name', action='store', type=str, required=True)
+    args_parser.add_argument('--name', action='store', type=str, required=True,
+                             help="the name of the SSH to be executed")
     args = args_parser.parse_args()
 
     profile = Profile.get_cached_profile()
@@ -18,7 +19,7 @@ def main():
     ssh_profile: Dict[str, Union[str, bool]] = config[args.name]
 
     if ssh_profile["vpn"] is True:
-        print("spinning up VPN")
+        print("needs VPN")
 
     key_name = ssh_profile["key"]
     username = ssh_profile["username"]

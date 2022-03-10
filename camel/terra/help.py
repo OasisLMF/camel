@@ -12,7 +12,6 @@ def main():
     for profile in Profile.get_profiles():
         print(profile)
     print("\navailable commands:")
-    print(colored(f"cml-ssh-add => adds an ssh config to the current profile", 'yellow'))
-    print(colored(f"cml-ssh-delete => deletes an ssh config", 'yellow'))
-    print(colored(f"cml-get => lists all ssh configs", 'yellow'))
-    print(colored(f"cml-enter => connects to the server in the SSH config selected", 'yellow'))
+    print(colored(f"cml-terra-apply => builds a terraform build based on the config file passed", 'yellow'))
+    print(colored(f"cml-terra-destroy => destroys the terraform build in the config file", 'yellow'))
+    print(colored(f"cml-terra-install => installs the terraform software to be used", 'yellow'))

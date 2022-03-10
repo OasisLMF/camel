@@ -6,7 +6,8 @@ from camel.storage.components.profile import Profile
 
 def main():
     args_parser = argparse.ArgumentParser()
-    args_parser.add_argument('--name', action='store', type=str, required=False)
+    args_parser.add_argument('--name', action='store', type=str, required=True,
+                             help="the name of the profile being created")
     args = args_parser.parse_args()
 
     print(f"creating profile with name: {args.name}")

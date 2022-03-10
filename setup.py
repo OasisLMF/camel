@@ -30,12 +30,19 @@ setup(
           "cml-profile-switch=camel.storage.entry_points.switch_profile:main",
           "cml-profile-delete=camel.storage.entry_points.delete_profile:main",
 
+          "cml-ssh=camel.ssh_tools.entry_points.help:main",
           "cml-ssh-add=camel.ssh_tools.entry_points.add_ssh:main",
           "cml-ssh-delete=camel.ssh_tools.entry_points.delete_ssh:main",
           "cml-ssh-get=camel.ssh_tools.entry_points.get_all_ssh:main",
           "cml-ssh-enter=camel.ssh_tools.entry_points.ssh_enter:main",
 
           "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
+          "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
+
+          "cml-terra=camel.terra.run_terra:help",
+          "cml-terra-apply=camel.terra.run_terra:main",
+          "cml-terra-destroy=camel.terra.destroy_terra:main",
+          "cml-terra-install=camel.terra.install_terraform:main"
        ]
    },
 )
