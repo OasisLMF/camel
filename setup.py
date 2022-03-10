@@ -39,7 +39,7 @@ setup(
           "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
           # "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
 
-          "cml-terra=camel.terra.run_terra:help",
+          "cml-terra=camel.terra.help:main",
           "cml-terra-apply=camel.terra.run_terra:main",
           "cml-terra-destroy=camel.terra.destroy_terra:main",
           "cml-terra-install=camel.terra.install_terraform:main"
