@@ -27,7 +27,8 @@ def main() -> None:
     :return: None
     """
     config_parser = argparse.ArgumentParser()
-    config_parser.add_argument('--config_path', action='store', type=str, required=False, default="terra_config.yml")
+    config_parser.add_argument('--config_path', action='store', type=str, required=False, default="terra_config.yml",
+                               help="the path the config yml file that defines the terraform build (default: terra_config.yml)")
     args = config_parser.parse_args()
 
     config_path: str = str(os.getcwd()) + f"/{args.config_path}"
