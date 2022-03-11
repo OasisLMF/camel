@@ -1,10 +1,18 @@
+"""
+This file defines the entry point for the cml-key-add command.
+"""
 import argparse
 from subprocess import Popen
 
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Adds a key file for the profile.
+
+    Returns: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--key', action='store', type=str, required=True,
                              help="the path to the key being added")

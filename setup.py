@@ -37,12 +37,16 @@ setup(
           "cml-ssh-enter=camel.ssh_tools.entry_points.ssh_enter:main",
 
           "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
-          # "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
 
           "cml-terra=camel.terra.help:main",
           "cml-terra-apply=camel.terra.run_terra:main",
           "cml-terra-destroy=camel.terra.destroy_terra:main",
-          "cml-terra-install=camel.terra.install_terraform:main"
+          "cml-terra-install=camel.terra.install_terraform:main",
+
+          "cml-repo=camel.local.entry_points.help:repo",
+          "cml-repo-add=camel.local.entry_points.add_repo:main",
+          "cml-repo-update=camel.local.entry_points.update_repo:main",
+          "cml-repo-delete=camel.local.entry_points.delete_repo:main",
        ]
    },
 )

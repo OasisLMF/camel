@@ -1,11 +1,11 @@
 """
 This script defines the entry point for terra-apply.
 """
+import argparse
+import json
 import os
 from pathlib import Path
 from subprocess import Popen
-import argparse
-import json
 
 from camel.terra.config_loader import ConfigEngine
 

@@ -1,21 +1,24 @@
+"""
+This file defines the main display entry point for the cml command telling the user the available options.
+"""
+from termcolor import colored
+
 from camel.interface.components.camel_logo import print_camel_image
 from camel.interface.components.oasis_logo import print_logo_image
 from camel.storage.components.profile import Profile
-from termcolor import colored
 
 
-def main():
+def main()-> None:
+    """
+    Prints out the Camel and OASIS logos, the current profile, the available profiles, and the available options.
+
+    :returns: None
+    """
     print_camel_image()
     print_logo_image()
-    try:
-        current_profile = Profile.get_cached_profile().name
-        print(f"\ncurrent profile: {current_profile}")
-    except:
-        print("\ncurrent profile: None")
-    print("\navailable profiles:")
-    for profile in Profile.get_profiles():
-        print(profile)
+    Profile.print_out_profiles()
     print("\navailable commands:")
     print(colored(f"cml-profile => manages the profile", 'yellow'))
     print(colored(f"cml-ssh => manages ssh configurations", 'yellow'))
     print(colored(f"cml-terra => manages terraform builds", 'yellow'))
+    print(colored(f"cml-repo => manages local repo operations", 'yellow'))

@@ -1,12 +1,12 @@
 """
-This file defines the class and manages the data around SSH configs.
+This file defines the class and manages the data around local repo configs.
 """
 import os
 
 import yaml
 
 
-class SshConfig(dict):
+class LocalRepoConfig(dict):
     """
     This class is responsible for loading the config data and managing it.
     Attributes:
@@ -14,7 +14,7 @@ class SshConfig(dict):
     """
     def __init__(self, config_path: str) -> None:
         """
-        The constructor for the SshConfig class.
+        The constructor for the LocalRepoConfig class.
 
         :param config_path: (str) the default path to the config file
         """
@@ -47,22 +47,16 @@ class SshConfig(dict):
         with open(self.config_path, "w") as file:
             yaml.dump(placeholder, file, default_flow_style=False)
 
-    def add_ssh_config(self, name: str, ip_address: str, vpn: bool, key: str, username: str) -> None:
+    def add_repo_config(self, name: str, local_path: str) -> None:
         """
         Adds an SSH configuration to the config file.
 
         Args:
-            name: (str) the name of the SSH config that is going to be referenced.
-            ip_address: (str) the IP address of the server that is going to be SSHed into
-            vpn: (bool) if a VPN is going used or not
-            key: (str) the name of the key being used for the SSH (including extension)
-            username: (str) the username on the server that is being SSHed into
+            name: (str) the name of the SSH config that is going to be referenced
+            local_path: (str) local path to the repo being updated
 
         Returns: None
         """
         self[name] = {
-            "ip_address": ip_address,
-            "vpn": vpn,
-            "key": key,
-            "username": username
+            "local_path": local_path
         }

@@ -1,12 +1,20 @@
+"""
+This file defines the entry point for the cml-ssh-enter command.
+"""
 import argparse
+from subprocess import Popen
+from typing import Dict, Union
 
 from camel.ssh_tools.components.ssh_config import SshConfig
 from camel.storage.components.profile import Profile
-from typing import Dict, Union
-from subprocess import Popen
 
 
-def main():
+def main() -> None:
+    """
+    Enters into a server via SSH from the SSH config selected.
+
+    Returns: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the SSH to be executed")
