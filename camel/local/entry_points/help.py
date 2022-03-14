@@ -12,3 +12,4 @@ def repo() -> None:
     print(colored(f"cml-repo-add => adds an local repo config to the current profile", 'yellow'))
     print(colored(f"cml-repo-update => updates a python env from a local repo", 'yellow'))
     print(colored(f"cml-repo-delete => deletes an local repo config to the current profile", 'yellow'))
+    print(colored(f"cml-repo-get => gets all the locaL repos that can be updated", 'yellow'))
