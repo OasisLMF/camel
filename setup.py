@@ -47,6 +47,7 @@ setup(
           "cml-repo-add=camel.local.entry_points.add_repo:main",
           "cml-repo-update=camel.local.entry_points.update_repo:main",
           "cml-repo-delete=camel.local.entry_points.delete_repo:main",
+          "cml-repo-get=camel.local.entry_points.get_all_repos:main",
        ]
    },
 )
