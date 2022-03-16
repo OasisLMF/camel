@@ -89,3 +89,44 @@ and how its done by merely routing through the version being used.
 ## Exporting profiles 
 In the future we hope to support export and importing of profiles. This will enable us to transfer configs, files, and 
 data under a certain profile to another user onboarding and standardising processes. 
+
+## Terraform 
+Camel supports terraform. The most recent commands available can be seen by running the ```cml-terra``` command.
+However, what is not covered and needs further explanation is the config files for terra builds. Later on we will 
+work on storing these config files in the profile storage just like the SSH configs. For now, we just need to point to 
+terraform configs for running builds. A example of a terraform config file takes the form below:
+
+```commandline
+location: model_runs/pariswindstorm
+variables:
+    aws_access_key: SOMEKEY
+    aws_secret_access_key: SOMEKEY
+    subnet_id: SOMEID
+    server_security_group: SOMEGROUP
+steps:
+    - name: run_script
+      script_name: run_model
+```
+
+What we first need to note is the ```location``` field. This is the location of the build in the camel repo. The 
+base path of the ```location``` is [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds). Your
+path that the ```location``` field has to point to a ```main.tf``` file. To demonstrate this, we can revisit our 
+location definition below:
+```commandline
+location: model_runs/pariswindstorm
+```
+This will tell camel to look for a ```main.tf``` file 
+[here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds/model_runs/pariswindstorm). We can now 
+move onto the next field which is ```variables```. This is merely a dictionary of variables passed into the terraform 
+build. Continuing our Paris Windstorm model example, we can look a what variables are needed in the 
+```variables.tf``` file in the build as seen 
+[here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/variables.tf). 
+It must be noted here that we are working on passing in keys in different ways as they are needed for all builds. Also, 
+they keys are noted as secrets so they will not show up in the terraform logs. With this covered, we can now move onto 
+the final section which is ```steps```. This field is a list. They have a ```name``` field which is the name of the 
+step that is suppoorted. If you want to see what steps are available they can be seen 
+[here](https://github.com/OasisLMF/camel/blob/15c2aa3bb67945703b81ce91c6c8ecfd37bb29a0/camel/terra/run_terra.py#L61)
+Our example config file runs a python script on a server that has been created. The ```run_model``` script is a 
+python script in the terraform build that we are running which can be found 
+[here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/run_model.py).
+More steps will be added in time. 
