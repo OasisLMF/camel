@@ -110,8 +110,8 @@ steps:
 
 What we first need to note is the ```location``` field. This is the location of the build in the camel repo. The 
 base path of the ```location``` is [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds). Your
-path that the ```location``` field has to point to a ```main.tf``` file. To demonstrate this, we can revisit our 
-location definition below:
+path that the ```location``` field has to point to is a path leading to the ```main.tf``` file of that build. 
+To demonstrate this, we can revisit our location definition below:
 ```commandline
 location: model_runs/pariswindstorm
 ```
