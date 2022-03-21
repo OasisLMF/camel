@@ -108,6 +108,7 @@ steps:
       script_name: run_model
 ```
 
+
 What we first need to note is the ```location``` field. This is the location of the build in the camel repo. The 
 base path of the ```location``` is [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds). Your
 path that the ```location``` field has to point to is a path leading to the ```main.tf``` file of that build. 
@@ -130,3 +131,8 @@ Our example config file runs a python script on a server that has been created. 
 python script in the terraform build that we are running which can be found 
 [here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/run_model.py).
 More steps will be added in time. 
+
+## AWS authentication 
+We are looking into handling profiles and aws authentication using the following guide:
+https://blog.gruntwork.io/authenticating-to-aws-with-the-credentials-file-d16c0fbcbf9e
+

@@ -1,23 +1,20 @@
 #!/bin/bash
 
-sudo yum update -y
-sudo yum install git -y
-# sudo yum groupinstall "Development Tools" -y
-sudo yum install cmake -y
-sudo yum install tree -y
-sudo yum install vim -y
-sudo yum install tmux -y 
+sudo apt-get update -y
+sudo apt-get install git -y
+sudo apt-get install cmake -y
+sudo apt-get install tree -y
+sudo apt-get install vim -y
+sudo apt-get install tmux -y
+sudo apt-get install lsb-release -y
 
-sudo amazon-linux-extras install postgresql10 vim epel -y
-sudo yum install -y postgresql-server postgresql-devel -y
+curl -fsSL https://get.docker.com/ | sh
+sudo service docker restart
 
-# 1 | curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-sudo amazon-linux-extras install docker
-sudo service docker start
 sudo usermod -a -G docker ec2-user
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker
 
 python3 pip install requests
