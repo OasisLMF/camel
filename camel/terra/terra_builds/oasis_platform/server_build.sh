@@ -7,7 +7,8 @@ sudo apt-get install tmux -y
 sudo apt-get install ca-certificates -y
 sudo apt-get install curl -y 
 sudo apt-get install gnupg -y 
-sudo apt-get install lsb-release -y 
+sudo apt-get install lsb-release -y
+sudo apt install awscli -y
 
 curl -fsSL https://get.docker.com/ | sh
 sudo service docker restart

@@ -30,6 +30,9 @@ def main() -> None:
     copy_process = Popen(f"cp {args.key} {key_path}", shell=True)
     copy_process.wait()
 
-    change_permissions = Popen(f"chmod 600 {key_path}", shell=True)
+    change_permissions = Popen(f"chmod 700 {key_path}", shell=True)
     change_permissions.wait()
+
+    add_key = Popen(f"ssh-add {key_path}", shell=True)
+    add_key.wait()
     print(f"key {key_name} added, this key has to be referred to for SSH")
