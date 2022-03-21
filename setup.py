@@ -37,6 +37,7 @@ setup(
           "cml-ssh-enter=camel.ssh_tools.entry_points.ssh_enter:main",
 
           "cml-key-add=camel.ssh_tools.entry_points.key_add:main",
+          "cml-key-delete=camel.ssh_tools.entry_points.key_delete:main",
 
           "cml-terra=camel.terra.help:main",
           "cml-terra-apply=camel.terra.run_terra:main",

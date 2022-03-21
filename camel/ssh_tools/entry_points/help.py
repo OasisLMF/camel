@@ -19,3 +19,4 @@ def main() -> None:
     print(colored(f"cml-ssh-get => lists all ssh configs", 'yellow'))
     print(colored(f"cml-ssh-enter => connects to the server in the SSH config selected", 'yellow'))
     print(colored(f"\ncml-key-add => adds a key file for the current profile", 'yellow'))
+    print(colored(f"cml-key-delete => deletes a key file for the current profile", 'yellow'))
