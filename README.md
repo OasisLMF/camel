@@ -106,6 +106,11 @@ variables:
 steps:
     - name: run_script
       script_name: run_model
+      # variables that are passed into the run_model.py script in the model_runs/pariswindstorm location
+      # variables is optional
+      variables:
+          one: 1,
+          two: 2
 ```
 
 
