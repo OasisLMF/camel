@@ -49,13 +49,19 @@ resource "aws_instance" "main_server" {
 
   # user_data = file("./server_build.sh")
 
+  connection {
+    type = "ssh"
+    host = self.public_ip
+    user = "ubuntu"
+  }
+
   # Copy in the bash script we want to execute.
   # The source is the location of the bash script
   # on the local linux box you are executing terraform
   # from.  The destination is on the new AWS instance.
   provisioner "file" {
-    /* source      = "./server_build.sh" */
-    source      = file("./server_build.sh")
+    source      = "./server_build.sh"
+    # source      = file("./server_build.sh")
     destination = "/home/ubuntu/server_build.sh"
   }
   # Change permissions on bash script and execute from ec2-user.
@@ -65,9 +71,10 @@ resource "aws_instance" "main_server" {
       "sh /home/ubuntu/server_build.sh test_param_one",
     ]
   }
-
-
 }
+
+
+
 
 
 # # creates the EBS volume 
