@@ -47,7 +47,7 @@ resource "aws_instance" "main_server" {
     Name = "Paris windstorm model run"
   }
 
-  user_data = file("./server_build.sh")
+  user_data = file("./server_build.sh test_param")
 }
 
 

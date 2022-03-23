@@ -30,3 +30,4 @@ pip3 install numba
 sudo -u ubuntu git clone https://github.com/OasisLMF/ParisWindstormModel
 
 echo FINISHED > output.txt
+echo $1 > params_flag.txt
