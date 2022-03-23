@@ -54,7 +54,8 @@ resource "aws_instance" "main_server" {
   # on the local linux box you are executing terraform
   # from.  The destination is on the new AWS instance.
   provisioner "file" {
-    source      = "./server_build.sh"
+    /* source      = "./server_build.sh" */
+    source      = file("./server_build.sh")
     destination = "/home/ubuntu/server_build.sh"
   }
   # Change permissions on bash script and execute from ec2-user.
@@ -64,6 +65,8 @@ resource "aws_instance" "main_server" {
       "sh /home/ubuntu/server_build.sh test_param_one",
     ]
   }
+
+
 }
 
 
