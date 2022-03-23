@@ -63,6 +63,7 @@ resource "aws_instance" "main_server" {
       "chmod +x /home/ubuntu/server_build.sh",
       "sh /home/ubuntu/server_build.sh test_param_one",
     ]
+  }
 }
 
 
