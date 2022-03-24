@@ -22,7 +22,7 @@ setup(
        "termcolor"
    ],
    extras_require={
-      "server": ["Flask>=2.0.3"]
+      "server": ["Flask>=2.0.3", "Flask-Cors>=3.0.10"]
    },
    entry_points={
        "console_scripts": [
