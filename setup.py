@@ -53,7 +53,7 @@ setup(
           "cml-repo-delete=camel.local.entry_points.delete_repo:main",
           "cml-repo-get=camel.local.entry_points.get_all_repos:main",
 
-          "cml-serve=camel.server.entry_point:main"
+          "cml-serve=camel.server_entry_point:main"
        ]
    },
 )
