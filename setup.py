@@ -21,6 +21,9 @@ setup(
        "pyyaml",
        "termcolor"
    ],
+   extras_require={
+      "server": ["Flask>=2.0.3"]
+   },
    entry_points={
        "console_scripts": [
           "cml=camel.interface.entry_points.main_interface:main",
@@ -49,6 +52,8 @@ setup(
           "cml-repo-update=camel.local.entry_points.update_repo:main",
           "cml-repo-delete=camel.local.entry_points.delete_repo:main",
           "cml-repo-get=camel.local.entry_points.get_all_repos:main",
+
+          "cml-serve=camel.server)entry_point:main"
        ]
    },
 )
