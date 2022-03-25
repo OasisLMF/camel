@@ -15,3 +15,5 @@ def profile():
     print(colored(f"cml-profile-create => creates a new profile", 'yellow'))
     print(colored(f"cml-profile-switch => switches the current profile to a new one", 'yellow'))
     print(colored(f"cml-profile-delete => deletes a profile wiping all data associated with the profile", 'yellow'))
+    print(colored(f"cml-profile-export => exports a profile into the current directory", 'yellow'))
+    print(colored(f"cml-profile-import => imports a profile from the current directory", 'yellow'))
