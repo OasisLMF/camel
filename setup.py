@@ -49,6 +49,12 @@ setup(
           "cml-terra-destroy=camel.terra.destroy_terra:main",
           "cml-terra-install=camel.terra.install_terraform:main",
 
+          "cml-tconfig=camel.terra_configs.entry_points.help:main",
+          "cml-tconfig-get=camel.terra_configs.entry_points.get_configs:main",
+          "cml-tconfig-import=camel.terra_configs.entry_points.import_config:main",
+          "cml-tconfig-export=camel.terra_configs.entry_points.export_config:main",
+          "cml-tconfig-delete=camel.terra_configs.entry_points.delete_config:main",
+
           "cml-repo=camel.local.entry_points.help:repo",
           "cml-repo-add=camel.local.entry_points.add_repo:main",
           "cml-repo-update=camel.local.entry_points.update_repo:main",
