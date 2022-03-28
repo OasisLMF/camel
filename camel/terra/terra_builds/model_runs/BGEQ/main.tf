@@ -40,13 +40,22 @@ data "aws_iam_policy_document" "allow_access_to_model_data" {
 
     resources = [
       var.bucket_arm,
-#      "${aws_s3_bucket.example.arn}/*",
+      "${var.bucket_arm}/*",
     ]
 
     tags = {
       Name = "Bangladesh cyclone model"
     }
   }
+}
+
+
+resource "aws_iam_policy" "bucket_policy" {
+  name        = "bangladesh-model-data-access"
+  path        = "/"
+  description = "Allow "
+
+  policy = data.aws_iam_policy_document.allow_access_to_model_data.json
 }
 
 
@@ -72,7 +81,7 @@ resource "aws_iam_role" "s3_access_role" {
 
 resource "aws_iam_role_policy_attachment" "model_data_access_policy" {
   role       = aws_iam_role.s3_access_role.name
-  policy_arn = aws_iam_policy.allow_access_to_model_data.arn
+  policy_arn = aws_iam_policy.bucket_policy.arn
 }
 
 
