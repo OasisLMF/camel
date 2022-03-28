@@ -26,65 +26,65 @@ resource "aws_network_interface" "network_interface" {
 
 
 # defines the policy for the aws s3 access
-data "aws_iam_policy_document" "allow_access_to_model_data" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = ["123456789012"]
-    }
-
-    actions = [
-      "s3:GetObject",
-      "s3:ListBucket",
-    ]
-
-    resources = [
-      var.bucket_arm,
-      "${var.bucket_arm}/*",
-    ]
-  }
-}
-
-
-resource "aws_iam_policy" "bucket_policy" {
-  name        = "bangladesh-model-data-access"
-  path        = "/"
-  description = "Allow "
-
-  policy = data.aws_iam_policy_document.allow_access_to_model_data.json
-}
-
-
-resource "aws_iam_role" "s3_access_role" {
-
-  name = "bangladesh_eq_model"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-
-resource "aws_iam_role_policy_attachment" "model_data_access_policy" {
-  role       = aws_iam_role.s3_access_role.name
-  policy_arn = aws_iam_policy.bucket_policy.arn
-}
-
-
-resource "aws_iam_instance_profile" "model_data_access_profile" {
-  name = "bangladesh-cyclone-model"
-  role = aws_iam_role.s3_access_role.name
-}
+#data "aws_iam_policy_document" "allow_access_to_model_data" {
+#  statement {
+#    principals {
+#      type        = "AWS"
+#      identifiers = ["123456789012"]
+#    }
+#
+#    actions = [
+#      "s3:GetObject",
+#      "s3:ListBucket",
+#    ]
+#
+#    resources = [
+#      var.bucket_arm,
+#      "${var.bucket_arm}/*",
+#    ]
+#  }
+#}
+#
+#
+#resource "aws_iam_policy" "bucket_policy" {
+#  name        = "bangladesh-model-data-access"
+#  path        = "/"
+#  description = "Allow "
+#
+#  policy = data.aws_iam_policy_document.allow_access_to_model_data.json
+#}
+#
+#
+#resource "aws_iam_role" "s3_access_role" {
+#
+#  name = "bangladesh_eq_model"
+#
+#  assume_role_policy = jsonencode({
+#    Version = "2012-10-17"
+#    Statement = [
+#      {
+#        Action = "sts:AssumeRole"
+#        Effect = "Allow"
+#        Sid    = ""
+#        Principal = {
+#          Service = "ec2.amazonaws.com"
+#        }
+#      },
+#    ]
+#  })
+#}
+#
+#
+#resource "aws_iam_role_policy_attachment" "model_data_access_policy" {
+#  role       = aws_iam_role.s3_access_role.name
+#  policy_arn = aws_iam_policy.bucket_policy.arn
+#}
+#
+#
+#resource "aws_iam_instance_profile" "model_data_access_profile" {
+#  name = "bangladesh-cyclone-model"
+#  role = aws_iam_role.s3_access_role.name
+#}
 
 
 resource "aws_instance" "main_server" {
