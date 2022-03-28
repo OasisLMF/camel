@@ -28,7 +28,7 @@ pip3 install oasislmf
 pip3 install numba
 
 
-sudo -u ubuntu git clone https://github.com/OasisLMF/BangladeshCyclone.git
+# sudo -u ubuntu git clone https://github.com/OasisLMF/BangladeshCyclone.git
 
 # aws s3 cp --recursive s3://oasislmf-model-library-iki-bgwtcss1 /home/ubuntu/BangladeshCyclone/BGWTCSS1/
 

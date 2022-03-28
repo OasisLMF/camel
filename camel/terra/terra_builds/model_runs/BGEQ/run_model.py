@@ -23,6 +23,9 @@ if __name__ == "__main__":
             keep_waiting = False
             break
 
+    git_clone_command = Popen("git@github.com:OasisLMF/BangladeshCyclone.git", shell=True)
+    git_clone_command.wait()
+
     profile = "default"
 
     command_buffer = [
@@ -36,7 +39,6 @@ if __name__ == "__main__":
     aws_command = "".join(command_buffer)
     configure_aws_command = Popen(aws_command, shell=True)
     configure_aws_command.wait()
-
 
     s3_command = "aws s3 cp --recursive s3://oasislmf-model-library-iki-bgwtcss1 /home/ubuntu/BangladeshCyclone/BGWTCSS1/"
     get_data = Popen(s3_command, shell=True)
