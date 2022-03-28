@@ -9,7 +9,7 @@ provider "aws" {
 terraform {
     backend "s3" {
     bucket = "oasislmf-terraform"
-    key    = "eu-west-1/model_run/pariswindstorm/terraform.tfstate"
+    key    = "eu-west-1/model_run/bangladeshcyclone/terraform.tfstate"
     region = "eu-west-1"
   }
 }
@@ -20,7 +20,7 @@ resource "aws_network_interface" "network_interface" {
 #   private_ips = ["172.16.10.100"]
   security_groups = [ var.server_security_group ]
   tags = {
-    Name = "paris_windstorm_model_network_interface"
+    Name = "bangladesh_cyclone_model_network_interface"
   }
 }
 
@@ -44,7 +44,7 @@ resource "aws_instance" "main_server" {
   }
 
   tags = {
-    Name = "Paris windstorm model run"
+    Name = "Bangladesh Cyclone model run"
   }
 
   user_data = file("./server_build.sh")
@@ -56,7 +56,7 @@ resource "aws_ebs_volume" "ebs_volume" {
   availability_zone = aws_instance.main_server.availability_zone
   size = 30
   tags = {
-    Name = "paris windstorm model run"
+    Name = "Bangladesh Cyclone model run"
   }
 }
 
