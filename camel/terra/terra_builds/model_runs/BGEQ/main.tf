@@ -42,10 +42,6 @@ data "aws_iam_policy_document" "allow_access_to_model_data" {
       var.bucket_arm,
       "${var.bucket_arm}/*",
     ]
-
-    tags = {
-      Name = "Bangladesh cyclone model"
-    }
   }
 }
 
