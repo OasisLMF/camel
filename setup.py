@@ -32,6 +32,8 @@ setup(
           "cml-profile-create=camel.storage.entry_points.create_profile:main",
           "cml-profile-switch=camel.storage.entry_points.switch_profile:main",
           "cml-profile-delete=camel.storage.entry_points.delete_profile:main",
+          "cml-profile-export=camel.storage.entry_points.export_profile:main",
+          "cml-profile-import=camel.storage.entry_points.import_profile:main",
 
           "cml-ssh=camel.ssh_tools.entry_points.help:main",
           "cml-ssh-add=camel.ssh_tools.entry_points.add_ssh:main",
@@ -46,6 +48,12 @@ setup(
           "cml-terra-apply=camel.terra.run_terra:main",
           "cml-terra-destroy=camel.terra.destroy_terra:main",
           "cml-terra-install=camel.terra.install_terraform:main",
+
+          "cml-tconfig=camel.terra_configs.entry_points.help:main",
+          "cml-tconfig-get=camel.terra_configs.entry_points.get_configs:main",
+          "cml-tconfig-import=camel.terra_configs.entry_points.import_config:main",
+          "cml-tconfig-export=camel.terra_configs.entry_points.export_config:main",
+          "cml-tconfig-delete=camel.terra_configs.entry_points.delete_config:main",
 
           "cml-repo=camel.local.entry_points.help:repo",
           "cml-repo-add=camel.local.entry_points.add_repo:main",

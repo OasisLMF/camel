@@ -22,3 +22,4 @@ def main()-> None:
     print(colored(f"cml-ssh => manages ssh configurations", 'yellow'))
     print(colored(f"cml-terra => manages terraform builds", 'yellow'))
     print(colored(f"cml-repo => manages local repo operations", 'yellow'))
+    print(colored(f"cml-tconfig => manages terraform build configs", 'yellow'))
