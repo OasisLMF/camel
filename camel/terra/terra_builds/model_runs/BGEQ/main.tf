@@ -91,7 +91,7 @@ resource "aws_instance" "main_server" {
   ami           = "ami-08ca3fed11864d6bb"
   instance_type = "t2.medium"
   key_name = "OasisProject"
-  iam_instance_profile = aws_iam_instance_profile.model_data_access_profile.id
+#  iam_instance_profile = aws_iam_instance_profile.model_data_access_profile.id
   /* security_groups = [ var.server_security_group ] */
 
   network_interface {
