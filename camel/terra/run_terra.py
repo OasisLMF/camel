@@ -35,7 +35,7 @@ def _run_script_on_server(server_ip: str, script_name: str, location: str, param
 
     command = "".join(buffer)
 
-    run_script = Popen(f"ssh ubuntu@{server_ip} '{command}'", shell=True)
+    run_script = Popen(f"ssh -A ubuntu@{server_ip} '{command}'", shell=True)
     run_script.wait()
 
 
