@@ -23,7 +23,7 @@ if __name__ == "__main__":
             keep_waiting = False
             break
 
-    git_clone_command = Popen("git clone git@github.com:OasisLMF/BangladeshCyclone.git", shell=True)
+    git_clone_command = Popen('ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts && git clone git@github.com:OasisLMF/BangladeshCyclone.git', shell=True)
     git_clone_command.wait()
 
     profile = "default"
