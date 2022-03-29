@@ -88,6 +88,8 @@ def main() -> None:
         for step in config.steps:
             if step["name"] == "run_script":
                 server_ip: str = terraform_data["main_server_ip"]["value"][0]
+                add_to_known_hosts = Popen(f'ssh-keyscan -H "{server_ip}" >> ~/.ssh/known_hosts', shell=True)
+                add_to_known_hosts.wait()
                 script_name: str = step["script_name"]
                 step_parameters: dict = step.get("variables", {})
                 _run_script_on_server(server_ip=server_ip,
