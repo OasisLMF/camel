@@ -69,5 +69,5 @@ if __name__ == "__main__":
 
     # get the data from s3
 
-    run_model = Popen("cd BangladeshCyclone/BGWTCSS1/tests/test-1 && oasislmf model run --config oasislmf_mdk.json", shell=True)
+    run_model = Popen("cd BangladeshCyclone/BGWTCSS1/tests/test-1 && oasislmf model run --config oasislmf.json", shell=True)
     run_model.wait()
