@@ -10,33 +10,7 @@ from subprocess import Popen
 from camel.terra.config_loader import ConfigEngine
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
-
-def _run_script_on_server(server_ip: str, script_name: str, location: str, parameters: dict) -> None:
-    """
-    Copies a python script over to another server and then runs it with parameters.
-
-    Args:
-        server_ip: (str) the IP of the server that the Python script is going to be run on
-        script_name: (str) the name of the Python script (without .py) that is going to be run on the server
-        location: (str) the location of where the script is being run on the server (usually /home/ubuntu/)
-        parameters: (dict) the parameters that are going to be passed into the script
-
-    Returns: None
-    """
-    copy_to_server = Popen(f"scp {location}/{script_name}.py ubuntu@{server_ip}:/home/ubuntu/{script_name}.py", shell=True)
-    copy_to_server.wait()
-
-    command = f"cd /home/ubuntu/ && python3 {script_name}.py"
-    buffer = list()
-    buffer.append(command)
-
-    for param_key in parameters.keys():
-        buffer.append(f" --{param_key} {parameters[param_key]}")
-
-    command = "".join(buffer)
-
-    run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{server_ip} '{command}'", shell=True)
-    run_script.wait()
+from camel.terra.steps.run_script_on_server import RunScriptOnServer
 
 
 def main() -> None:
@@ -87,12 +61,7 @@ def main() -> None:
     if config.steps is not None:
         for step in config.steps:
             if step["name"] == "run_script":
-                server_ip: str = terraform_data["main_server_ip"]["value"][0]
-                add_to_known_hosts = Popen(f'ssh-keyscan -H "{server_ip}" >> ~/.ssh/known_hosts', shell=True)
-                add_to_known_hosts.wait()
-                script_name: str = step["script_name"]
-                step_parameters: dict = step.get("variables", {})
-                _run_script_on_server(server_ip=server_ip,
-                                      script_name=script_name,
-                                      location=f'{file_path}/{config["location"]}',
-                                      parameters=step_parameters)
+                step_process = RunScriptOnServer(input_params=step,
+                                                 terraform_data=terraform_data,
+                                                 location=f'{file_path}/{config["location"]}')
+                step_process.run()
