@@ -17,8 +17,7 @@ if __name__ == "__main__":
 
     while keep_waiting is True:
         time.sleep(sleep_count)
-        print(".", end="")
-        
+
         if os.path.exists("./output.txt") is True:
             keep_waiting = False
             break
