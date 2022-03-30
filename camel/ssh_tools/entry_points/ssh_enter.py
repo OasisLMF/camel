@@ -35,5 +35,5 @@ def main() -> None:
 
     key_path = profile.keys_path + f"/{key_name}"
 
-    ssh_process = Popen(f"ssh -A -i {key_path} {username}@{ip_address}", shell=True)
+    ssh_process = Popen(f"ssh -A -o StrictHostKeyChecking=no -i {key_path} {username}@{ip_address}", shell=True)
     ssh_process.wait()
