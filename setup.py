@@ -35,6 +35,11 @@ setup(
           "cml-profile-export=camel.storage.entry_points.export_profile:main",
           "cml-profile-import=camel.storage.entry_points.import_profile:main",
 
+          "cml-storage=camel.storage.entry_points.help:storage",
+          "cml-storage-create=camel.storage.entry_points.create_storage:main",
+          "cml-storage-delete=camel.storage.entry_points.delete_storage:main",
+          "cml-storage-get=camel.storage.entry_points.get_storage:main",
+
           "cml-ssh=camel.ssh_tools.entry_points.help:main",
           "cml-ssh-add=camel.ssh_tools.entry_points.add_ssh:main",
           "cml-ssh-delete=camel.ssh_tools.entry_points.delete_ssh:main",
