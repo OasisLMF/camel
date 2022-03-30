@@ -17,8 +17,8 @@ if __name__ == "__main__":
 
     while keep_waiting is True:
         time.sleep(sleep_count)
-        # sleep_count = sleep_count * 2
-
+        print(".", end="")
+        
         if os.path.exists("./output.txt") is True:
             keep_waiting = False
             break
@@ -43,31 +43,11 @@ if __name__ == "__main__":
     configure_aws_command = Popen(aws_command, shell=True)
     configure_aws_command.wait()
 
+    # getting data from s3
     s3_command = "aws s3 cp --recursive s3://oasislmf-model-library-iki-bgwtcss1 /home/ubuntu/BangladeshCyclone/BGWTCSS1/"
     get_data = Popen(s3_command, shell=True)
     get_data.wait()
 
-    # aws configure
-    # ws_access_key_id
-    # "$AWS_ACCESS_KEY_ID" - -profile
-    # profile_name_here & & aws
-    # configure
-    # set
-    # aws_secret_access_key
-    # "$AWS_SECRET_ACCESS_KEY" - -profile
-    # profile_name_here & & aws
-    # configure
-    # set
-    # region
-    # "$AWS_REGION" - -profile
-    # profile_name_here & & aws
-    # configure
-    # set
-    # output
-    # "json" - -profile
-    # profile_name_here
-
-    # get the data from s3
-
+    # run the model
     run_model = Popen("cd BangladeshCyclone/BGWTCSS1/tests/test-1 && oasislmf model run --config oasislmf.json", shell=True)
     run_model.wait()
