@@ -7,6 +7,28 @@ from pathlib import Path
 from subprocess import Popen
 
 from camel.terra.config_loader import ConfigEngine
+from camel.storage.components.profile_storage import LocalProfileVariablesStorage
+
+
+def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
+    current_value = lookup_dict.get(key)
+
+    if current_value is None:
+        raise ValueError(f"{key} not found in {label} config")
+
+    if isinstance(current_value, str) and current_value[:2] == "=>":
+        local_storage = LocalProfileVariablesStorage()
+        current_value = local_storage.get(current_value[2:])
+
+        if current_value is None:
+            raise ValueError(f"{current_value[2:]} not found in profile storage")
+    return current_value
+
+
+def translate_dictionary(config: dict, label: str) -> dict:
+    for key in config.keys():
+        config[key] = _extract_variable(key=key, lookup_dict=config, label=label)
+    return config
 
 
 def main() -> None:
@@ -29,7 +51,8 @@ def main() -> None:
     variables = config["variables"]
 
     for key in variables:
-        command_buffer.append(f'-var="{key}={variables[key]}" ')
+        current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
+        command_buffer.append(f'-var="{key}={current_value}" ')
 
     command = "".join(command_buffer)
 
