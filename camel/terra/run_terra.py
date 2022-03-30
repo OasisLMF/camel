@@ -16,7 +16,7 @@ from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
-    current_value = lookup_dict.get("key")
+    current_value = lookup_dict.get(key)
 
     if current_value is None:
         raise ValueError(f"{key} not found in {label} config")
