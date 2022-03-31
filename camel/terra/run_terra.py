@@ -69,7 +69,12 @@ def main() -> None:
     file_path: str = str(Path(__file__).parent) + "/terra_builds"
 
     config = ConfigEngine(config_path=config_path)
-    VariableMap().update(config.get("local_vars", {}))
+    
+    local_vars = config.get("local_vars", [])
+    variable_map = VariableMap()
+
+    for local_var in local_vars:
+        variable_map[local_var["name"]] = local_var
 
     output_path = _run_terraform_build_commands(file_path=file_path, config=config)
 
