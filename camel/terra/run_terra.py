@@ -15,6 +15,7 @@ from camel.storage.components.profile_storage import LocalProfileVariablesStorag
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
 
 
+# TODO => put this into an adapter under components
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
     current_value = lookup_dict.get(key)
 
@@ -30,6 +31,7 @@ def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
     return current_value
 
 
+# TODO => put this into an adapter under components
 def translate_dictionary(config: dict, label: str) -> dict:
     for key in config.keys():
         config[key] = _extract_variable(key=key, lookup_dict=config, label=label)
@@ -95,7 +97,9 @@ def main() -> None:
     if config.steps is not None:
         for step in config.steps:
             if step["name"] == "run_script":
-                processed_step_params = translate_dictionary(config=step.get("variables", {}), label="step configuration for run script")
+                variables = step.get("variables", {})
+                variables["script_name"] = step["step_name"]
+                processed_step_params = translate_dictionary(config=variables, label="step configuration for run script")
                 step_process = RunScriptOnServerStep(input_params=processed_step_params,
                                                      terraform_data=terraform_data,
                                                      location=f'{file_path}/{config["location"]}')
