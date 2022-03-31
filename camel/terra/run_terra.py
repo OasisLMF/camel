@@ -97,10 +97,9 @@ def main() -> None:
     if config.steps is not None:
         for step in config.steps:
             if step["name"] == "run_script":
-                variables = step.get("variables", {})
-                variables["script_name"] = step["script_name"]
-                processed_step_params = translate_dictionary(config=variables, label="step configuration for run script")
-                step_process = RunScriptOnServerStep(input_params=processed_step_params,
+                step["script_name"] = _extract_variable(key="script_name", lookup_dict=step, label="getting script name")
+                step["variables"] = translate_dictionary(config=step.get("variables", {}), label="converting step labels")
+                step_process = RunScriptOnServerStep(input_params=step,
                                                      terraform_data=terraform_data,
                                                      location=f'{file_path}/{config["location"]}')
                 step_process.run()
