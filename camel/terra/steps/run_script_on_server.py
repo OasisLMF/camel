@@ -2,6 +2,7 @@ from typing import Optional
 from subprocess import Popen
 
 from camel.terra.steps.base import Step
+from camel.terra.components.variable_map import VariableMap
 
 
 class RunScriptOnServerStep(Step):
@@ -51,6 +52,7 @@ class RunScriptOnServerStep(Step):
 
         Returns: None
         """
+        VariableMap().ip_address = self.server_ip
         add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
         add_to_known_hosts.wait()
 

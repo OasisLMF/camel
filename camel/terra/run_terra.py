@@ -11,30 +11,16 @@ from typing import Any
 from camel.terra.config_loader import ConfigEngine
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
+from camel.terra.components.variable_map import VariableMap
+from camel.terra.components.variable import Variable
 
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
 
 
 # TODO => put this into an adapter under components
-def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
-    current_value = lookup_dict.get(key)
-
-    if current_value is None:
-        raise ValueError(f"{key} not found in {label} config")
-
-    if isinstance(current_value, str) and current_value[:2] == "=>":
-        local_storage = LocalProfileVariablesStorage()
-        current_value = local_storage.get(current_value[2:])
-
-        if current_value is None:
-            raise ValueError(f"{current_value[2:]} not found in profile storage")
-    return current_value
-
-
-# TODO => put this into an adapter under components
 def translate_dictionary(config: dict, label: str) -> dict:
     for key in config.keys():
-        config[key] = _extract_variable(key=key, lookup_dict=config, label=label)
+        config[key] = Variable(name=config[key])
     return config
 
 
@@ -43,7 +29,7 @@ def _run_terraform_build_commands(file_path: str, config:dict) -> str:
     variables = config["variables"]
 
     for key in variables:
-        current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
+        current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
 
     command = "".join(command_buffer)
@@ -83,6 +69,7 @@ def main() -> None:
     file_path: str = str(Path(__file__).parent) + "/terra_builds"
 
     config = ConfigEngine(config_path=config_path)
+    VariableMap().update(config.get("local_vars", {}))
 
     output_path = _run_terraform_build_commands(file_path=file_path, config=config)
 
@@ -97,7 +84,7 @@ def main() -> None:
     if config.steps is not None:
         for step in config.steps:
             if step["name"] == "run_script":
-                step["script_name"] = _extract_variable(key="script_name", lookup_dict=step, label="getting script name")
+                step["script_name"] = Variable(name=step["script_name"])
                 step["variables"] = translate_dictionary(config=step.get("variables", {}), label="converting step labels")
                 step_process = RunScriptOnServerStep(input_params=step,
                                                      terraform_data=terraform_data,
