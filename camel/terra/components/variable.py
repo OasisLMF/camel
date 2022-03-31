@@ -22,7 +22,7 @@ class Variable:
 
     def _extract_value_from_config_vars(self) -> str:
         variable_map = VariableMap()
-        variable_data = variable_map[self.name]
+        variable_data = variable_map[self.name[2:]]
 
         self.path = variable_data["path"]
         self.ip_address = variable_data.get("ip_address")
