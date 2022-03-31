@@ -9,7 +9,7 @@ TERRAFORM_VER=`curl -s https://api.github.com/repos/hashicorp/terraform/releases
 wget https://releases.hashicorp.com/terraform/${TERRAFORM_VER}/terraform_${TERRAFORM_VER}_linux_amd64.zip
 
 # install unzip so we can access the zip that we have just downloaded 
-sudo yum -y install unzip
+sudo apt-get -y install unzip
 
 # unzip the terraform that we have just downloaded
 unzip terraform_${TERRAFORM_VER}_linux_amd64.zip
