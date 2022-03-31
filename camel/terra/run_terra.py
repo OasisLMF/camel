@@ -69,7 +69,7 @@ def main() -> None:
     file_path: str = str(Path(__file__).parent) + "/terra_builds"
 
     config = ConfigEngine(config_path=config_path)
-    
+
     local_vars = config.get("local_vars", [])
     variable_map = VariableMap()
 
@@ -95,3 +95,4 @@ def main() -> None:
                                                      terraform_data=terraform_data,
                                                      location=f'{file_path}/{config["location"]}')
                 step_process.run()
+                print(Variable(name=">>output"))
