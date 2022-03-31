@@ -98,7 +98,7 @@ def main() -> None:
         for step in config.steps:
             if step["name"] == "run_script":
                 variables = step.get("variables", {})
-                variables["script_name"] = step["step_name"]
+                variables["script_name"] = step["script_name"]
                 processed_step_params = translate_dictionary(config=variables, label="step configuration for run script")
                 step_process = RunScriptOnServerStep(input_params=processed_step_params,
                                                      terraform_data=terraform_data,
