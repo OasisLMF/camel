@@ -1,10 +1,18 @@
+"""
+This file defines the entry point for the cml-tconfig-delete command
+"""
 import argparse
 import os
 
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Deletes a terraform config file associated with the current profile.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the terraform config to be deleted")

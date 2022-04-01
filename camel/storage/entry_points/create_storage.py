@@ -1,9 +1,17 @@
+"""
+This file defines the entry point for the cml-storage-create command.
+"""
 import argparse
 
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 
 
-def main():
+def main() -> None:
+    """
+    Stores a value and key in the storage for the profile.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the value being stored")

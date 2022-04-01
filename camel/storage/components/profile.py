@@ -22,7 +22,7 @@ class Profile:
         The constructor for the Profile class.
 
         Args:
-            name: (str) the name of the profile
+            name: (str) the name of the profile being loaded
         """
         self.name: str = name
 

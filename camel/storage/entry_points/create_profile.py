@@ -1,10 +1,19 @@
+"""
+This file defines the entry point for cml-repo-create.
+"""
 import argparse
 import os
 
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Creates a repo to be referenced for updating code based off as long as the repo home directory has a setup.py
+    file.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the profile being created")

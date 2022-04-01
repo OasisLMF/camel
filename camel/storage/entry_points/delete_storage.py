@@ -1,9 +1,17 @@
+"""
+This file defines the entry point for the cml-storage-delete command.
+"""
 import argparse
 
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 
 
-def main():
+def main() -> None:
+    """
+    Deletes a key and value from the current profile's value storage.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the value being stored")

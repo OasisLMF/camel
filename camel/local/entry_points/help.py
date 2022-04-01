@@ -7,6 +7,11 @@ from camel.storage.components.profile import Profile
 
 
 def repo() -> None:
+    """
+    Prints out the available commands for the repo command.
+
+    :return: None
+    """
     Profile.print_out_profiles()
     print("\navailable commands:")
     print(colored(f"cml-repo-add => adds an local repo config to the current profile", 'yellow'))
