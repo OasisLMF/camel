@@ -1,3 +1,6 @@
+"""
+This file defines the entry point for the cml-tconfig-import command.
+"""
 import argparse
 import os
 import shutil
@@ -5,7 +8,12 @@ import shutil
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Imports a terraform config to the storage of the current profile.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="name the config is going to be stored under")

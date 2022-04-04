@@ -1,10 +1,18 @@
+"""
+This file defines the entry point for the cml-profile-delete command.
+"""
 import argparse
 import os
 
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Deletes a profile from the camel storage with everything associated with the profile.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the profile being deleted")

@@ -1,3 +1,6 @@
+"""
+This file defines the entry point for the cml-profile-import command.
+"""
 import argparse
 import os
 from subprocess import Popen
@@ -5,7 +8,12 @@ from subprocess import Popen
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Imports a file that holds all the data around a profile. The profile name is the name of the file.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the profile being imported")

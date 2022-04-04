@@ -1,3 +1,6 @@
+"""
+This file defines the entry point for the cml-tconfig-export command.
+"""
 import argparse
 import os
 import shutil
@@ -5,7 +8,12 @@ import shutil
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Exports a terraform config file to the current working directory.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="name the config is going to be stored under")

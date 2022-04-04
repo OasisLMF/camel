@@ -1,3 +1,6 @@
+"""
+This file defines the entry point for the cml-profile-export command.
+"""
 import argparse
 import os
 from subprocess import Popen
@@ -5,7 +8,13 @@ from subprocess import Popen
 from camel.storage.components.profile import Profile
 
 
-def main():
+def main() -> None:
+    """
+    Exports a file to the current working directory that contains everything associated with the profile under the
+    name of the profile.
+
+    :return: None
+    """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="the name of the profile being exported")

@@ -1,16 +1,17 @@
+"""
+This file defines the entry point for the cml-tconfig command.
+"""
 from camel.storage.components.profile import Profile
 from termcolor import colored
 
 
-def main():
-    try:
-        current_profile = Profile.get_cached_profile().name
-        print(f"\ncurrent profile: {current_profile}")
-    except:
-        print("\ncurrent profile: None")
-    print("\navailable profiles:")
-    for profile in Profile.get_profiles():
-        print(profile)
+def main() -> None:
+    """
+    Prints out the available commands for the terraform configuration files.
+
+    :return: None
+    """
+    Profile.print_out_profiles()
     print("\navailable commands:")
     print(colored(f"cml-tconfig-get => gets all the terraform configs available", 'yellow'))
     print(colored(f"cml-tconfig-import => imports a terraform config file to be saved", 'yellow'))

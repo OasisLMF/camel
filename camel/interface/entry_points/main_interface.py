@@ -19,6 +19,7 @@ def main()-> None:
     Profile.print_out_profiles()
     print("\navailable commands:")
     print(colored(f"cml-profile => manages the profile", 'yellow'))
+    print(colored(f"cml-storage => manages the storage of variables for a profile to be referenced in other processes", 'yellow'))
     print(colored(f"cml-ssh => manages ssh configurations", 'yellow'))
     print(colored(f"cml-terra => manages terraform builds", 'yellow'))
     print(colored(f"cml-repo => manages local repo operations", 'yellow'))
