@@ -59,7 +59,7 @@ class Variable:
                 value = file.read()
             return value
 
-        ssh_value_process = Popen(f"ssh -A ubuntu@{self.ip_address} 'cat {self.path}/{self.name[2:]}.txt'", stdout=PIPE, shell=True)
+        ssh_value_process = Popen(f"ssh -A ubuntu@{variable_map.ip_address} 'cat {self.path}/{self.name[2:]}.txt'", stdout=PIPE, shell=True)
         ssh_value_process.wait()
         return ssh_value_process.communicate()[0].decode().replace("\n", "")
 

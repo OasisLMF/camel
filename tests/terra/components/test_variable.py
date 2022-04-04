@@ -2,7 +2,7 @@
 This file tests the Variable displaying how the object can be used in code on the last test case.
 """
 from unittest import main, TestCase
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 from camel.terra.components.variable import Variable
 
@@ -44,7 +44,7 @@ class Test(TestCase):
     @patch("camel.terra.components.variable.Popen")
     @patch("camel.terra.components.variable.VariableMap")
     def test__extract_value_from_config_vars(self, mock_variable_map, mock_popen, mock_open):
-        mock_variable_map.return_value = {}
+        mock_variable_map.return_value = dict()
         mock_variable_map.return_value["test"] = {
             "path": "/path/to/something"
         }
@@ -57,9 +57,13 @@ class Test(TestCase):
         self.assertEqual("something", outcome)
         mock_open.assert_called_once_with('/path/to/something/test.txt', 'r')
 
-        mock_variable_map.return_value["test"] = {
+        mock_variable_map.return_value = MagicMock()
+
+        mock_variable_map.return_value.ip_address = "0.0.0.0:500"
+
+        mock_variable_map.return_value.__getitem__.return_value = {
             "path": "/path/to/something",
-            "ip_address": "0.0.0.0:500"
+            "ip_address": True
         }
         mock_popen.return_value.communicate.return_value[0].decode.return_value.replace.return_value = "something"
         outcome = test._extract_value_from_config_vars()
