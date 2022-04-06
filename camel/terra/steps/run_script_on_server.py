@@ -1,3 +1,6 @@
+"""
+This file defines the step that runs a script on another server.
+"""
 from typing import Optional
 from subprocess import Popen
 
