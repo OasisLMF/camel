@@ -144,7 +144,7 @@ It must be noted here that we are working on passing in keys in different ways a
 they keys are noted as secrets so they will not show up in the terraform logs. With this covered, we can now move onto 
 the final section which is ```steps```. This field is a list. They have a ```name``` field which is the name of the 
 step that is suppoorted. If you want to see what steps are available they can be seen 
-[here](https://github.com/OasisLMF/camel/blob/15c2aa3bb67945703b81ce91c6c8ecfd37bb29a0/camel/terra/run_terra.py#L61)
+[here](https://github.com/OasisLMF/camel/blob/3136fcfddd4e33eb44124706080aedcc35a344b8/camel/terra/steps/__init__.py#L59)
 Our example config file runs a python script on a server that has been created. The ```run_model``` script is a 
 python script in the terraform build that we are running which can be found 
 [here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/run_model.py).
