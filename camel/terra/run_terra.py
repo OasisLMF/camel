@@ -21,20 +21,6 @@ from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
-def translate_dictionary(config: dict) -> dict:
-    """
-    Converts all values in a dictionary into Variable objects.
-
-    Args:
-        config: (dict) the dictionary to be processed
-
-    Returns: (dict) the inputted dictionary that has all the values to be a Variable
-    """
-    for key in config.keys():
-        config[key] = Variable(name=config[key])
-    return config
-
-
 def _run_terraform_build_commands(file_path: str, config: dict) -> str:
     """
     Builds the command for running a terraform build and runs it.

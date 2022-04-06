@@ -97,29 +97,42 @@ work on storing these config files in the profile storage just like the SSH conf
 terraform configs for running builds. A example of a terraform config file takes the form below:
 
 ```commandline
-location: model_runs/pariswindstorm
+location: model_runs/BGEQ
 variables:
-    aws_access_key: SOMEKEY
-    aws_secret_access_key: SOMEKEY
-    subnet_id: SOMEID
-    server_security_group: SOMEGROUP
+    aws_access_key: "=>aws_access_key"
+    aws_secret_access_key: "=>aws_secret_access_key"
+    subnet_id: some_subnet_id
+    server_security_group: some_security_group_id
+local_vars:
+    - name: output
+      path: "/home/ubuntu/"
+      ip_address: true
 steps:
     - name: run_script
       script_name: run_model
-      # variables that are passed into the run_model.py script in the model_runs/pariswindstorm location
-      # variables is optional
       variables:
-          one: 1,
-          two: 2
+              key: "=>aws_access_key"
+              secret_key: "=>aws_secret_access_key"
+    - name: conditional
+      operator: "=="
+      variable: ">>output"
+      value: "FINISHED"
+      step_data:
+              name: print
+              statement: "the process is finished"
+    - name: conditional
+      operator: "=="
+      variable: ">>output"
+      value: "FINISHED"
+      step_data:
+              name: destroy_build
 ```
-
-
 What we first need to note is the ```location``` field. This is the location of the build in the camel repo. The 
 base path of the ```location``` is [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds). Your
 path that the ```location``` field has to point to is a path leading to the ```main.tf``` file of that build. 
 To demonstrate this, we can revisit our location definition below:
 ```commandline
-location: model_runs/pariswindstorm
+location: model_runs/BGEQ
 ```
 This will tell camel to look for a ```main.tf``` file 
 [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds/model_runs/pariswindstorm). We can now 
