@@ -1,3 +1,6 @@
+"""
+This file defines the class around managing config variables for a terra build.
+"""
 import argparse
 from enum import Enum
 from typing import Optional, List

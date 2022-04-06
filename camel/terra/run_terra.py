@@ -23,6 +23,7 @@ from camel.terra.components.variable import Variable
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
 from camel.terra.steps.conditional import ConditionalStep
 from camel.terra.steps.printout import PrintoutStep
+from camel.terra.steps.destroy_build import DestroyBuild
 from camel.terra.steps.base import Step
 
 
@@ -94,10 +95,12 @@ def _get_step(step_data: dict, terraform_data: dict, file_path, config) -> Optio
                                              location=f'{file_path}/{config["location"]}')
     elif step_name == "print":
         step_process = PrintoutStep(string=step_data["statement"])
+    elif step_name == "destroy_build":
+        step_process = DestroyBuild(config=config, file_path=file_path)
     return step_process
 
 
-def _process_step(step_data: dict, terraform_data, file_path, config) -> None:
+def _process_step(step_data: dict, terraform_data: dict, file_path: str, config: dict) -> None:
     """
     Processes a step based on the data by constructing it and then running it.
 

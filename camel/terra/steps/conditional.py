@@ -1,3 +1,6 @@
+"""
+This file defines the step that executes another step based on a conditional comparison of variables.
+"""
 from enum import Enum
 
 from camel.terra.steps.base import Step
