@@ -54,7 +54,7 @@ class Variable:
         self.path = variable_data["path"]
         self.ip_address = variable_data.get("ip_address")
 
-        if self.ip_address is None:
+        if self.ip_address is None or self.ip_address is False:
             with open(f"{self.path}/{self.name[2:]}.txt", "r") as file:
                 value = file.read()
             return value
@@ -63,7 +63,7 @@ class Variable:
         ssh_value_process.wait()
         return ssh_value_process.communicate()[0].decode().replace("\n", "")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.value
 
     @property

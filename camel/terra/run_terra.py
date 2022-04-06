@@ -1,30 +1,55 @@
 """
-This script defines the entry point for terra-apply.
+This script defines the entry point for terra-apply. This file takes a functional approach however, we do not want to
+just litter the file with loads of functions. If a theme of functionality can be found we should package it as a
+module or object and abstract it out of the file. The aim of this file is to define the flow of running a terra-apply
+command. Examples of code being packaged as objects and abstracted out is:
+
+- components/variable.py
+- components/variable_map.py
+- steps/run_script_on_server.py
 """
 import argparse
 import json
 import os
 from pathlib import Path
 from subprocess import Popen
-from typing import Any
+from typing import Optional
 
 from camel.terra.config_loader import ConfigEngine
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
-from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.components.variable_map import VariableMap
 from camel.terra.components.variable import Variable
 
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
+from camel.terra.steps.conditional import ConditionalStep
+from camel.terra.steps.printout import PrintoutStep
+from camel.terra.steps.base import Step
 
 
-# TODO => put this into an adapter under components
-def translate_dictionary(config: dict, label: str) -> dict:
+def translate_dictionary(config: dict) -> dict:
+    """
+    Converts all values in a dictionary into Variable objects.
+
+    Args:
+        config: (dict) the dictionary to be processed
+
+    Returns: (dict) the inputted dictionary that has all the values to be a Variable
+    """
     for key in config.keys():
         config[key] = Variable(name=config[key])
     return config
 
 
-def _run_terraform_build_commands(file_path: str, config:dict) -> str:
+def _run_terraform_build_commands(file_path: str, config: dict) -> str:
+    """
+    Builds the command for running a terraform build and runs it.
+
+    Args:
+        file_path: (str) the path to where the terraform files are for the terraform build
+        config: (dict) variables to be inserted into the terraform build
+
+    Returns: (str) a path to where the output variables file from the terraform build is
+    """
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
@@ -44,6 +69,67 @@ def _run_terraform_build_commands(file_path: str, config:dict) -> str:
     output_terra = Popen(f'cd {file_path}/{config["location"]} && terraform output -json > {output_path}', shell=True)
     output_terra.wait()
     return output_path
+
+
+def _get_step(step_data: dict, terraform_data: dict, file_path, config) -> Optional[Step]:
+    """
+    Gets the step and constructs it.
+
+    Args:
+        step_data: (dict) data needed to construct the step
+        terraform_data: (dict) data loaded from the output file from the terraform build
+        file_path: (str) the path to where the terraform files are for the terraform build
+        config: (dict) variables to be inserted into the terraform build
+
+    Returns: (Optional[Step]) the constructed step if it is supported
+    """
+    step_name = step_data["name"]
+    step_process: Optional[Step] = None
+
+    if step_name == "run_script":
+        step_data["script_name"] = Variable(name=step_data["script_name"])
+        step_data["variables"] = translate_dictionary(config=step_data.get("variables", {}))
+        step_process = RunScriptOnServerStep(input_params=step_data,
+                                             terraform_data=terraform_data,
+                                             location=f'{file_path}/{config["location"]}')
+    elif step_name == "print":
+        step_process = PrintoutStep(string=step_data["statement"])
+    return step_process
+
+
+def _process_step(step_data: dict, terraform_data, file_path, config) -> None:
+    """
+    Processes a step based on the data by constructing it and then running it.
+
+    Args:
+        step_data: (dict) data needed to construct the step
+        terraform_data: (dict) data loaded from the output file from the terraform build
+        file_path: (str) the path to where the terraform files are for the terraform build
+        config: (dict) variables to be inserted into the terraform build
+
+    Returns: None
+    """
+    step_name = step_data["name"]
+
+    if step_name == "conditional":
+
+        inner_step_data = step_data["step_data"]
+        inner_step = _get_step(
+            step_data=inner_step_data,
+            terraform_data=terraform_data,
+            file_path=file_path,
+            config=config
+        )
+        step_process = ConditionalStep(operator=step_data["operator"],
+                                       variable=Variable(name=step_data["variable"]),
+                                       value=step_data["value"],
+                                       step=inner_step)
+
+    else:
+        step_process = _get_step(step_data=step_data, terraform_data=terraform_data, file_path=file_path, config=config)
+
+    if step_process is not None:
+        step_process.run()
 
 
 def main() -> None:
@@ -81,18 +167,6 @@ def main() -> None:
     with open(output_path, "r") as file:
         terraform_data = json.loads(file.read())
 
-    # TODO => build a process step function
-
-    # TODO => build variable component (remote and local)
-
-    # TODO => build if step with fields: left, right, condition(enum like ==, !=, >= etc) and then pass in step object to run
     if config.steps is not None:
         for step in config.steps:
-            if step["name"] == "run_script":
-                step["script_name"] = Variable(name=step["script_name"])
-                step["variables"] = translate_dictionary(config=step.get("variables", {}), label="converting step labels")
-                step_process = RunScriptOnServerStep(input_params=step,
-                                                     terraform_data=terraform_data,
-                                                     location=f'{file_path}/{config["location"]}')
-                step_process.run()
-                print(Variable(name=">>output"))
+            _process_step(step_data=step, terraform_data=terraform_data, file_path=file_path, config=config)
