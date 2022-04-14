@@ -27,6 +27,7 @@ setup(
    entry_points={
        "console_scripts": [
           "cml=camel.interface.entry_points.main_interface:main",
+          "cb=camel.basecamp.entry_points.main_interface:main",
 
           "cml-profile=camel.storage.entry_points.help:profile",
           "cml-profile-create=camel.storage.entry_points.create_profile:main",
@@ -66,7 +67,15 @@ setup(
           "cml-repo-delete=camel.local.entry_points.delete_repo:main",
           "cml-repo-get=camel.local.entry_points.get_all_repos:main",
 
-          "cml-serve=camel.server_entry_point:main"
+          "cml-serve=camel.server_entry_point:main",
+          
+          # this is where we define the entry points for the basecamp
+          
+          "cb-project-create=camel.basecamp.projects.entry_points.create:main",
+          "cb-project-update=camel.basecamp.projects.entry_points.update_status:main",
+          "cb-project-get=camel.basecamp.projects.entry_points.get:main",
+
+          "cb-create=camel.basecamp.entry_points.create:main"
        ]
    },
 )
