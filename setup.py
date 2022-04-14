@@ -70,10 +70,12 @@ setup(
           "cml-serve=camel.server_entry_point:main",
           
           # this is where we define the entry points for the basecamp
-          
+
+          "cb-project=camel.basecamp.projects.entry_points.help:main",
           "cb-project-create=camel.basecamp.projects.entry_points.create:main",
           "cb-project-update=camel.basecamp.projects.entry_points.update_status:main",
           "cb-project-get=camel.basecamp.projects.entry_points.get:main",
+          "cb-project-all=camel.basecamp.projects.entry_points.get_all:main",
 
           "cb-create=camel.basecamp.entry_points.create:main"
        ]

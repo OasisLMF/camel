@@ -1,3 +1,6 @@
+"""
+This file defines the object that manages the status and paths for a base camp.
+"""
 import glob
 import json
 import os
@@ -5,17 +8,31 @@ from typing import Optional, List
 
 
 class Mapper:
-
+    """
+    This object is responsible for mapping out the current position of the user and the paths for the data in the
+    basecamp.
+    """
     def __init__(self) -> None:
+        """
+        The constructor Mapper object.
+        """
         self.current_path: str = os.getcwd()
 
     def create(self, name: str) -> bool:
+        """
+        Creates a new basecamp infrastructure if not in a basecamp.
+
+        Args:
+            name: (str) the name of the basecamp being created
+
+        Returns: (bool) True if created False if not
+        """
         if self.in_camp is False:
             os.mkdir(self.projects_path)
             os.mkdir(self.configs_path)
             os.mkdir(self.users_path)
             with open(self.camp_charter_path, "w") as file:
-                data = json.dumps({"NAME": name})
+                data = {"NAME": name}
                 json.dump(data, file)
             # TODO => api.py writing isn't defined yet
             return True
@@ -39,7 +56,7 @@ class Mapper:
 
     @property
     def camp_charter_path(self) -> str:
-        return self.current_path + "/.camp_charter.json"
+        return self.current_path + "/camp_charter.json"
 
     @property
     def in_camp(self) -> bool:

@@ -1,3 +1,7 @@
+"""
+This file defines the function that creates a project for basecamp and the entry point for the cb-project-create
+command.
+"""
 import argparse
 
 from camel.basecamp.components.mapper import Mapper
@@ -6,6 +10,14 @@ from camel.basecamp.components.user import User
 
 
 def create(name: str) -> None:
+    """
+    Creates a new basecamp project in the current basecamp.
+
+    Args:
+        name: (str) the name of the project being created
+
+    Returns: None
+    """
     mapper: Mapper = Mapper()
 
     if mapper.in_camp is True:
@@ -20,6 +32,11 @@ def create(name: str) -> None:
 
 
 def main() -> None:
+    """
+    Creates a basecamp project in the current basecamp.
+
+    Returns: None
+    """
     config_parser = argparse.ArgumentParser()
     config_parser.add_argument('--name', action='store', type=str, required=True,
                                help="name of the project being created")

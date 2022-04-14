@@ -8,7 +8,7 @@ from camel.interface.components.oasis_logo import print_logo_image
 from camel.basecamp.components.mapper import Mapper
 
 
-def main()-> None:
+def main() -> None:
     """
     Prints out the Camel and OASIS logos, the current profile, the available profiles, and the available options.
 
@@ -20,3 +20,4 @@ def main()-> None:
     print("\navailable commands:")
     print(colored(f"cb-project => manages the running projects in the current camp", 'yellow'))
     print(colored(f"cb-user => manages the users in the current camp", 'yellow'))
+    print(colored(f"cb-create => creates a new basecamp in the current working directory", 'yellow'))
