@@ -13,15 +13,13 @@ import json
 import os
 from pathlib import Path
 from subprocess import Popen
-from typing import Optional
 
+from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.terra.components.variable import Variable
 from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
-
-from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 
 
 def _run_terraform_build_commands(file_path: str, config: dict) -> str:
@@ -84,24 +82,22 @@ def main() -> None:
     project_adapter = TerraApplyProjectAdapter(config=config)
 
     if project_adapter.continue_building is True:
-        print("starting to build program")
         project_adapter.start_build()
-        # local_vars = config.get("local_vars", [])
-        # variable_map = VariableMap()
-        #
-        # for local_var in local_vars:
-        #     variable_map[local_var["name"]] = local_var
-        #
-        # output_path = _run_terraform_build_commands(file_path=file_path, config=config)
-        #
-        # with open(output_path, "r") as file:
-        #     terraform_data = json.loads(file.read())
-        #
-        # step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
-        #
-        # if config.steps is not None:
-        #     for step in config.steps:
-        #         step_manager.process_step(step_data=step)
+        local_vars = config.get("local_vars", [])
+        variable_map = VariableMap()
+
+        for local_var in local_vars:
+            variable_map[local_var["name"]] = local_var
+
+        output_path = _run_terraform_build_commands(file_path=file_path, config=config)
+
+        with open(output_path, "r") as file:
+            terraform_data = json.loads(file.read())
+
+        step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
+
+        if config.steps is not None:
+            for step in config.steps:
+                step_manager.process_step(step_data=step)
 
         project_adapter.finish_build()
-        print("program is now running")
