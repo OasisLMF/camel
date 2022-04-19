@@ -19,5 +19,5 @@ def main() -> None:
     print(f"the current base camp is: {Mapper().camp_name}")
     print("\navailable commands:")
     print(colored(f"cb-project => manages the running projects in the current camp", 'yellow'))
-    print(colored(f"cb-user => manages the users in the current camp", 'yellow'))
+    # print(colored(f"cb-user => manages the users in the current camp", 'yellow'))
     print(colored(f"cb-create => creates a new basecamp in the current working directory", 'yellow'))

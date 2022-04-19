@@ -1,8 +1,9 @@
 """
 This file defines the entry point for the cb-create command.
 """
-from camel.basecamp.components.mapper import Mapper
 import argparse
+
+from camel.basecamp.components.mapper import Mapper
 
 
 def main() -> None:

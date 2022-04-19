@@ -59,6 +59,17 @@ class Project:
         """
         self.data["STATUS"] = status.value
 
+    def update_last_interacted_by(self, user_name: str) -> None:
+        """
+        Updates the last interacted by field in the self.data.
+
+        Args:
+            user_name: (str) the username last interacting with the project
+
+        Returns: None
+        """
+        self.data["LAST_INTERACTED_BY"] = user_name
+
     @property
     def schema(self) -> dict:
         return {
@@ -67,3 +78,7 @@ class Project:
             "CREATED_BY": self.data.get("CREATED_BY", "undefined"),
             "LAST_INTERACTED_BY": self.data.get("LAST_INTERACTED_BY", "undefined")
         }
+
+    @property
+    def last_interacted_by(self) -> str:
+        return self.data.get("LAST_INTERACTED_BY", "")

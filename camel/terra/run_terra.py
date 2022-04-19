@@ -13,12 +13,15 @@ import json
 import os
 from pathlib import Path
 from subprocess import Popen
+from typing import Optional
 
 from camel.terra.components.variable import Variable
 from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+
+from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 
 
 def _run_terraform_build_commands(file_path: str, config: dict) -> str:
@@ -65,6 +68,7 @@ def main() -> None:
                                help="the name of the existing terraform config file")
     args = config_parser.parse_args()
 
+    # gets the existing config if the --config_name is supplied
     if args.config_name != "none":
         print(f"running existing config: {args.config_name}")
         config_map = TerraConfigMapper.get_cached_profile()
@@ -72,23 +76,32 @@ def main() -> None:
     else:
         config_path: str = str(os.getcwd()) + f"/{args.config_path}"
 
+    # defines the file path of where all the terraform builds are defined in the pip package
     file_path: str = str(Path(__file__).parent) + "/terra_builds"
 
+    # load and extract the data from the terra build config file
     config = ConfigEngine(config_path=config_path)
+    project_adapter = TerraApplyProjectAdapter(config=config)
 
-    local_vars = config.get("local_vars", [])
-    variable_map = VariableMap()
+    if project_adapter.continue_building is True:
+        print("starting to build program")
+        project_adapter.start_build()
+        # local_vars = config.get("local_vars", [])
+        # variable_map = VariableMap()
+        #
+        # for local_var in local_vars:
+        #     variable_map[local_var["name"]] = local_var
+        #
+        # output_path = _run_terraform_build_commands(file_path=file_path, config=config)
+        #
+        # with open(output_path, "r") as file:
+        #     terraform_data = json.loads(file.read())
+        #
+        # step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
+        #
+        # if config.steps is not None:
+        #     for step in config.steps:
+        #         step_manager.process_step(step_data=step)
 
-    for local_var in local_vars:
-        variable_map[local_var["name"]] = local_var
-
-    output_path = _run_terraform_build_commands(file_path=file_path, config=config)
-
-    with open(output_path, "r") as file:
-        terraform_data = json.loads(file.read())
-
-    step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
-
-    if config.steps is not None:
-        for step in config.steps:
-            step_manager.process_step(step_data=step)
+        project_adapter.finish_build()
+        print("program is now running")

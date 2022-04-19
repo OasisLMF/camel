@@ -3,7 +3,6 @@ This file defines the main display entry point for the cb-project command tellin
 """
 from termcolor import colored
 
-from camel.interface.components.tent_logo import print_tent_image
 from camel.interface.components.oasis_logo import print_logo_image
 from camel.basecamp.components.mapper import Mapper
 

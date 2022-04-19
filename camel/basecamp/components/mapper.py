@@ -4,6 +4,7 @@ This file defines the object that manages the status and paths for a base camp.
 import glob
 import json
 import os
+from subprocess import Popen
 from typing import Optional, List
 
 
@@ -18,6 +19,24 @@ class Mapper:
         """
         self.current_path: str = os.getcwd()
 
+    def _create_venv(self) -> None:
+        """
+        Creates the venv for the basecamp.
+
+        Returns: None
+        """
+        create_venv = Popen(f"cd {self.current_path} && python3 -m venv venv", shell=True)
+        create_venv.wait()
+
+        command_buffer = [
+            f"cd {self.current_path}/ && ",
+            f"source venv/bin/activate && ",
+            f"pip install git+https://github.com/OasisLMF/camel"
+        ]
+        command = "".join(command_buffer)
+        install_camel = Popen(command, shell=True)
+        install_camel.wait()
+
     def create(self, name: str) -> bool:
         """
         Creates a new basecamp infrastructure if not in a basecamp.
@@ -31,6 +50,7 @@ class Mapper:
             os.mkdir(self.projects_path)
             os.mkdir(self.configs_path)
             os.mkdir(self.users_path)
+            # self._create_venv()
             with open(self.camp_charter_path, "w") as file:
                 data = {"NAME": name}
                 json.dump(data, file)
