@@ -21,7 +21,7 @@ class MapperTest(TestCase):
         mock_getcwd.return_value = "."
         mock_in_camp.return_value = True
 
-        self.assertEqual(["two", "three", "one"], self.test.available_projects)
+        self.assertEqual(["five", "four", "six"], self.test.available_projects)
 
         mock_in_camp.return_value = False
         self.assertEqual([], self.test.available_projects)
@@ -32,13 +32,19 @@ class MapperTest(TestCase):
         mock_getcwd.return_value = "."
         mock_in_camp.return_value = True
 
-        self.assertEqual(["five", "four", "six"], self.test.available_users)
+        self.assertEqual(["two", "one"], self.test.available_users)
 
         mock_in_camp.return_value = False
         self.assertEqual([], self.test.available_users)
 
     def test_camp_name(self):
-        self.assertEqual("test_name", self.test.camp_name)
+        self.assertEqual("test_camp", self.test.camp_name)
+
+    def test_available_configs(self):
+        self.assertEqual(["eight", "seven"], self.test.available_configs)
+
+    def test_in_camp(self):
+        self.assertEqual(True, self.test.in_camp)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 """
 This file defines the classes that manage the data around projects in basecamp.
 """
+from datetime import datetime
 from enum import Enum
 
 from camel.basecamp.components.storage_descriptor import DataStorageDescriptor
@@ -69,6 +70,7 @@ class Project:
         Returns: None
         """
         self.data["LAST_INTERACTED_BY"] = user_name
+        self.data["LAST_INTERACTED"] = str(datetime.now())
 
     @property
     def schema(self) -> dict:
@@ -76,7 +78,8 @@ class Project:
             "NAME": self.data.get("NAME", "undefined"),
             "STATUS": self.data.get("STATUS", Status.UNDEFINED.value),
             "CREATED_BY": self.data.get("CREATED_BY", "undefined"),
-            "LAST_INTERACTED_BY": self.data.get("LAST_INTERACTED_BY", "undefined")
+            "LAST_INTERACTED_BY": self.data.get("LAST_INTERACTED_BY", "undefined"),
+            "LAST_INTERACTED": self.data.get("LAST_INTERACTED", "undefined")
         }
 
     @property

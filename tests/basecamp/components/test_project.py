@@ -16,7 +16,7 @@ class ProjectTest(TestCase):
             'NAME': 'test model',
             'STATUS': 'running',
             'CREATED_BY': 'four',
-            'LAST_INTERACTED_BY': 'five'
+            'LAST_INTERACTED_BY': 'five',
         }
         self.test = Project(name="four", file_path=self.file_path)
 
@@ -37,6 +37,7 @@ class ProjectTest(TestCase):
         os.remove("projects/test.json")
 
     def test_schema(self):
+        self.expected_data["LAST_INTERACTED"] = "undefined"
         self.assertEqual(self.expected_data, self.test.schema)
 
     def test_schema_from_empty_folder(self):
@@ -45,7 +46,8 @@ class ProjectTest(TestCase):
             'NAME': 'undefined',
             'STATUS': 'undefined',
             'CREATED_BY': 'undefined',
-            'LAST_INTERACTED_BY': 'undefined'
+            'LAST_INTERACTED_BY': 'undefined',
+            'LAST_INTERACTED': 'undefined'
         }
         self.assertEqual(expected_empty_schema, test.schema)
 
