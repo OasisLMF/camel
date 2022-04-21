@@ -51,7 +51,7 @@ resource "aws_instance" "main_server" {
 # # creates the EBS volume
 resource "aws_ebs_volume" "ebs_volume" {
   availability_zone = aws_instance.main_server.availability_zone
-  size = 30
+  size = 80
   tags = {
     Name = "impact forecasting euws model run"
   }
