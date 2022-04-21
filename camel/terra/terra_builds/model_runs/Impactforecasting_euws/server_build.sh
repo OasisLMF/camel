@@ -26,6 +26,8 @@ PATH=$PATH:~/.local/bin
 
 pip3 install oasislmf
 pip3 install numba
+pip3 install shapely
+pip3 install scipy
 
 ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
 
