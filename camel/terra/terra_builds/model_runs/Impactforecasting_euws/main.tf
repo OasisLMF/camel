@@ -26,8 +26,9 @@ resource "aws_network_interface" "network_interface" {
 
 resource "aws_instance" "main_server" {
   ami           = "ami-08ca3fed11864d6bb"
-  instance_type = "t2.medium"
+  instance_type = "m4.16xlarge"
   key_name = "OasisProject"
+  cpu_core_count = "8"
 
   network_interface {
     network_interface_id = aws_network_interface.network_interface.id
@@ -36,7 +37,7 @@ resource "aws_instance" "main_server" {
 
   # root disk
   root_block_device {
-    volume_size           = "30"
+    volume_size           = "80"
     delete_on_termination = true
   }
 
@@ -51,7 +52,7 @@ resource "aws_instance" "main_server" {
 # # creates the EBS volume
 resource "aws_ebs_volume" "ebs_volume" {
   availability_zone = aws_instance.main_server.availability_zone
-  size = 80
+  size = 400
   tags = {
     Name = "impact forecasting euws model run"
   }
