@@ -29,6 +29,7 @@ resource "aws_instance" "main_server" {
   instance_type = "m4.16xlarge"
   key_name = "OasisProject"
   cpu_core_count = "8"
+  cpu_threads_per_core = "1"
 
   network_interface {
     network_interface_id = aws_network_interface.network_interface.id
