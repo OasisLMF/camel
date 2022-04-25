@@ -18,3 +18,4 @@ def main() -> None:
     print(colored(f"cml-terra-apply => builds a terraform build based on the config file passed", 'yellow'))
     print(colored(f"cml-terra-destroy => destroys the terraform build in the config file", 'yellow'))
     print(colored(f"cml-terra-install => installs the terraform software to be used", 'yellow'))
+    print(colored(f"cml-terra-all => gets all the automatically supported models and builds", 'yellow'))

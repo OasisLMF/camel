@@ -10,6 +10,7 @@ from typing import Any
 from camel.terra.config_loader import ConfigEngine
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
@@ -57,6 +58,7 @@ def main() -> None:
     file_path: str = str(Path(__file__).parent) + "/terra_builds"
 
     config = ConfigEngine(config_path=config_path)
+    project_adapter = TerraApplyProjectAdapter(config=config)
 
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
     variables = config["variables"]
@@ -67,7 +69,10 @@ def main() -> None:
 
     command = "".join(command_buffer)
 
-    init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init', shell=True)
-    init_terraform.wait()
-    run_terraform = Popen(command, shell=True)
-    run_terraform.wait()
+    if project_adapter.continue_building is True:
+        project_adapter.destroy_build()
+        init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init', shell=True)
+        init_terraform.wait()
+        run_terraform = Popen(command, shell=True)
+        run_terraform.wait()
+        project_adapter.declare_destroyed()
