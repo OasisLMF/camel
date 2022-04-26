@@ -1,6 +1,7 @@
 """
 This file defines the adapters for interacting with the terra-apply processes.
 """
+import os
 from typing import Optional
 
 from camel.basecamp.components.mapper import Mapper as BasecampMapper
@@ -130,3 +131,9 @@ class TerraApplyProjectAdapter:
         Returns: None
         """
         self._update_status(status=ProjectStatus.DESTROYED)
+
+    @property
+    def terraform_data_path(self) -> str:
+        if self.in_basecamp is True:
+            return self.basecamp_map.data_path + f"{self.project.name}.json"
+        return str(os.getcwd()) + "/build_output.json"

@@ -22,15 +22,16 @@ from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
-def _run_terraform_build_commands(file_path: str, config: dict) -> str:
+def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
     """
     Builds the command for running a terraform build and runs it.
 
     Args:
         file_path: (str) the path to where the terraform files are for the terraform build
         config: (dict) variables to be inserted into the terraform build
+        output_path: (str) the path to where the output of the terraform is done
 
-    Returns: (str) a path to where the output variables file from the terraform build is
+    Returns: None
     """
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform apply ']
     variables = config["variables"]
@@ -46,16 +47,13 @@ def _run_terraform_build_commands(file_path: str, config: dict) -> str:
     run_terraform = Popen(command, shell=True)
     run_terraform.wait()
 
-    output_path: str = str(os.getcwd()) + "/build_output.json"
-
     output_terra = Popen(f'cd {file_path}/{config["location"]} && terraform output -json > {output_path}', shell=True)
     output_terra.wait()
-    return output_path
 
 
 def main() -> None:
     """
-    Loads the data from the terra_consfig.yml config file in the current directory and run a terraform apply command.
+    Loads the data from the terra_config.yml config file in the current directory and run a terraform apply command.
 
     :return: None
     """
@@ -89,9 +87,10 @@ def main() -> None:
         for local_var in local_vars:
             variable_map[local_var["name"]] = local_var
 
-        output_path = _run_terraform_build_commands(file_path=file_path, config=config)
+        _run_terraform_build_commands(file_path=file_path, config=config,
+                                      output_path=project_adapter.terraform_data_path)
 
-        with open(output_path, "r") as file:
+        with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
 
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)

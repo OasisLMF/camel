@@ -50,6 +50,7 @@ class Mapper:
             os.mkdir(self.projects_path)
             os.mkdir(self.configs_path)
             os.mkdir(self.users_path)
+            os.mkdir(self.data_path)
             # self._create_venv()
             with open(self.camp_charter_path, "w") as file:
                 data = {"NAME": name}
@@ -69,6 +70,10 @@ class Mapper:
     @property
     def users_path(self) -> str:
         return self.current_path + "/users/"
+
+    @property
+    def data_path(self) -> str:
+        return self.current_path + "/data/"
 
     @property
     def api_path(self) -> str:
