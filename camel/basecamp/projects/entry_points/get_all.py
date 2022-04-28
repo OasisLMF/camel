@@ -31,4 +31,4 @@ def main() -> None:
 
 
 def api() -> None:
-    pass
+    print(get_all())

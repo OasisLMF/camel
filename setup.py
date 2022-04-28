@@ -76,7 +76,7 @@ setup(
           "cb-project-create=camel.basecamp.projects.entry_points.create:main",
           "cb-project-update=camel.basecamp.projects.entry_points.update_status:main",
           "cb-project-get=camel.basecamp.projects.entry_points.get:main",
-          "cb-project-all=camel.basecamp.projects.entry_points.get_all:main",
+          "cb-project-all=camel.basecamp.projects.entry_points.get_all:api",
 
           "cb-create=camel.basecamp.entry_points.create:main"
        ]
