@@ -150,6 +150,21 @@ python script in the terraform build that we are running which can be found
 [here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/run_model.py).
 More steps will be added in time. 
 
+## Creating a model 
+Camel now supports model templates. To create a model template carry out the following command: 
+```bash
+cml-model-build --name <NAME_OF_MODEL>
+```
+This will produce a template folder will all the files needed to build a model that will run on a server created by 
+terraform. All files are annotated and the example ```config.yml``` in the package. Once you have altered the files 
+to enable your model to run, you will have to load it into your camel package with the following command:
+```bash
+cml-model-load --name <NAME_OF_MODEL>
+```
+This loads the model package into the camel package so it can be referenced in model builds. You will also be asked if 
+you want to add the config in the model package. If you put in ```y``` to this answer it will be loaded into our 
+```tconfig```. 
+
 ## AWS authentication 
 We are looking into handling profiles and aws authentication using the following guide:
 https://blog.gruntwork.io/authenticating-to-aws-with-the-credentials-file-d16c0fbcbf9e

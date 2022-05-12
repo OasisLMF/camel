@@ -15,7 +15,7 @@ def main() -> None:
     """
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
-                             help="the name of the ssh key being added")
+                             help="name of the model package being loaded")
     args = args_parser.parse_args()
 
     target_path = str(Path(__file__).parent.absolute()).replace(

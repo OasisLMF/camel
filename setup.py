@@ -71,6 +71,8 @@ setup(
           "cml-model=camel.models.entry_points.help:main",
           "cml-model-build=camel.models.entry_points.build:main",
           "cml-model-load=camel.models.entry_points.load:main",
+          "cml-model-get=camel.models.entry_points.get:main",
+          "cml-model-delete=camel.models.entry_points.delete:main",
 
           "cml-serve=camel.server_entry_point:main",
           
