@@ -8,7 +8,7 @@ from camel.interface.components.oasis_logo import print_logo_image
 from camel.storage.components.profile import Profile
 
 
-def main()-> None:
+def main() -> None:
     """
     Prints out the Camel and OASIS logos, the current profile, the available profiles, and the available options.
 
@@ -24,3 +24,5 @@ def main()-> None:
     print(colored(f"cml-terra => manages terraform builds", 'yellow'))
     print(colored(f"cml-repo => manages local repo operations", 'yellow'))
     print(colored(f"cml-tconfig => manages terraform build configs", 'yellow'))
+    print(colored(f"cml-model => manages the model builds", 'yellow'))
+    print(colored(f"cb => displays the basecamp menu", 'yellow'))
