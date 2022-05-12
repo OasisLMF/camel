@@ -4,7 +4,7 @@ from flask_cors import CORS
 from camel.storage.components.profile import Profile
 
 # define the flask app configurations
-app = Flask(__name__, template_folder="templates")
+app = Flask(__name__, template_folder="model_template")
 # api = Api(app)
 app.secret_key = "nothing"
 cors = CORS(app)
