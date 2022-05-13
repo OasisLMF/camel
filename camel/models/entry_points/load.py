@@ -16,6 +16,8 @@ def main() -> None:
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--name', action='store', type=str, required=True,
                              help="name of the model package being loaded")
+    args_parser.add_argument("--config", action='store', type=str, required=False,
+                             default="N", help="'y' if you want to automatically load the config")
     args = args_parser.parse_args()
 
     target_path = str(Path(__file__).parent.absolute()).replace(
@@ -31,7 +33,12 @@ def main() -> None:
 
         config_path = f"{build_path}/{args.name}_config.yml"
         if Path(config_path).exists():
-            load_config = input(f"{args.name}_config.yml file found do you want to load it into your tconfig? y/N: ")
+            if args.config != "y":
+                load_config = input(
+                    f"{args.name}_config.yml file found do you want to load it into your tconfig? y/N: "
+                )
+            else:
+                load_config = "y"
 
             if load_config == "y":
                 print("loading to tconfig")
