@@ -17,4 +17,5 @@ def main() -> None:
 
     print("available models:")
     for model in [x.split("/")[-2] for x in glob(f"{model_directory}/*/", recursive=True)]:
-        print(model)
+        if model != "__pycache__":
+            print(model)
