@@ -66,6 +66,7 @@ class Profile:
         """
         current_directory = str(os.path.dirname(os.path.realpath(__file__)))
         cache_directory = current_directory + "/profile_cache.txt"
+
         with open(cache_directory, "r") as file:
             name = file.read()
         return cls(name=name)
