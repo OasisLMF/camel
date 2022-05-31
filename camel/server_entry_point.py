@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from camel.storage.components.profile import Profile
+from camel.
 
 # define the flask app configurations
 app = Flask(__name__, template_folder="model_template")
@@ -21,6 +22,46 @@ def get_profiles():
     for profile in Profile.get_profiles():
         string_buffer += f" {profile}"
     return string_buffer
+
+
+@app.route("/projects/remote")
+def get_remote_projects():
+    return "remote projects"
+
+
+@app.route("projects/remote/get")
+def get_remote_project():
+    return "remote project"
+
+
+@app.route("project/remote/start")
+def project_remote_start():
+    return "remote project start"
+
+
+@app.route("project/remote/finish")
+def project_remote_finish():
+    return "remote project finish"
+
+
+@app.route("ssh/get/all")
+def ssh_get_all():
+    return "ssh get all"
+
+
+@app.route("ssh/get/stashed")
+def ssh_get_stashed():
+    return "ssh get stashed"
+
+
+@app.route("ssh/stash/")
+def ssh_stash():
+    return "ssh stash"
+
+
+@app.route("basecampe/stash/")
+def basecamp_stash():
+    return "basecamp stash"
 
 
 # @app.teardown_request
