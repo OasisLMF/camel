@@ -9,7 +9,7 @@ provider "aws" {
 terraform {
     backend "s3" {
     bucket = "oasislmf-terraform"
-    key    = "eu-west-1/model_run/bangladeshcyclone/terraform.tfstate"
+    key    = var.state_location
     region = "eu-west-1"
   }
 }

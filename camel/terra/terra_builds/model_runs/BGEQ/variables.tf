@@ -24,8 +24,9 @@ variable "subnet_id" {
   sensitive   = true
 }
 
-#variable "bucket_arm" {
-#  description = "arm of bucket getting the model data"
-#  type        = string
-#  sensitive   = true
-#}
+variable "state_location" {
+    description = "The position in s3 where the state is stored"
+    type        = string
+    sensitive   = true
+    default     = "eu-west-1/model_run/bangladeshcyclone/terraform.tfstate"
+}
