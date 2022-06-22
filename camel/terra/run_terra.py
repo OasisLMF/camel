@@ -20,6 +20,7 @@ from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
@@ -33,22 +34,32 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
 
     Returns: None
     """
-    command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform apply ']
+    build_path: str = config["location"]
+    command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
 
+    new_state_key = variables.get("STATE_S3_KEY")
+    edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
+
+    if new_state_key is not None:
+        edit_state.update_state(s3_key=new_state_key)
+
     command = "".join(command_buffer)
 
-    init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init -reconfigure', shell=True)
+    init_terraform = Popen(f'cd {file_path}/{build_path} && terraform init -reconfigure', shell=True)
     init_terraform.wait()
     run_terraform = Popen(command, shell=True)
     run_terraform.wait()
 
-    output_terra = Popen(f'cd {file_path}/{config["location"]} && terraform output -json > {output_path}', shell=True)
+    output_terra = Popen(f'cd {file_path}/{build_path} && terraform output -json > {output_path}', shell=True)
     output_terra.wait()
+
+    if new_state_key is not None:
+        edit_state.revert_main_back_to_initial_state()
 
 
 def main() -> None:
