@@ -29,10 +29,3 @@ variable "state_key" {
     type        = string
     sensitive   = true
 }
-
-variable "state_location" {
-    description = "The position in s3 where the state is stored"
-    type        = string
-    sensitive   = true
-    default     = "eu-west-1/terraform.tfstate"
-}
