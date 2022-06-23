@@ -26,6 +26,7 @@ PATH=$PATH:~/.local/bin
 
 pip3 install oasislmf
 pip3 install numba
+pip3 install pyarrow
 
 sudo -u ubuntu git clone https://github.com/OasisLMF/ParisWindstormModel
 

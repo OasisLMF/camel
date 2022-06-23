@@ -28,6 +28,7 @@ pip3 install oasislmf
 pip3 install numba
 pip3 install shapely
 pip3 install scipy
+pip3 install pyarrow
 
 ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts
 

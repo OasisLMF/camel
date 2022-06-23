@@ -25,6 +25,7 @@ cd /home/ubuntu
 PATH=$PATH:~/.local/bin
 
 pip3 install oasislmf
+pip3 install pyarrow
 pip3 install numba
 
 

@@ -18,3 +18,4 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker
 
 python3 pip install requests
+python3 pip install pyarrow
