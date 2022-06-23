@@ -2,10 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 
 from camel.storage.components.profile import Profile
-<<<<<<< HEAD
-=======
-from camel.
->>>>>>> 22777f571df36ff4aee3f50b885975da410b6143
+
 
 # define the flask app configurations
 app = Flask(__name__, template_folder="model_template")
@@ -27,8 +24,6 @@ def get_profiles():
     return string_buffer
 
 
-<<<<<<< HEAD
-=======
 @app.route("/projects/remote")
 def get_remote_projects():
     return "remote projects"
@@ -69,7 +64,6 @@ def basecamp_stash():
     return "basecamp stash"
 
 
->>>>>>> 22777f571df36ff4aee3f50b885975da410b6143
 # @app.teardown_request
 # def teardown_request(*args, **kwargs):
 #     "Expire and remove the session after each request"
