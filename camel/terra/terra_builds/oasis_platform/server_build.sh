@@ -23,5 +23,4 @@ cd /home/ubuntu
 
 git clone https://github.com/OasisLMF/OasisEvaluation
 cd OasisEvaluation
-./install.sh 
-
+./install.sh

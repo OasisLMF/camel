@@ -23,9 +23,3 @@ variable "subnet_id" {
   type        = string
   sensitive   = true
 }
-
-#variable "bucket_arm" {
-#  description = "arm of bucket getting the model data"
-#  type        = string
-#  sensitive   = true
-#}
