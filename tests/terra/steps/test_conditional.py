@@ -11,6 +11,7 @@ class ConditionalStepVariableTest(TestCase):
 
     def setUp(self) -> None:
         self.mock_step = MagicMock()
+        self.mock_step.__str__.return_value = "test"
         self.variable = Variable(name="test")
         self.test = ConditionalStep(operator="==", variable=self.variable, value="test", step=self.mock_step)
 
@@ -32,7 +33,8 @@ class ConditionalStepVariableTest(TestCase):
         self.test.run()
         self.mock_step.run.assert_called_once_with()
 
-        self.test.value = "should fail"
+        self.test.value = "testing"
+        self.test.run()
         self.mock_step.run.assert_called_once_with()
 
 

@@ -60,11 +60,9 @@ class TestStepManager(TestCase):
     def test_process_step(self, mock_run_script_on_server, mock_conditional_step_run):
         self.test.process_step(step_data=self.config["steps"][0])
         mock_run_script_on_server.return_value.run.assert_called_once_with()
-
         # try and mock the ConditionalStep object and assert what the object is called with
         self.test.process_step(step_data=self.config["steps"][1])
         mock_conditional_step_run.assert_called_once_with()
-
 
 if __name__ == "__main__":
     main()
