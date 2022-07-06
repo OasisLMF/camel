@@ -6,6 +6,7 @@ from camel.terra.steps.conditional import ConditionalStep
 from camel.terra.steps.destroy_build import DestroyBuild
 from camel.terra.steps.printout import PrintoutStep
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
+from camel.terra.steps.enums import StepNameEnum
 
 
 class StepManager:
@@ -36,7 +37,7 @@ class StepManager:
         Converts all values in a dictionary into Variable objects.
 
         Args:
-            config: (dict) the dictionary to be processed
+            config: (dict) the dictionary to be processed (usually the variables from the config file)
 
         Returns: (dict) the inputted dictionary that has all the values to be a Variable
         """
@@ -53,18 +54,18 @@ class StepManager:
 
         Returns: (Optional[Step]) the constructed step if it is supported
         """
-        step_name = step_data["name"]
+        step_name = StepNameEnum(step_data["name"])
         step_process: Optional[Step] = None
 
-        if step_name == "run_script":
+        if step_name == StepNameEnum.RUN_SCRIPT:
             step_data["script_name"] = Variable(name=step_data["script_name"])
             step_data["variables"] = StepManager.translate_dictionary(config=step_data.get("variables", {}))
             step_process = RunScriptOnServerStep(input_params=step_data,
                                                  terraform_data=self.terraform_data,
                                                  location=f'{self.file_path}/{self.config["location"]}')
-        elif step_name == "print":
+        elif step_name == StepNameEnum.PRINT:
             step_process = PrintoutStep(string=step_data["statement"])
-        elif step_name == "destroy_build":
+        elif step_name == StepNameEnum.DESTROY_BUILD:
             step_process = DestroyBuild(config=self.config, file_path=self.file_path)
         return step_process
 
@@ -77,9 +78,9 @@ class StepManager:
 
         Returns: None
         """
-        step_name = step_data["name"]
+        step_name = StepNameEnum(step_data["name"])
 
-        if step_name == "conditional":
+        if step_name == step_name.CONDITIONAL:
 
             inner_step_data = step_data["step_data"]
             inner_step = self._get_step(step_data=inner_step_data)

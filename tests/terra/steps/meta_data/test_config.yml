@@ -1,0 +1,29 @@
+location: model_runs/BGEQ
+variables:
+    aws_access_key: "=>aws_access_key"
+    aws_secret_access_key: "=>aws_secret_access_key"
+    subnet_id: some_subnet_id
+    server_security_group: some_security_group_id
+local_vars:
+    - name: output
+      path: "/home/ubuntu/"
+      ip_address: true
+steps:
+    - name: run_script
+      script_name: run_model
+      variables:
+              key: "=>aws_access_key"
+              secret_key: "=>aws_secret_access_key"
+    - name: conditional
+      operator: "=="
+      variable: ">>output"
+      value: "FINISHED"
+      step_data:
+              name: print
+              statement: "the process is finished"
+    - name: conditional
+      operator: "=="
+      variable: ">>output"
+      value: "FINISHED"
+      step_data:
+              name: destroy_build
