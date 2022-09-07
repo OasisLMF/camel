@@ -22,7 +22,7 @@ class TestServerBuildBashGenerator(TestCase):
         self.assertEqual(expected_outcome, self.test)
 
     def test_generate_script(self):
-        self.test.generate_script()
+        self.test.generate_script(oasislmf_version="1.26")
         self.assertEqual("".join(self.test), str(self.test))
 
 

@@ -19,7 +19,8 @@ setup(
    include_package_data=True,
    install_requires=[
        "pyyaml",
-       "termcolor"
+       "termcolor",
+       "requests==2.28.1"
    ],
    extras_require={
       "server": ["Flask>=2.0.3", "Flask-Cors>=3.0.10"]

@@ -98,6 +98,7 @@ terraform configs for running builds. A example of a terraform config file takes
 
 ```commandline
 location: model_runs/BGEQ
+oasis_version: "1.26"
 variables:
     aws_access_key: "=>aws_access_key"
     aws_secret_access_key: "=>aws_secret_access_key"
@@ -149,6 +150,9 @@ Our example config file runs a python script on a server that has been created. 
 python script in the terraform build that we are running which can be found 
 [here](https://github.com/OasisLMF/camel/blob/main/camel/terra/terra_builds/model_runs/pariswindstorm/run_model.py).
 More steps will be added in time. 
+
+We also must state that ```oasis_version``` is optional. If you do not supply a version the latest version will be used
+as default. The ```oasis_version``` is the version of ```oasislmf``` from pypi.
 
 ## Creating a model 
 Camel now supports model templates. To create a model template carry out the following command: 

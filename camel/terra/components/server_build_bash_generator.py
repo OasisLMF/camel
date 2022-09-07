@@ -1,6 +1,7 @@
 """
 This file defines the class responsible for generating bash scripts for building servers.
 """
+from typing import Optional
 
 
 class ServerBuildBashGenerator(list):
@@ -14,15 +15,22 @@ class ServerBuildBashGenerator(list):
         """
         super().__init__([])
 
-    def generate_script(self) -> None:
+    def generate_script(self, oasislmf_version: Optional[str]) -> None:
         """
         Fills up the self with the lines needed to create a bash script.
         Notes:
             if you want to add parameters to the bash script in future pass them into this function and format the
             lines that you want with the parameters
 
+        oasis_version: (Optional[str]) the version of aosis you want installed is None will be latest version
+
         Returns: None
         """
+        if oasislmf_version is None:
+            install_oasislmf_line = "pip3 install oasislmf[extra]"
+        else:
+            install_oasislmf_line = f"pip3 install oasislmf[extra]=={oasislmf_version}"
+
         lines = [
             "#!/bin/bash",
             "",
@@ -49,7 +57,7 @@ class ServerBuildBashGenerator(list):
             "",
             "cd /home/ubuntu",
             "PATH=$PATH:~/.local/bin",
-            "pip3 install oasislmf",
+            install_oasislmf_line,
             "pip3 install pyarrow",
             "pip3 install numba",
             "",
