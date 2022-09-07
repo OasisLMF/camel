@@ -15,12 +15,27 @@ from pathlib import Path
 from subprocess import Popen
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
+from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
+from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.components.variable import Variable
 from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
+
+
+def write_server_build_bash_file(file_path: str) -> None:
+    """
+    Writes a server build bash script for the terraform build.
+
+    Args:
+        file_path: (str) path to the build including the name of the script being written
+
+    Returns: None
+    """
+    bash_file = ServerBuildBashGenerator()
+    bash_file.generate_script()
+    bash_file.write_script(file_path=file_path)
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
@@ -35,8 +50,11 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     Returns: None
     """
     build_path: str = config["location"]
+    server_build_bash_script_path: str = build_path + "/server_build.sh"
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
+
+    write_server_build_bash_file(file_path=server_build_bash_script_path)
 
     for key in variables:
         current_value = Variable(name=variables[key])
