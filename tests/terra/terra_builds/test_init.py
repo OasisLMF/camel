@@ -20,7 +20,7 @@ class TerraBuildsTest(TestCase):
 
     def test_get_all_models(self):
         outcome = get_all_models()
-        self.assertEqual(["BGEQ", "pariswindstorm"], outcome)
+        self.assertEqual(["BGEQ", "pariswindstorm", "Impactforecasting_euws"], outcome)
 
 
 if __name__ == "__main__":

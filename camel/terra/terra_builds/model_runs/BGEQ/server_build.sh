@@ -5,8 +5,8 @@ sudo apt-get install git -y
 sudo apt-get install vim -y
 sudo apt-get install tmux -y 
 sudo apt-get install ca-certificates -y
-sudo apt-get install curl -y 
-sudo apt-get install gnupg -y 
+sudo apt-get install curl -y
+sudo apt-get install gnupg -y
 sudo apt-get install lsb-release -y
 sudo apt install python3.8-venv -y
 sudo apt install python3-pip -y
