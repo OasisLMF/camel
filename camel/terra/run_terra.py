@@ -50,7 +50,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     Returns: None
     """
     build_path: str = config["location"]
-    server_build_bash_script_path: str = build_path + "/server_build.sh"
+    server_build_bash_script_path: str = f"{file_path}/{build_path}/server_build.sh"
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
