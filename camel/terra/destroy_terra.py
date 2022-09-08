@@ -60,7 +60,7 @@ def main() -> None:
     config = ConfigEngine(config_path=config_path)
     project_adapter = TerraApplyProjectAdapter(config=config)
 
-    command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
+    command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy -auto-approve']
     variables = config["variables"]
 
     for key in variables:

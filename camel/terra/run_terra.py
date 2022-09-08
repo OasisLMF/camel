@@ -54,7 +54,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     build_path: str = config["location"]
     oasis_version: Optional[str] = config.get("oasis_version")
     server_build_bash_script_path: str = f"{file_path}/{build_path}/server_build.sh"
-    command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
+    command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply -auto-approve']
     variables = config["variables"]
 
     write_server_build_bash_file(file_path=server_build_bash_script_path, oasis_version=oasis_version)
