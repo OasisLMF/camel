@@ -121,6 +121,8 @@ steps:
       step_data:
               name: print
               statement: "the process is finished"
+    - name: run_server_command
+      command: 'cd {=>directory} && echo "{>>output}"'
     - name: conditional
       operator: "=="
       variable: ">>output"
