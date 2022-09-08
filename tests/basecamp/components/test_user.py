@@ -5,6 +5,7 @@ import json
 import os
 from unittest import main, TestCase
 from unittest.mock import patch
+import pathlib
 
 from camel.basecamp.components.user import User
 
@@ -12,7 +13,7 @@ from camel.basecamp.components.user import User
 class UserTest(TestCase):
 
     def setUp(self) -> None:
-        self.file_path = "users/"
+        self.file_path = str(pathlib.Path(__file__).resolve().parent) + "/users/"
         self.expected_data = {
             'NAME': 'test name',
         }
@@ -28,11 +29,11 @@ class UserTest(TestCase):
         self.test.name = "test"
         self.test.write()
 
-        with open("users/test.json", "r") as file:
+        with open(f"{self.file_path}/test.json", "r") as file:
             data = json.loads(file.read())
 
         self.assertEqual(self.test.data, data)
-        os.remove("users/test.json")
+        os.remove(f"{self.file_path}/test.json")
 
     def test_schema(self):
         self.assertEqual(self.expected_data, self.test.schema)

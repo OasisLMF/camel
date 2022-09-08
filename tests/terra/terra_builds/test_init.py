@@ -16,11 +16,11 @@ class TerraBuildsTest(TestCase):
 
     def test_get_all_builds(self):
         outcome = get_all_builds()
-        self.assertEqual(["eu_west_1", "oasis_platform"], outcome)
+        self.assertEqual(['oasis_platform', 'eu_west_1'], outcome)
 
     def test_get_all_models(self):
         outcome = get_all_models()
-        self.assertEqual(["BGEQ", "pariswindstorm", "Impactforecasting_euws"], outcome)
+        self.assertEqual(['pariswindstorm', 'BGEQ', 'Impactforecasting_euws'], outcome)
 
 
 if __name__ == "__main__":

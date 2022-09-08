@@ -4,6 +4,7 @@ This file tests the object that manages the data around a project.
 import json
 import os
 from unittest import main, TestCase
+import pathlib
 
 from camel.basecamp.components.project import Project, Status
 
@@ -11,7 +12,7 @@ from camel.basecamp.components.project import Project, Status
 class ProjectTest(TestCase):
 
     def setUp(self) -> None:
-        self.file_path = "projects/"
+        self.file_path: str = str(pathlib.Path(__file__).resolve().parent) + "/projects"
         self.expected_data = {
             'NAME': 'test model',
             'STATUS': 'running',
@@ -30,11 +31,11 @@ class ProjectTest(TestCase):
         self.test.name = "test"
         self.test.write()
 
-        with open("projects/test.json", "r") as file:
+        with open(f"{self.file_path}/test.json", "r") as file:
             data = json.loads(file.read())
 
         self.assertEqual(self.test.data, data)
-        os.remove("projects/test.json")
+        os.remove(f"{self.file_path}/test.json")
 
     def test_schema(self):
         self.expected_data["LAST_INTERACTED"] = "undefined"
