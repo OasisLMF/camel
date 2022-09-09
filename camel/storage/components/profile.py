@@ -120,7 +120,7 @@ class Profile:
         try:
             current_profile = Profile.get_cached_profile().name
             print(f"\ncurrent profile: {current_profile}")
-        except:
+        except FileNotFoundError:
             print("\ncurrent profile: None")
         print("\navailable profiles:")
         for profile in Profile.get_profiles():

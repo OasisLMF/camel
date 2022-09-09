@@ -25,4 +25,3 @@ def main() -> None:
         raise ValueError(f"profile with the name {new_profile.name} already exists")
     new_profile.create_profile()
     print("profile created")
-

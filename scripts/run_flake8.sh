@@ -14,4 +14,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 export PYTHONPATH="."
 
-python -m unittest
+echo "running flake8"
+flake8 . --config ./flake8_config
+echo "flake8 has been run if you do not see anything this means flake8 is completely satisfied"
