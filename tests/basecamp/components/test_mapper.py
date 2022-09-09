@@ -21,6 +21,9 @@ class MapperTest(TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test___init__(self):
+        self.assertEqual(self.current_path, self.test.current_path)
+
     def test__create_venv(self):
         # Warning the following test requires internet connection
         venv_path = self.current_path + f"/venv"
@@ -51,6 +54,22 @@ class MapperTest(TestCase):
         self.assertEqual(self.current_path + "/api.py", self.test.api_path)
         self.assertEqual(self.current_path + "/camp_charter.json", self.test.camp_charter_path)
 
+    @patch("camel.basecamp.components.mapper.Mapper.camp_charter_path", new_callable=PropertyMock)
+    def test_in_camp(self, mock_camp_charter_path):
+        mock_camp_charter_path.return_value = self.current_path + "/camp_charter.json"
+        self.assertEqual(True, self.test.in_camp)
+
+        mock_camp_charter_path.return_value = self.current_path + "/not_camp_charter.json"
+        self.assertEqual(False, self.test.in_camp)
+
+    @patch("camel.basecamp.components.mapper.Mapper.in_camp", new_callable=PropertyMock)
+    def test_camp_name(self, mock_in_camp):
+        mock_in_camp.return_value = True
+        self.assertEqual("test_camp", self.test.camp_name)
+
+        mock_in_camp.return_value = False
+        self.assertEqual(None, self.test.camp_name)
+
     @patch("camel.basecamp.components.mapper.Mapper.in_camp", new_callable=PropertyMock)
     def test_available_projects(self, mock_in_camp):
         mock_in_camp.return_value = True
@@ -70,16 +89,15 @@ class MapperTest(TestCase):
         mock_in_camp.return_value = False
         self.assertEqual([], self.test.available_users)
 
-    def test_camp_name(self):
-        self.assertEqual("test_camp", self.test.camp_name)
-
-    def test_available_configs(self):
+    @patch("camel.basecamp.components.mapper.Mapper.in_camp", new_callable=PropertyMock)
+    def test_available_configs(self, mock_in_camp):
+        mock_in_camp.return_value = True
         outcome = self.test.available_configs
         outcome.sort()
         self.assertEqual(['eight', 'seven'], outcome)
 
-    def test_in_camp(self):
-        self.assertEqual(True, self.test.in_camp)
+        mock_in_camp.return_value = False
+        self.assertEqual([], self.test.available_configs)
 
 
 if __name__ == "__main__":
