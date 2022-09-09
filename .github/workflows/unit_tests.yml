@@ -24,6 +24,6 @@ jobs:
       - name: Run unit tests
         run: |
           export PYTHONPATH="."
-          python -m unittest
+          python -m coverage run -m unittest
       - name: Generate coverage report
         run: python -m coverage report

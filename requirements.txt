@@ -1,5 +1,6 @@
 certifi==2022.6.15.1
 charset-normalizer==2.1.1
+coverage==6.4.4
 flake8==5.0.4
 idna==3.3
 mccabe==0.7.0

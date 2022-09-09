@@ -54,8 +54,9 @@ class MapperTest(TestCase):
     @patch("camel.basecamp.components.mapper.Mapper.in_camp", new_callable=PropertyMock)
     def test_available_projects(self, mock_in_camp):
         mock_in_camp.return_value = True
-
-        self.assertEqual(["five", "four", "six"], self.test.available_projects)
+        outcome = self.test.available_projects
+        outcome.sort()
+        self.assertEqual(["five", "four", "six"], outcome)
 
         mock_in_camp.return_value = False
         self.assertEqual([], self.test.available_projects)
@@ -73,7 +74,9 @@ class MapperTest(TestCase):
         self.assertEqual("test_camp", self.test.camp_name)
 
     def test_available_configs(self):
-        self.assertEqual(["seven", "eight"], self.test.available_configs)
+        outcome = self.test.available_configs
+        outcome.sort()
+        self.assertEqual(['eight', 'seven'], outcome)
 
     def test_in_camp(self):
         self.assertEqual(True, self.test.in_camp)
