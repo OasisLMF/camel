@@ -4,8 +4,7 @@ This file defines a basic function a prints out the OASIS logo for display to th
 from termcolor import colored
 
 
-IMAGE = """
-                                                                                
+IMAGE = """                                                            
       ############      %####%%#%%%%%       /%%%%%%%%%%%%%%%%      %%%%%%%%%%%% 
    ####          #### ###/         .%%%    #%%             %%%   %%%            
   ###              ####/             .%%%   %%%             %%    %%#           
@@ -24,4 +23,3 @@ def print_logo_image() -> None:
     :returns: None
     """
     print(colored(IMAGE, 'red'))
-

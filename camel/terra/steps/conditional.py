@@ -26,7 +26,7 @@ class ConditionalStep(Step):
         step: (Step) the step that is going to be executed if the condition is met
     """
 
-    def __init__(self, operator: str, variable: Variable, value: str,  step: Step) -> None:
+    def __init__(self, operator: str, variable: Variable, value: str, step: Step) -> None:
         """
         The constructor for the ConditionalStep.
 
