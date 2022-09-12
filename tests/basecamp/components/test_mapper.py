@@ -84,7 +84,9 @@ class MapperTest(TestCase):
     def test_available_users(self, mock_in_camp):
         mock_in_camp.return_value = True
 
-        self.assertEqual(["one", "two"], self.test.available_users)
+        outcome = self.test.available_users
+        outcome.sort()
+        self.assertEqual(["one", "two"], outcome)
 
         mock_in_camp.return_value = False
         self.assertEqual([], self.test.available_users)
