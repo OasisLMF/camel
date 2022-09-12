@@ -49,7 +49,7 @@ class ServerBuildBashGenerator(list):
             "curl -fsSL https://get.docker.com/ | sh",
             "sudo service docker restart",
             "",
-            "sudo usermod -a -G docker ec2-ubuntu",
+            "sudo usermod -a -G docker ubuntu",
             "",
             "sudo chmod 666 /var/run/docker.sock",
             "",
