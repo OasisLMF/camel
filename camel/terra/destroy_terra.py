@@ -60,12 +60,13 @@ def main() -> None:
     config = ConfigEngine(config_path=config_path)
     project_adapter = TerraApplyProjectAdapter(config=config)
 
-    command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy -auto-approve']
+    command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
     variables = config["variables"]
 
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
         command_buffer.append(f'-var="{key}={current_value}" ')
+    command_buffer.append("-auto-approve")
 
     command = "".join(command_buffer)
 

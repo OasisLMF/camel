@@ -54,7 +54,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     build_path: str = config["location"]
     oasis_version: Optional[str] = config.get("oasis_version")
     server_build_bash_script_path: str = f"{file_path}/{build_path}/server_build.sh"
-    command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply -auto-approve']
+    command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
     write_server_build_bash_file(file_path=server_build_bash_script_path, oasis_version=oasis_version)
@@ -62,6 +62,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
+    command_buffer.append("-auto-approve")
 
     new_state_key = variables.get("STATE_S3_KEY")
     edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
