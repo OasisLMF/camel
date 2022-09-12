@@ -12,7 +12,7 @@ def main() -> None:
     Returns: None
     """
     model_directory = str(Path(__file__).parent.absolute()).replace(
-        "models/entry_points", f"terra/terra_builds/model_runs/"
+        "models/entry_points", "terra/terra_builds/model_runs/"
     )
 
     print("available models:")

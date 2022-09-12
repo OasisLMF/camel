@@ -30,8 +30,8 @@ class Mapper:
 
         command_buffer = [
             f"cd {self.current_path}/ && ",
-            f"source venv/bin/activate && ",
-            f"pip install git+https://github.com/OasisLMF/camel"
+            "source venv/bin/activate && ",
+            "pip install git+https://github.com/OasisLMF/camel"
         ]
         command = "".join(command_buffer)
         install_camel = Popen(command, shell=True)

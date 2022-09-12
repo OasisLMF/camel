@@ -13,7 +13,7 @@ def main() -> None:
     """
     Profile.print_out_profiles()
     print("\navailable commands:")
-    print(colored(f"cml-tconfig-get => gets all the terraform configs available", 'yellow'))
-    print(colored(f"cml-tconfig-import => imports a terraform config file to be saved", 'yellow'))
-    print(colored(f"cml-tconfig-export => imports a terraform config file to the current location", 'yellow'))
-    print(colored(f"cml-tconfig-delete => deletes a terraform config file to the current location", 'yellow'))
+    print(colored("cml-tconfig-get => gets all the terraform configs available", 'yellow'))
+    print(colored("cml-tconfig-import => imports a terraform config file to be saved", 'yellow'))
+    print(colored("cml-tconfig-export => imports a terraform config file to the current location", 'yellow'))
+    print(colored("cml-tconfig-delete => deletes a terraform config file to the current location", 'yellow'))

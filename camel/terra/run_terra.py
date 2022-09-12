@@ -91,7 +91,8 @@ def main() -> None:
     """
     config_parser = argparse.ArgumentParser()
     config_parser.add_argument('--config_path', action='store', type=str, required=False, default="terra_config.yml",
-                               help="the path the config yml file that defines the terraform build (default: terra_config.yml)")
+                               help="the path the config yml file that defines the terraform build "
+                                    "(default: terra_config.yml)")
     config_parser.add_argument('--config_name', action='store', type=str, required=False, default="none",
                                help="the name of the existing terraform config file")
     args = config_parser.parse_args()
