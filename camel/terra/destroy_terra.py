@@ -62,6 +62,7 @@ def main() -> None:
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
         command_buffer.append(f'-var="{key}={current_value}" ')
+    command_buffer.append("-auto-approve")
 
     command = "".join(command_buffer)
 
