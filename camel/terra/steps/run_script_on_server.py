@@ -6,6 +6,7 @@ from subprocess import Popen
 
 from camel.terra.steps.base import Step
 from camel.terra.components.variable_map import VariableMap
+from gerund.commands.terminal_command import TerminalCommand
 
 
 class RunScriptOnServerStep(Step):
@@ -32,6 +33,7 @@ class RunScriptOnServerStep(Step):
         self.script_name: Optional[str] = None
         self.location = location
         self.parameters: Optional[dict] = None
+        self.environment_variables: Optional[dict] = None
         self._process_inputs(input_data=input_params, terraform_dict=terraform_data)
 
     def _process_inputs(self, input_data: dict, terraform_dict: dict) -> None:
@@ -47,6 +49,7 @@ class RunScriptOnServerStep(Step):
         self.server_ip = terraform_dict["main_server_ip"]["value"][0]
         self.script_name = input_data["script_name"]
         self.parameters = input_data.get("variables", {})
+        self.environment_variables = input_data.get("env_vars", {})
 
     def run(self) -> None:
         """
@@ -72,5 +75,9 @@ class RunScriptOnServerStep(Step):
 
         command = "".join(buffer)
 
-        run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
+        run_script = TerminalCommand(command=command, environment_variables=self.environment_variables,
+                                     ip_address=self.server_ip)
         run_script.wait()
+
+        # run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
+        # run_script.wait()

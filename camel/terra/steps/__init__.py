@@ -70,8 +70,10 @@ class StepManager:
             step_process = DestroyBuild(config=self.config, file_path=self.file_path)
         elif step_name == "run_server_command":
             command_string = CommandString(command=step_data["command"])
+            environment_variables: dict = step_data.get("env_vars", {})
             step_process = RunCommandOnServerStep(terraform_data=self.terraform_data,
-                                                  command=str(command_string))
+                                                  command=str(command_string),
+                                                  environment_variables=environment_variables)
         return step_process
 
     def process_step(self, step_data: dict) -> None:

@@ -20,7 +20,8 @@ setup(
     install_requires=[
         "pyyaml",
         "termcolor",
-        "requests==2.28.1"
+        "requests==2.28.1",
+        "git+https://github.com/OasisLMF/gerund.git"
     ],
     extras_require={
         "server": ["Flask>=2.0.3", "Flask-Cors>=3.0.10"]
