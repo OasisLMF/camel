@@ -15,11 +15,12 @@ from pathlib import Path
 from subprocess import Popen
 from typing import Optional
 
+from gerund.components.variable import Variable
+from gerund.components.variable_map import VariableMap
+
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
-from camel.terra.components.variable import Variable
-from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper

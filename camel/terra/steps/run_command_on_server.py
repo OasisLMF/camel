@@ -3,9 +3,9 @@ This file defines the step that runs a command on another server.
 """
 from subprocess import Popen
 
-from camel.terra.components.variable_map import VariableMap
 from camel.terra.steps.base import Step
 from gerund.commands.terminal_command import TerminalCommand
+from gerund.components.variable_map import VariableMap
 
 
 class RunCommandOnServerStep(Step):
