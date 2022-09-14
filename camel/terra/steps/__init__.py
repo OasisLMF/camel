@@ -1,11 +1,13 @@
 from typing import Optional
 
 from camel.terra.components.variable import Variable
+from camel.terra.components.command_string import CommandString
 from camel.terra.steps.base import Step
 from camel.terra.steps.conditional import ConditionalStep
 from camel.terra.steps.destroy_build import DestroyBuild
 from camel.terra.steps.printout import PrintoutStep
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
+from camel.terra.steps.run_command_on_server import RunCommandOnServerStep
 
 
 class StepManager:
@@ -66,6 +68,10 @@ class StepManager:
             step_process = PrintoutStep(string=step_data["statement"])
         elif step_name == "destroy_build":
             step_process = DestroyBuild(config=self.config, file_path=self.file_path)
+        elif step_name == "run_server_command":
+            command_string = CommandString(command=step_data["command"])
+            step_process = RunCommandOnServerStep(terraform_data=self.terraform_data,
+                                                  command=str(command_string))
         return step_process
 
     def process_step(self, step_data: dict) -> None:

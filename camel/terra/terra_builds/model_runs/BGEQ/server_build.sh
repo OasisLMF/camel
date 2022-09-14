@@ -15,7 +15,8 @@ sudo apt install awscli -y
 curl -fsSL https://get.docker.com/ | sh
 sudo service docker restart
 
-sudo usermod -a -G docker ec2-user
+sudo usermod -a -G docker ubuntu
+sudo chmod 666 /var/run/docker.sock
 
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -24,7 +25,8 @@ sudo chmod +x /usr/local/bin/docker
 cd /home/ubuntu
 PATH=$PATH:~/.local/bin
 
-pip3 install oasislmf
+pip3 install scipy
+pip3 install shapely
 pip3 install pyarrow
 pip3 install numba
 
