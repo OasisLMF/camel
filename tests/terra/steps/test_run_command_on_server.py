@@ -24,6 +24,7 @@ class TestRunCommandOnServerStep(TestCase):
                                            command=self.command,
                                            environment_variables=self.env_var)
 
+
     def tearDown(self) -> None:
         Singleton._instances = {}
 
