@@ -14,6 +14,7 @@ from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapte
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
+    # TODO => consider getting rid of this and having a standard Variable object instead
     current_value = lookup_dict.get(key)
 
     if current_value is None:
@@ -28,12 +29,6 @@ def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
     return current_value
 
 
-def translate_dictionary(config: dict, label: str) -> dict:
-    for key in config.keys():
-        config[key] = _extract_variable(key=key, lookup_dict=config, label=label)
-    return config
-
-
 def main() -> None:
     """
     Loads the data from the terra_config.yml config file in the current directory and run a terraform apply command.
@@ -42,7 +37,8 @@ def main() -> None:
     """
     config_parser = argparse.ArgumentParser()
     config_parser.add_argument('--config_path', action='store', type=str, required=False, default="terra_config.yml",
-                               help="the path to the config yml file that defines the terraform build that is going to be destroyed (default: terra_config.yml)")
+                               help="the path to the config yml file that defines the terraform build that is going"
+                                    " to be destroyed (default: terra_config.yml)")
     config_parser.add_argument('--config_name', action='store', type=str, required=False, default="none",
                                help="the name of the existing terraform config file")
 
@@ -66,6 +62,7 @@ def main() -> None:
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
         command_buffer.append(f'-var="{key}={current_value}" ')
+    command_buffer.append("-auto-approve")
 
     command = "".join(command_buffer)
 

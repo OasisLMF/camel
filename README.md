@@ -109,6 +109,8 @@ local_vars:
       path: "/home/ubuntu/"
       ip_address: true
 steps:
+    - name: run_server_command
+      command: echo 'export OASIS_UI_VERSION="1.11.3"' >> ~/.bashrc && echo 'export OASIS_WORKER_VERSION="1.26.2"' >> ~/.bashrc && echo 'export OASIS_PLATFORM_VERSION="1.26.2"' >>~/.bashrc
     - name: run_script
       script_name: run_model
       variables:
@@ -121,6 +123,8 @@ steps:
       step_data:
               name: print
               statement: "the process is finished"
+    - name: run_server_command
+      command: 'cd {=>directory} && echo "{>>output}"'
     - name: conditional
       operator: "=="
       variable: ">>output"
@@ -153,6 +157,10 @@ More steps will be added in time.
 
 We also must state that ```oasis_version``` is optional. If you do not supply a version the latest version will be used
 as default. The ```oasis_version``` is the version of ```oasislmf``` from pypi.
+
+When it comes to our ```run_server_command``` step this is running a command on the recently created server. We
+can see that right now we are exporting a range of global environment variables into the server. We should work on
+creating an environment variable step to organise the variables better.
 
 ## Creating a model 
 Camel now supports model templates. To create a model template carry out the following command: 

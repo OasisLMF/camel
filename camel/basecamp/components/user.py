@@ -87,4 +87,3 @@ class User:
         """
         user_name = User.get_cached_username()
         return User(name=user_name, file_path=file_path)
-

@@ -15,11 +15,13 @@ from pathlib import Path
 from subprocess import Popen
 from typing import Optional
 
+from gerund.components.variable import Variable
+from gerund.components.variable_map import VariableMap
+
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
+from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
-from camel.terra.components.variable import Variable
-from camel.terra.components.variable_map import VariableMap
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
@@ -62,6 +64,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
+    command_buffer.append("-auto-approve")
 
     new_state_key = variables.get("STATE_S3_KEY")
     edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
@@ -91,10 +94,12 @@ def main() -> None:
     """
     config_parser = argparse.ArgumentParser()
     config_parser.add_argument('--config_path', action='store', type=str, required=False, default="terra_config.yml",
-                               help="the path the config yml file that defines the terraform build (default: terra_config.yml)")
+                               help="the path the config yml file that defines the terraform build "
+                                    "(default: terra_config.yml)")
     config_parser.add_argument('--config_name', action='store', type=str, required=False, default="none",
                                help="the name of the existing terraform config file")
     args = config_parser.parse_args()
+    LocalProfileVariablesStorage()
 
     # gets the existing config if the --config_name is supplied
     if args.config_name != "none":

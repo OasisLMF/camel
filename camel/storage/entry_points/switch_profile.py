@@ -24,4 +24,3 @@ def main() -> None:
         raise ValueError(f"profile with the name {new_profile.name} does not exist")
     new_profile.cache_profile_name()
     print("profile switched")
-
