@@ -4,6 +4,7 @@ This file defines the class and manages the data variables and their values for 
 import os
 
 import yaml
+from gerund.components.local_variable_storage import LocalVariableStorage
 
 from camel.storage.components.profile import Profile
 
@@ -25,6 +26,15 @@ class LocalProfileVariablesStorage(dict):
         self.config_path: str = self.profile.configs_path + "/STORAGE_VARS123.yml"
         self.read()
 
+    def _update_gerund(self) -> None:
+        """
+        Updates the gerund local storage so gerund variables can access the latest values.
+
+        Returns: None
+        """
+        gerund_storage = LocalVariableStorage()
+        gerund_storage.update(self)
+
     def read(self) -> None:
         """
         Reads the config file based off the self.config_path file. File needs to be in yml.
@@ -37,6 +47,7 @@ class LocalProfileVariablesStorage(dict):
         with open(self.config_path, "r") as file:
             data = yaml.load(file, Loader=yaml.FullLoader)
             self.update(data)
+        self._update_gerund()
 
     def write(self) -> None:
         """
@@ -62,6 +73,7 @@ class LocalProfileVariablesStorage(dict):
         """
         self[name] = value
         self.write()
+        self._update_gerund()
 
     def delete_value(self, name) -> None:
         """
@@ -74,3 +86,4 @@ class LocalProfileVariablesStorage(dict):
         """
         del self[name]
         self.write()
+        self._update_gerund()

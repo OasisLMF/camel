@@ -3,8 +3,9 @@ This file defines the step that runs a command on another server.
 """
 from subprocess import Popen
 
-from camel.terra.components.variable_map import VariableMap
 from camel.terra.steps.base import Step
+from gerund.commands.terminal_command import TerminalCommand
+from gerund.components.variable_map import VariableMap
 
 
 class RunCommandOnServerStep(Step):
@@ -16,7 +17,7 @@ class RunCommandOnServerStep(Step):
         server_ip (str): the IP address of the server running the script
         command (str): the command that is going to be run on the server
     """
-    def __init__(self, terraform_data: dict, command: str) -> None:
+    def __init__(self, terraform_data: dict, command: str, environment_variables: dict) -> None:
         """
         The constructor for the RunCommandOnServerStep class.
 
@@ -25,6 +26,7 @@ class RunCommandOnServerStep(Step):
             command: (str) the command that is going to be run on the server
         """
         self.server_ip: str = terraform_data["main_server_ip"]["value"][0]
+        self.environment_variables: dict = environment_variables
         self.command: str = command
 
     def run(self) -> None:
@@ -39,6 +41,10 @@ class RunCommandOnServerStep(Step):
         add_to_known_hosts.wait()
 
         command = f"cd /home/ubuntu/ && {self.command}"
+        terminal_command = TerminalCommand(command=command,
+                                           environment_variables=self.environment_variables,
+                                           ip_address=self.server_ip)
+        terminal_command.wait()
 
-        run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
-        run_script.wait()
+        # run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
+        # run_script.wait()

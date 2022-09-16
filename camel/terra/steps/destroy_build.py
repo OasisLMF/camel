@@ -3,7 +3,8 @@ This file defines the step that destroys the terraform build.
 """
 from subprocess import Popen
 
-from camel.terra.components.variable import Variable
+from gerund.components.variable import Variable
+
 from camel.terra.steps.base import Step
 
 

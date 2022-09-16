@@ -3,8 +3,9 @@ This file defines the step that executes another step based on a conditional com
 """
 from enum import Enum
 
+from gerund.components.variable import Variable
+
 from camel.terra.steps.base import Step
-from camel.terra.components.variable import Variable
 
 
 class Operator(Enum):
