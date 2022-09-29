@@ -23,7 +23,7 @@ module "model_server" {
   instance_type         = var.instance_type
   key_name              = var.key_name
   root_block_size       = var.root_block_size
-  model_server_ami      = var.model_server_ami
+#  model_server_ami      = var.model_server_ami
   region                = var.region
 }
 

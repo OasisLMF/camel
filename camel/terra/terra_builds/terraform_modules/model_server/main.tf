@@ -12,9 +12,9 @@ resource "aws_network_interface" "network_interface" {
 }
 
 resource "aws_instance" "main_server" {
-  ami           = "ami-08ca3fed11864d6bb"
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  key_name = var.key_name
+  key_name      = var.key_name
 
   network_interface {
     network_interface_id = aws_network_interface.network_interface.id
