@@ -48,12 +48,6 @@ variable "root_block_size" {
   default     = "30"
 }
 
-#variable "model_server_ami" {
-#  description = "the AMI of the model server"
-#  type        = string
-#  default     = data.aws_ami.ubuntu.id
-#}
-
 variable "region" {
   description = "the AWS region where the model server is going to run"
   type        = string

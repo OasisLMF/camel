@@ -31,6 +31,6 @@ def get_all_builds() -> List[str]:
     builds = [x.split("/")[-2] for x in glob(parent_path + "/*/", recursive=True)]
     buffer = []
     for model in builds:
-        if model not in ["model_runs", "__pycache__"]:
+        if model not in ["model_runs", "__pycache__", "terraform_modules"]:
             buffer.append(model)
     return buffer

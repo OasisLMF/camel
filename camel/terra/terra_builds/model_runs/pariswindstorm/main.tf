@@ -3,7 +3,7 @@
 provider "aws" {
   access_key = var.aws_access_key
   secret_key = var.aws_secret_access_key
-  region     = "eu-west-1"
+  region     = var.region
 }
 
 terraform {
@@ -14,7 +14,6 @@ terraform {
   }
 }
 
-
 module "model_server" {
   source                = "../../terraform_modules/model_server"
   server_security_group = var.server_security_group
@@ -23,10 +22,8 @@ module "model_server" {
   instance_type         = var.instance_type
   key_name              = var.key_name
   root_block_size       = var.root_block_size
-#  model_server_ami      = var.model_server_ami
   region                = var.region
 }
-
 
 # return the IP of the server created */
 output "main_server_ip" {
