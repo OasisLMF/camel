@@ -35,6 +35,6 @@ resource "aws_instance" "main_server" {
 }
 
 # return the IP of the server created */
-#output "main_server_ip" {
-#  value = "${aws_instance.main_server.*.private_ip}"
-#}
+output "main_server_ip" {
+  value = "${aws_instance.main_server.*.private_ip}"
+}

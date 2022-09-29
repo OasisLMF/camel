@@ -30,5 +30,5 @@ module "model_server" {
 
 # return the IP of the server created */
 output "main_server_ip" {
-  value = "${module.model_server.aws_instance.main_server.*.private_ip}"
+  value = "${module.model_server.main_server_ip.value}"
 }
