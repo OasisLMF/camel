@@ -7,7 +7,7 @@ resource "aws_network_interface" "network_interface" {
   subnet_id   = var.subnet_id
   security_groups = [ var.server_security_group ]
   tags = {
-    Name = var.server_tag + " interface"
+    Name =  "${var.server_tag} interface"
   }
 }
 
@@ -35,6 +35,6 @@ resource "aws_instance" "main_server" {
 }
 
 # return the IP of the server created */
-output "main_server_ip" {
-  value = "${aws_instance.main_server.*.private_ip}"
-}
+#output "main_server_ip" {
+#  value = "${aws_instance.main_server.*.private_ip}"
+#}
