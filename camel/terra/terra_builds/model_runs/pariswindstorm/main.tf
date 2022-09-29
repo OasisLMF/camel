@@ -30,5 +30,5 @@ module "model_server" {
 
 # return the IP of the server created */
 output "main_server_ip" {
-  value = "${module.model_server.main_server_ip.value}"
+  value = "${module.model_server.main_server_ip}"
 }
