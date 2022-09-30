@@ -17,6 +17,7 @@ from typing import Optional
 
 from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
+from gerund.commands.terminal_command import TerminalCommand
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
@@ -42,6 +43,27 @@ def write_server_build_bash_file(file_path: str, oasis_version: Optional[str]) -
     bash_file.write_script(file_path=file_path)
 
 
+def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
+    build_path: str = config["location"]
+    server_build_variables_path: str = f"{file_path}/{build_path}/variables.json"
+
+    with open(server_build_variables_path, "r") as file:
+        build_variables = json.loads(file.read())
+
+    repository = build_variables["repository"]
+    oasislmf_version = build_variables.get("oasislmf_version")
+    data_bucket = build_variables.get("data_bucket")
+    data_directory = build_variables.get("data_directory")
+
+    server_build_commands = ServerBuildBashGenerator()
+    server_build_commands.generate_script(repository=repository,
+                                          oasislmf_version=oasislmf_version,
+                                          data_bucket=data_bucket,
+                                          data_directory=data_directory)
+    command = TerminalCommand(command=server_build_commands.stripped, ip_address=ip_address)
+    command.wait()
+
+
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
     """
     Builds the command for running a terraform build and runs it.
@@ -59,7 +81,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
-    write_server_build_bash_file(file_path=server_build_bash_script_path, oasis_version=oasis_version)
+    # write_server_build_bash_file(file_path=server_build_bash_script_path, oasis_version=oasis_version)
 
     for key in variables:
         current_value = Variable(name=variables[key])
@@ -130,6 +152,9 @@ def main() -> None:
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
 
+        run_server_config_commands(file_path=file_path,
+                                   ip_address=terraform_data["main_server_ip"]["value"][0],
+                                   config=config)
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
         if config.steps is not None:

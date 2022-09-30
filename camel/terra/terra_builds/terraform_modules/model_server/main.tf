@@ -31,7 +31,7 @@ resource "aws_instance" "main_server" {
     Name = var.server_tag
   }
 
-  user_data = file("./server_build.sh")
+#  user_data = file("./server_build.sh")
 }
 
 # return the IP of the server created */

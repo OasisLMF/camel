@@ -1,7 +1,7 @@
 """
 This file defines the class responsible for generating bash scripts for building servers.
 """
-from typing import Optional
+from typing import Optional, List
 
 
 class ServerBuildBashGenerator(list):
@@ -15,14 +15,19 @@ class ServerBuildBashGenerator(list):
         """
         super().__init__([])
 
-    def generate_script(self, oasislmf_version: Optional[str]) -> None:
+    def generate_script(self, repository: str, oasislmf_version: Optional[str] = None,
+                        data_bucket: Optional[str] = None, data_directory: Optional[str] = None) -> None:
         """
         Fills up the self with the lines needed to create a bash script.
         Notes:
             if you want to add parameters to the bash script in future pass them into this function and format the
             lines that you want with the parameters
 
-        oasis_version: (Optional[str]) the version of aosis you want installed is None will be latest version
+        Args:
+            repository: (str) the repository where the model is stored
+            oasislmf_version: (Optional[str]) the version of oasis you want installed is None will be latest version
+            data_bucket: (Optional[str]) the s3 bucket that is where the model data is stored
+            data_directory: (Optional[str]) the directory of where the data should be stored on the server
 
         Returns: None
         """
@@ -30,6 +35,11 @@ class ServerBuildBashGenerator(list):
             install_oasislmf_line = "pip3 install oasislmf[extra]"
         else:
             install_oasislmf_line = f"pip3 install oasislmf[extra]=={oasislmf_version}"
+
+        if data_bucket is None:
+            data_line = ""
+        else:
+            data_line = f"aws s3 cp --recursive s3://{data_bucket} /home/ubuntu/{data_directory}"
 
         lines = [
             "#!/bin/bash",
@@ -64,9 +74,9 @@ class ServerBuildBashGenerator(list):
             "pip3 install numba",
             "",
             "",
-            "# sudo -u ubuntu git clone https://github.com/OasisLMF/BangladeshCyclone.git",
+            f"sudo -u ubuntu git clone {repository}",
             "",
-            "# aws s3 cp --recursive s3://oasislmf-model-library-iki-bgwtcss1 /home/ubuntu/BangladeshCyclone/BGWTCSS1/",
+            data_line,
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
             "",
             "echo FINISHED > output.txt"
@@ -98,6 +108,15 @@ class ServerBuildBashGenerator(list):
         """
         with open(file_path, "w") as file:
             file.write(str(self))
+
+    @property
+    def stripped(self) -> List[str]:
+        buffer = []
+        for i in self[1:]:
+            i = i.replace("\n", "")
+            if i != "":
+                buffer.append(i)
+        return buffer
 
     def _format(self) -> str:
         return "".join(self)
