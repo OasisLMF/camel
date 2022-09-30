@@ -42,7 +42,6 @@ class TestServerBuildBashGenerator(TestCase):
             'pip3 install pyarrow', 'pip3 install numba', 'sudo -u ubuntu git clone test/repo',
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts', 'echo FINISHED > output.txt'
         ]
-
         self.test.generate_script(repository="test/repo", oasislmf_version="1.26")
         self.assertEqual(expected_outcome, self.test.stripped)
 
