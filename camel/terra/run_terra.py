@@ -158,9 +158,9 @@ def main() -> None:
             terraform_data = json.loads(file.read())
 
         # TODO => run the bash script generation
-        bash_commands = ServerBuildBashGenerator()
-        bash_commands.generate_script()
-        bash_script = BashScript(commands=, ip_address=, key=)
+        # bash_commands = ServerBuildBashGenerator()
+        # bash_commands.generate_script()
+        # bash_script = BashScript(commands=, ip_address=, key=)
 
         run_server_config_commands(file_path=file_path,
                                    ip_address=terraform_data["main_server_ip"]["value"][0],
