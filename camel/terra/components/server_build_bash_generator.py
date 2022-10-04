@@ -32,9 +32,9 @@ class ServerBuildBashGenerator(list):
         Returns: None
         """
         if oasislmf_version is None:
-            install_oasislmf_line = "pip3 install oasislmf[extra]"
+            install_oasislmf_line = "pip3 install oasislmf"
         else:
-            install_oasislmf_line = f"pip3 install oasislmf[extra]=={oasislmf_version}"
+            install_oasislmf_line = f"pip3 install oasislmf=={oasislmf_version}"
 
         if data_bucket is None:
             data_line = ""

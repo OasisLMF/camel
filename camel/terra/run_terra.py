@@ -15,10 +15,9 @@ from pathlib import Path
 from subprocess import Popen
 from typing import Optional
 
+from gerund.commands.bash_script import BashScript
 from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
-from gerund.commands.terminal_command import TerminalCommand
-from gerund.commands.bash_script import BashScript
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
@@ -29,28 +28,17 @@ from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
-# def run_server_build_bash_file(file_path: str, config: dict) -> None:
-#     """
-#     Writes a server build bash script for the terraform build.
-#
-#     Args:
-#         file_path: (str) path to the build including the name of the script being written
-#         oasis_version: (Optional[str]) the version of aosis you want installed is None will be latest version
-#
-#     Returns: None
-#     """
-#     build_path: str = config["location"]
-#     server_build_variables_path: str = f"{file_path}/{build_path}/variables.json"
-#
-#     with open(server_build_variables_path, "r") as file:
-#         build_variables = json.loads(file.read())
-#     repository = build_variables["repository"]
-#     oasislmf_version = build_variables.get("oasislmf_version")
-#     data_bucket = build_variables.get("data_bucket")
-#     data_directory = build_variables.get("data_directory")
-
-
 def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
+    """
+    Runs the bash script on the model server to setup the model run.
+
+    Args:
+        file_path: (str) the path to where the terra builds are
+        ip_address: (str) the IP address of the model server where the model is being run on
+        config: (dict) the config data around the build
+
+    Returns: None
+    """
     build_path: str = config["location"]
     server_build_variables_path: str = f"{file_path}/{build_path}/variables.json"
 
@@ -156,11 +144,6 @@ def main() -> None:
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
-
-        # TODO => run the bash script generation
-        # bash_commands = ServerBuildBashGenerator()
-        # bash_commands.generate_script()
-        # bash_script = BashScript(commands=, ip_address=, key=)
 
         run_server_config_commands(file_path=file_path,
                                    ip_address=terraform_data["main_server_ip"]["value"][0],

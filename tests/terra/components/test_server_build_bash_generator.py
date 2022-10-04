@@ -27,20 +27,33 @@ class TestServerBuildBashGenerator(TestCase):
 
     def test_strip(self):
         expected_outcome = [
-            'sudo apt-get update -y', 'sudo apt-get install git -y', 'sudo apt-get install vim -y',
-            'sudo apt-get install tmux -y ', 'sudo apt-get install ca-certificates -y',
-            'sudo apt-get install curl -y', 'sudo apt-get install gnupg -y',
+            'sudo apt-get update -y',
+            'sudo apt-get install git -y',
+            'sudo apt-get install vim -y',
+            'sudo apt-get install tmux -y ',
+            'sudo apt-get install ca-certificates -y',
+            'sudo apt-get install curl -y',
+            'sudo apt-get install gnupg -y',
             'sudo apt-get install lsb-release -y',
-            'sudo apt install python3.8-venv -y', 'sudo apt install python3-pip -y',
-            'sudo apt install awscli -y', 'curl -fsSL https://get.docker.com/ | sh',
-            'sudo service docker restart', 'sudo usermod -a -G docker ubuntu',
+            'sudo apt-get install python3-venv -y',
+            'sudo apt-get install python3-pip -y',
+            'sudo apt-get install awscli -y',
+            'curl -fsSL https://get.docker.com/ | sh',
+            'sudo service docker restart',
+            'sudo usermod -a -G docker ubuntu',
             'sudo chmod 666 /var/run/docker.sock',
-            'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/'
-            'docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
-            'sudo chmod +x /usr/local/bin/docker-compose', 'sudo chmod +x /usr/local/bin/docker',
-            'cd /home/ubuntu', 'PATH=$PATH:~/.local/bin', 'pip3 install oasislmf[extra]==1.26',
-            'pip3 install pyarrow', 'pip3 install numba', 'sudo -u ubuntu git clone test/repo',
-            'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts', 'echo FINISHED > output.txt'
+            'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)'
+            '-$(uname -m)" -o /usr/local/bin/docker-compose',
+            'sudo chmod +x /usr/local/bin/docker-compose',
+            'sudo chmod +x /usr/local/bin/docker',
+            'cd /home/ubuntu',
+            'PATH=$PATH:~/.local/bin',
+            'pip3 install oasislmf[extra]==1.26',
+            'pip3 install pyarrow',
+            'pip3 install numba',
+            'sudo -u ubuntu git clone test/repo',
+            'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
+            'echo FINISHED > output.txt'
         ]
         self.test.generate_script(repository="test/repo", oasislmf_version="1.26")
         self.assertEqual(expected_outcome, self.test.stripped)
