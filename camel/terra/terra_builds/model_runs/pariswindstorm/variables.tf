@@ -53,3 +53,9 @@ variable "region" {
   type        = string
   default     = "eu-west-1"
 }
+
+variable "model_server_ami" {
+  description = "the AMI of the model server"
+  type        = string
+#  default     = data.aws_ami.ubuntu.id
+}

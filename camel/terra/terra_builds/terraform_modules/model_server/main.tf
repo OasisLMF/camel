@@ -12,7 +12,7 @@ resource "aws_network_interface" "network_interface" {
 }
 
 resource "aws_instance" "main_server" {
-  ami           = data.aws_ami.ubuntu.id
+  ami           = var.model_server_ami
   instance_type = var.instance_type
   key_name      = var.key_name
 
