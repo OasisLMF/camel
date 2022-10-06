@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from subprocess import Popen
 from typing import Optional
+import time
 
 from gerund.commands.bash_script import BashScript
 from gerund.commands.terminal_command import TerminalCommand
@@ -142,6 +143,8 @@ def main() -> None:
 
         _run_terraform_build_commands(file_path=file_path, config=config,
                                       output_path=project_adapter.terraform_data_path)
+
+        time.sleep(5)
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
