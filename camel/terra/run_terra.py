@@ -144,7 +144,7 @@ def main() -> None:
         _run_terraform_build_commands(file_path=file_path, config=config,
                                       output_path=project_adapter.terraform_data_path)
 
-        time.sleep(5)
+        time.sleep(10)
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
@@ -158,7 +158,7 @@ def main() -> None:
                                    ip_address=VariableMap().ip_address,
                                    config=config)
 
-        time.sleep(5)
+        time.sleep(10)
 
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
