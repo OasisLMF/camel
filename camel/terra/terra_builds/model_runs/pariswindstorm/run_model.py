@@ -1,7 +1,6 @@
-from subprocess import Popen
 import os
 import time
-
+from subprocess import Popen
 
 if __name__ == "__main__":
     sleep_count = 1
@@ -15,5 +14,5 @@ if __name__ == "__main__":
             keep_waiting = False
             break
 
-    run_model = Popen("cd ParisWindstormModel && oasislmf model run --config oasislmf_mdk.json", shell=True)
+    run_model = Popen("source ~/.profile && cd ParisWindstormModel && oasislmf model run --config oasislmf_mdk.json", shell=True)
     run_model.wait()
