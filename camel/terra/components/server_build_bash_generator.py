@@ -70,7 +70,7 @@ class ServerBuildBashGenerator(list):
             "sudo chmod +x /usr/local/bin/docker",
             "",
             "cd /home/ubuntu",
-            "PATH=$PATH:~/.local/bin",
+            # "PATH=$PATH:~/.local/bin",
             install_oasislmf_line,
             "pip3 install pyarrow",
             "pip3 install numba",
