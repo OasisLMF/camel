@@ -13,7 +13,7 @@ import json
 import os
 from pathlib import Path
 from subprocess import Popen
-from typing import Optional
+from typing import Optional, List
 import time
 
 from gerund.commands.bash_script import BashScript
@@ -103,6 +103,24 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
         edit_state.revert_main_back_to_initial_state()
 
 
+def _establish_connection(ip_address: str) -> None:
+    connection = TerminalCommand(command="echo 'connection achieved'", ip_address=ip_address)
+
+    connected = False
+    while connected is False:
+        print(f"establishing connection to: {ip_address}")
+        established: List[str] = connection.wait(capture_output=True)
+        established_str: str = " ".join(established).lower()
+
+        if "connection refused" not in established_str:
+            print("connection established")
+            time.sleep(3)
+            connected = True
+            break
+        print("connection refused trying again")
+
+
+
 def main() -> None:
     """
     Loads the data from the terra_config.yml config file in the current directory and run a terraform apply command.
@@ -144,12 +162,14 @@ def main() -> None:
         _run_terraform_build_commands(file_path=file_path, config=config,
                                       output_path=project_adapter.terraform_data_path)
 
-        time.sleep(10)
+        # time.sleep(10)
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
 
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
+
+        _establish_connection(ip_address=VariableMap().ip_address)
 
         add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
         add_to_known_hosts.wait()
