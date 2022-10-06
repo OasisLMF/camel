@@ -112,13 +112,12 @@ def _establish_connection(ip_address: str) -> None:
         established: List[str] = connection.wait(capture_output=True)
         established_str: str = " ".join(established).lower()
 
-        if "connection refused" not in established_str:
+        if "refused" not in established_str:
             print("connection established")
-            time.sleep(3)
             connected = True
             break
         print("connection refused trying again")
-
+        time.sleep(3)
 
 
 def main() -> None:
