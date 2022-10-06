@@ -16,6 +16,7 @@ from subprocess import Popen
 from typing import Optional
 
 from gerund.commands.bash_script import BashScript
+from gerund.commands.terminal_command import TerminalCommand
 from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
@@ -145,8 +146,13 @@ def main() -> None:
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
 
+        VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
+
+        add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
+        add_to_known_hosts.wait()
+
         run_server_config_commands(file_path=file_path,
-                                   ip_address=terraform_data["main_server_ip"]["value"][0],
+                                   ip_address=VariableMap().ip_address,
                                    config=config)
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
