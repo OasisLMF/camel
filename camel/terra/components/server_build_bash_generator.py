@@ -42,7 +42,7 @@ class ServerBuildBashGenerator(list):
             data_line = f"aws s3 cp --recursive s3://{data_bucket} {data_directory}"
 
         lines = [
-            "#!/bin/bash",
+            # "#!/bin/bash",
             "",
             "sudo apt-get update -y",
             "sudo apt-get install git -y",

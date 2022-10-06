@@ -157,6 +157,9 @@ def main() -> None:
         run_server_config_commands(file_path=file_path,
                                    ip_address=VariableMap().ip_address,
                                    config=config)
+
+        time.sleep(5)
+
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
         if config.steps is not None:
