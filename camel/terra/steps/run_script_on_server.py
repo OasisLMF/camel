@@ -6,7 +6,6 @@ from subprocess import Popen
 
 from camel.terra.steps.base import Step
 from gerund.components.variable_map import VariableMap
-from gerund.commands.terminal_command import TerminalCommand
 
 
 class RunScriptOnServerStep(Step):

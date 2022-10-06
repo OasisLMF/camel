@@ -11,10 +11,10 @@ command. Examples of code being packaged as objects and abstracted out is:
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from subprocess import Popen
-from typing import Optional, List
-import time
+from typing import List
 
 from gerund.commands.bash_script import BashScript
 from gerund.commands.terminal_command import TerminalCommand
@@ -73,8 +73,6 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     Returns: None
     """
     build_path: str = config["location"]
-    oasis_version: Optional[str] = config.get("oasis_version")
-    server_build_bash_script_path: str = f"{file_path}/{build_path}/server_build.sh"
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
 
@@ -104,6 +102,14 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
 
 
 def _establish_connection(ip_address: str) -> None:
+    """
+    Loops through SSH connections until the SSH connection is accepted.
+
+    Args:
+        ip_address: (str) the IP address of the server being connecting to
+
+    Returns: None
+    """
     connection = TerminalCommand(command="echo 'connection achieved'", ip_address=ip_address)
 
     connected = False
@@ -114,7 +120,6 @@ def _establish_connection(ip_address: str) -> None:
 
         if "refused" not in established_str:
             print("connection established")
-            connected = True
             break
         print("connection refused trying again")
         time.sleep(3)
@@ -160,8 +165,6 @@ def main() -> None:
 
         _run_terraform_build_commands(file_path=file_path, config=config,
                                       output_path=project_adapter.terraform_data_path)
-
-        # time.sleep(10)
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
