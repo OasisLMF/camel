@@ -14,5 +14,6 @@ if __name__ == "__main__":
             keep_waiting = False
             break
 
-    run_model = Popen("source ~/.profile && cd ParisWindstormModel && oasislmf model run --config oasislmf_mdk.json", shell=True)
+    run_model = Popen(". ~/.profile && cd ParisWindstormModel && oasislmf model run --config oasislmf_mdk.json",
+                      shell=True)
     run_model.wait()
