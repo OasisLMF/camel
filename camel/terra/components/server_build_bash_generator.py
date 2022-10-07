@@ -15,8 +15,9 @@ class ServerBuildBashGenerator(list):
         """
         super().__init__([])
 
-    def generate_script(self, repository: str, oasislmf_version: Optional[str] = None,
-                        data_bucket: Optional[str] = None, data_directory: Optional[str] = None) -> None:
+    def generate_script(self, repository: str, aws_key: str, aws_secret_key: str,
+                        oasislmf_version: Optional[str] = None, data_bucket: Optional[str] = None,
+                        data_directory: Optional[str] = None) -> None:
         """
         Fills up the self with the lines needed to create a bash script.
         Notes:
@@ -25,6 +26,8 @@ class ServerBuildBashGenerator(list):
 
         Args:
             repository: (str) the repository where the model is stored
+            aws_key: (str) thr AWS access key to configure the server with the AWS client
+            aws_secret_key: (str) thr AWS secret access key to configure the server with the AWS client
             oasislmf_version: (Optional[str]) the version of oasis you want installed is None will be latest version
             data_bucket: (Optional[str]) the s3 bucket that is where the model data is stored
             data_directory: (Optional[str]) the directory of where the data should be stored on the server
@@ -40,6 +43,7 @@ class ServerBuildBashGenerator(list):
             data_line = ""
         else:
             data_line = f"aws s3 cp --recursive s3://{data_bucket} {data_directory}"
+        profile = "default"
 
         lines = [
             # "#!/bin/bash",
@@ -57,6 +61,9 @@ class ServerBuildBashGenerator(list):
             "sudo apt-get install python3-venv -y",
             "sudo apt-get install python3-pip -y",
             "sudo apt-get install awscli -y",
+            "",
+            f'aws configure set aws_access_key_id "{aws_key}" --profile {profile}',
+            f'aws configure set aws_secret_access_key "{aws_secret_key}" --profile {profile}',
             "",
             "curl -fsSL https://get.docker.com/ | sh",
             "sudo service docker restart",

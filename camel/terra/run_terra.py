@@ -47,16 +47,25 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
     with open(server_build_variables_path, "r") as file:
         build_variables = json.loads(file.read())
 
+    # obtaining the variables for a server build
     repository = build_variables["repository"]
     oasislmf_version = build_variables.get("oasislmf_version")
     data_bucket = build_variables.get("data_bucket")
     data_directory = build_variables.get("data_directory")
 
+    # getting the AWS credentials for the configuration of the model by getting s3 data
+    aws_access_key = config["variables"]["aws_access_key"]
+    aws_secret_access_key = config["variables"]["aws_secret_access_key"]
+
+    # configuring the bash commands to install what's needed in the model server and get the data for the model
     server_build_commands = ServerBuildBashGenerator()
     server_build_commands.generate_script(repository=repository,
+                                          aws_key=aws_access_key,
+                                          aws_secret_key=aws_secret_access_key,
                                           oasislmf_version=oasislmf_version,
                                           data_bucket=data_bucket,
                                           data_directory=data_directory)
+    # run the bash commands on the newly built model server
     command = BashScript(commands=server_build_commands.stripped, ip_address=ip_address)
     command.wait()
 
