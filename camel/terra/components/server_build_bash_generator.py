@@ -83,11 +83,11 @@ class ServerBuildBashGenerator(list):
             "pip3 install numba",
             "",
             "",
-            f"sudo -u ubuntu git clone {repository}",
-            "",
-            data_line,
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
             "",
+            f"git clone {repository}",
+            "",
+            data_line,
             "echo FINISHED > output.txt"
         ]
         for line in lines:
