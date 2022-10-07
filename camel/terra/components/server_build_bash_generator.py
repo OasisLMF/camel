@@ -81,6 +81,7 @@ class ServerBuildBashGenerator(list):
             install_oasislmf_line,
             "pip3 install pyarrow",
             "pip3 install numba",
+            "pip3 install git+https://github.com/OasisLMF/gerund"
             "",
             "",
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
