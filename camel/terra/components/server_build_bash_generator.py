@@ -35,9 +35,9 @@ class ServerBuildBashGenerator(list):
         Returns: None
         """
         if oasislmf_version is None:
-            install_oasislmf_line = "pip3 install oasislmf"
+            install_oasislmf_line = "pip3 install oasislmf[extra]"
         else:
-            install_oasislmf_line = f"pip3 install oasislmf=={oasislmf_version}"
+            install_oasislmf_line = f"pip3 install oasislmf[extra]=={oasislmf_version}"
 
         if data_bucket is None:
             data_line = ""
@@ -79,8 +79,8 @@ class ServerBuildBashGenerator(list):
             "cd /home/ubuntu",
             # "PATH=$PATH:~/.local/bin",
             install_oasislmf_line,
-            "pip3 install pyarrow",
-            "pip3 install numba",
+            #"pip3 install pyarrow",
+            #"pip3 install numba",
             "pip3 install git+https://github.com/OasisLMF/gerund"
             "",
             "",
