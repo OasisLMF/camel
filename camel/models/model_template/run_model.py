@@ -19,7 +19,7 @@ if __name__ == "__main__":
     sleep_count = 2
     keep_waiting = True
 
-    # loop until the FINISHED flag for the server_build.sh script has been written
+    # loop until the FINISHED flag for the placeholder.sh script has been written
     while keep_waiting is True:
         time.sleep(sleep_count)
 

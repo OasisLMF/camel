@@ -11,10 +11,13 @@ command. Examples of code being packaged as objects and abstracted out is:
 import argparse
 import json
 import os
+import time
 from pathlib import Path
 from subprocess import Popen
-from typing import Optional
+from typing import List
 
+from gerund.commands.bash_script import BashScript
+from gerund.commands.terminal_command import TerminalCommand
 from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
@@ -27,19 +30,40 @@ from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
-def write_server_build_bash_file(file_path: str, oasis_version: Optional[str]) -> None:
+def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
     """
-    Writes a server build bash script for the terraform build.
+    Runs the bash script on the model server to setup the model run.
 
     Args:
-        file_path: (str) path to the build including the name of the script being written
-        oasis_version: (Optional[str]) the version of aosis you want installed is None will be latest version
+        file_path: (str) the path to where the terra builds are
+        ip_address: (str) the IP address of the model server where the model is being run on
+        config: (dict) the config data around the build
 
     Returns: None
     """
-    bash_file = ServerBuildBashGenerator()
-    bash_file.generate_script(oasislmf_version=oasis_version)
-    bash_file.write_script(file_path=file_path)
+    # build_path: str = config["location"]
+
+    # obtaining the variables for a server build
+    repository = Variable(config["variables"]["repository"]).value
+    oasislmf_version = Variable(config["variables"]["oasislmf_version"]).value
+    data_bucket = Variable(config["variables"]["data_bucket"]).value
+    data_directory = Variable(config["variables"]["data_directory"]).value
+
+    # getting the AWS credentials for the configuration of the model by getting s3 data
+    aws_access_key = Variable(config["variables"]["aws_access_key"]).value
+    aws_secret_access_key = Variable(config["variables"]["aws_secret_access_key"]).value
+
+    # configuring the bash commands to install what's needed in the model server and get the data for the model
+    server_build_commands = ServerBuildBashGenerator()
+    server_build_commands.generate_script(repository=repository,
+                                          aws_key=aws_access_key,
+                                          aws_secret_key=aws_secret_access_key,
+                                          oasislmf_version=oasislmf_version,
+                                          data_bucket=data_bucket,
+                                          data_directory=data_directory)
+    # run the bash commands on the newly built model server
+    command = BashScript(commands=server_build_commands.stripped, ip_address=ip_address)
+    command.wait()
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
@@ -54,12 +78,8 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     Returns: None
     """
     build_path: str = config["location"]
-    oasis_version: Optional[str] = config.get("oasis_version")
-    server_build_bash_script_path: str = f"{file_path}/{build_path}/server_build.sh"
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["variables"]
-
-    write_server_build_bash_file(file_path=server_build_bash_script_path, oasis_version=oasis_version)
 
     for key in variables:
         current_value = Variable(name=variables[key])
@@ -84,6 +104,30 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
 
     if new_state_key is not None:
         edit_state.revert_main_back_to_initial_state()
+
+
+def _establish_connection(ip_address: str) -> None:
+    """
+    Loops through SSH connections until the SSH connection is accepted.
+
+    Args:
+        ip_address: (str) the IP address of the server being connecting to
+
+    Returns: None
+    """
+    connection = TerminalCommand(command="echo 'connection achieved'", ip_address=ip_address)
+
+    connected = False
+    while connected is False:
+        print(f"establishing connection to: {ip_address}")
+        established: List[str] = connection.wait(capture_output=True)
+        established_str: str = " ".join(established).lower()
+
+        if "refused" not in established_str:
+            print("connection established")
+            break
+        print("connection refused trying again")
+        time.sleep(3)
 
 
 def main() -> None:
@@ -129,6 +173,19 @@ def main() -> None:
 
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
+
+        VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
+
+        _establish_connection(ip_address=VariableMap().ip_address)
+
+        add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
+        add_to_known_hosts.wait()
+
+        run_server_config_commands(file_path=file_path,
+                                   ip_address=VariableMap().ip_address,
+                                   config=config)
+
+        time.sleep(10)
 
         step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
