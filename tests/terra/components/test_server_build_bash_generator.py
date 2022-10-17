@@ -22,7 +22,8 @@ class TestServerBuildBashGenerator(TestCase):
         self.assertEqual(expected_outcome, self.test)
 
     def test_generate_script(self):
-        self.test.generate_script(repository="test/repo", oasislmf_version="1.26")
+        self.test.generate_script(repository="test/repo", oasislmf_version="1.26",
+                                  aws_key="AWS_KEY", aws_secret_key="AWS_SECRET_KEY")
         self.assertEqual("".join(self.test), str(self.test))
 
     def test_strip(self):
@@ -38,24 +39,25 @@ class TestServerBuildBashGenerator(TestCase):
             'sudo apt-get install python3-venv -y',
             'sudo apt-get install python3-pip -y',
             'sudo apt-get install awscli -y',
+            'aws configure set aws_access_key_id "AWS_KEY" --profile default',
+            'aws configure set aws_secret_access_key "AWS_SECRET_KEY" --profile default',
             'curl -fsSL https://get.docker.com/ | sh',
             'sudo service docker restart',
             'sudo usermod -a -G docker ubuntu',
             'sudo chmod 666 /var/run/docker.sock',
-            'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)'
-            '-$(uname -m)" -o /usr/local/bin/docker-compose',
+            'sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2'
+            '/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose',
             'sudo chmod +x /usr/local/bin/docker-compose',
             'sudo chmod +x /usr/local/bin/docker',
-            'cd /home/ubuntu',
-            'PATH=$PATH:~/.local/bin',
-            'pip3 install oasislmf[extra]==1.26',
-            'pip3 install pyarrow',
-            'pip3 install numba',
-            'sudo -u ubuntu git clone test/repo',
+            'cd /home/ubuntu', 'pip3 install oasislmf[extra]==1.26',
+            'pip3 install git+https://github.com/OasisLMF/gerund',
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
+            'git clone test/repo',
             'echo FINISHED > output.txt'
         ]
-        self.test.generate_script(repository="test/repo", oasislmf_version="1.26")
+
+        self.test.generate_script(repository="test/repo", oasislmf_version="1.26",
+                                  aws_key="AWS_KEY", aws_secret_key="AWS_SECRET_KEY")
         self.assertEqual(expected_outcome, self.test.stripped)
 
 

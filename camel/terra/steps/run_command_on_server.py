@@ -34,10 +34,6 @@ class RunCommandOnServerStep(Step):
 
         Returns: None
         """
-        # VariableMap().ip_address = self.server_ip
-        # add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
-        # add_to_known_hosts.wait()
-
         command = f"cd /home/ubuntu/ && {self.command}"
         terminal_command = TerminalCommand(command=command,
                                            environment_variables=self.environment_variables,

@@ -41,11 +41,7 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
 
     Returns: None
     """
-    build_path: str = config["location"]
-    #server_build_variables_path: str = f"{file_path}/{build_path}/variables.json"
-
-    #with open(server_build_variables_path, "r") as file:
-    #    build_variables = json.loads(file.read())
+    # build_path: str = config["location"]
 
     # obtaining the variables for a server build
     repository = Variable(config["variables"]["repository"]).value

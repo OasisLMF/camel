@@ -37,9 +37,7 @@ class TestRunCommandOnServerStep(TestCase):
         self.assertEqual(self.command, self.test.command)
 
     @patch("camel.terra.steps.run_command_on_server.TerminalCommand")
-    @patch("camel.terra.steps.run_command_on_server.VariableMap")
-    def test_run(self, mock_variable, mock_terminal_command):
-        mock_variable.return_value.ip_address = "123456"
+    def test_run(self, mock_terminal_command):
         self.test.run()
         mock_terminal_command.assert_called_once_with(command='cd /home/ubuntu/ && python test.py',
                                                       environment_variables=self.environment_variables,
