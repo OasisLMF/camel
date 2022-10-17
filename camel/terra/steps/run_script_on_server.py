@@ -6,6 +6,7 @@ from subprocess import Popen
 
 from camel.terra.steps.base import Step
 from gerund.components.variable_map import VariableMap
+from gerund.commands.terminal_command import TerminalCommand
 
 
 class RunScriptOnServerStep(Step):
@@ -74,9 +75,9 @@ class RunScriptOnServerStep(Step):
 
         command = "".join(buffer)
 
-        # run_script = TerminalCommand(command=command, environment_variables=self.environment_variables,
-        #                              ip_address=self.server_ip)
-        # run_script.wait()
-
-        run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
+        run_script = TerminalCommand(command=command, environment_variables=self.environment_variables,
+                                     ip_address=self.server_ip)
         run_script.wait()
+
+        # run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
+        # run_script.wait()
