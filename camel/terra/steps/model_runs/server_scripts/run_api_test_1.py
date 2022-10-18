@@ -6,10 +6,10 @@ import os
 from subprocess import Popen
 
 env_vars = {
-        "OASIS_WORKER_VERSION": os.getenv('OASIS_WORKER_VERSION'),
-        "OASIS_PLATFORM_VERSION": os.getenv('OASIS_PLATFORM_VERSION'),
-        "OASIS_UI_VERSION": os.getenv('OASIS_UI_VERSION')
-    }
+    "OASIS_WORKER_VERSION": os.getenv('OASIS_WORKER_VERSION'),
+    "OASIS_PLATFORM_VERSION": os.getenv('OASIS_PLATFORM_VERSION'),
+    "OASIS_UI_VERSION": os.getenv('OASIS_UI_VERSION')
+}
 
 
 def main():
@@ -34,11 +34,10 @@ def main():
     args_parser.add_argument('--docker_compose_ui', action='store', type=str, required=True,
                              help="the location of the docker compose for the ui")
 
-
     args = args_parser.parse_args()
 
     # checkout required branch
-    checkout_branch = Popen("cd {} && git checkout {}".format(args.parent_dir,args.git_branch), shell=True)
+    checkout_branch = Popen("cd {} && git checkout {}".format(args.parent_dir, args.git_branch), shell=True)
     checkout_branch.wait()
 
     # Build docker-worker
@@ -53,7 +52,7 @@ def main():
 
     # run the docker-compose commands
     docker_compose = Popen("cd {} && docker-compose -f {} -f {} -f {} up -d".format(
-        args.parent_dir,args.docker_compose_platform, args.docker_compose_worker, args.docker_compose_ui),
+        args.parent_dir, args.docker_compose_platform, args.docker_compose_worker, args.docker_compose_ui),
         shell=True)
     docker_compose.wait()
 
@@ -73,7 +72,7 @@ def main():
 
     # check the md5sum
     output_dir = "{}/api_run/output".format(args.test_dir)
-    md5sum_cmd = "cd {} && md5sum --check {} > check.md5".format(output_dir,args.expected_md5)
+    md5sum_cmd = "cd {} && md5sum --check {} > check.md5".format(output_dir, args.expected_md5)
     md5sum_shell = Popen(md5sum_cmd, shell=True)
     md5sum_shell.wait()
 

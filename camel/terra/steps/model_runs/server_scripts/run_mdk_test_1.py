@@ -20,11 +20,13 @@ def main():
     args = args_parser.parse_args()
 
     # checkout required branch
-    checkout_branch = Popen("cd {} && git checkout {}".format(args.parent_dir,args.git_branch), shell=True)
+    checkout_branch = Popen("cd {} && git checkout {}".format(args.parent_dir, args.git_branch), shell=True)
     checkout_branch.wait()
 
     # run the mdk process
-    run_model = Popen(". ~/.profile && cd {} && oasislmf model run --config oasislmf.json -r {}".format(args.test_dir,args.run_dir),shell=True)
+    run_model = Popen(". ~/.profile && cd {} && oasislmf model run --config oasislmf.json -r {}".format(args.test_dir,
+                                                                                                        args.run_dir),
+                      shell=True)
     run_model.wait()
 
     # check md5sum

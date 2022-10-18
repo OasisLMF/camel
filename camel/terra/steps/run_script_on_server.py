@@ -31,7 +31,7 @@ class RunScriptOnServerStep(Step):
         """
         self.server_ip: Optional[str] = None
         self.script_name: Optional[str] = None
-        self.location = location
+        self.location: str = location
         self.parameters: Optional[dict] = None
         self.environment_variables: Optional[dict] = None
         self._process_inputs(input_data=input_params, terraform_dict=terraform_data)
