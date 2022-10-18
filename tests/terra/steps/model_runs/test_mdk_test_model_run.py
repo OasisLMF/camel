@@ -26,7 +26,7 @@ class TestMdkTestModelRunStep(TestCase):
         mock_script_run_step.assert_called_once_with(input_params={},
                                                      terraform_data={"script_name": "run_mdk_test_1"},
                                                      location="test_dir/server_scripts/")
-        mock__scan_input_params.assert_called_once_with(input_params={})
+        mock__scan_input_params.assert_called_once_with(input_params={}, expected_params=self.test.EXPECTED_PARAMS)
         self.assertEqual(mock_script_run_step.return_value, test.run_on_server_step)
 
     def test__scan_input_params(self):
@@ -37,12 +37,12 @@ class TestMdkTestModelRunStep(TestCase):
         }
 
         with self.assertRaises(ValueError) as error:
-            self.test._scan_input_params(input_params=input_params)
+            self.test._scan_input_params(input_params=input_params, expected_params=self.test.EXPECTED_PARAMS)
         self.assertEqual(str(error.exception), "the following keys are not found: ['test_dir', 'run_dir']")
 
         input_params["test_dir"] = "four"
         input_params["run_dir"] = "five"
-        self.test._scan_input_params(input_params=input_params)
+        self.test._scan_input_params(input_params=input_params, expected_params=self.test.EXPECTED_PARAMS)
 
     def test_run(self):
         self.test.run()
