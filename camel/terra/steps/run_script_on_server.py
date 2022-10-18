@@ -78,6 +78,3 @@ class RunScriptOnServerStep(Step):
         run_script = TerminalCommand(command=command, environment_variables=self.environment_variables,
                                      ip_address=self.server_ip)
         run_script.wait()
-
-        # run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
-        # run_script.wait()
