@@ -24,7 +24,7 @@ class MdkTestModelRunStep(Step):
             input_params: (dict) the params that are going to be
             terraform_data:
         """
-        terraform_data["script_name"] = "run_mdk_test_1"
+        input_params["script_name"] = "run_mdk_test_1"
         self._scan_input_params(input_params=input_params, expected_params=self.EXPECTED_PARAMS)
         self.run_on_server_step = RunScriptOnServerStep(
             input_params=input_params,
