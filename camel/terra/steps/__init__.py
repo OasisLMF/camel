@@ -80,7 +80,7 @@ class StepManager:
                                                   command=str(command_string),
                                                   environment_variables=environment_variables)
         elif "test_model" in step_name:
-            step_process = get_generic_model(model_type=step_name, input_params=step_data,
+            step_process = get_generic_model(model_type=step_name, input_params=step_data["variables"],
                                              terraform_data=self.terraform_data)
         return step_process
 
