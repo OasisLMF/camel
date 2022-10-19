@@ -14,7 +14,7 @@ import os
 import time
 from pathlib import Path
 from subprocess import Popen
-from typing import List
+from typing import List, Tuple
 
 from gerund.commands.bash_script import BashScript
 from gerund.commands.terminal_command import TerminalCommand
@@ -28,6 +28,12 @@ from camel.terra.components.server_build_bash_generator import ServerBuildBashGe
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+
+
+def _pop_variable(config: dict, key: str) -> Tuple[str, dict]:
+    var = Variable(config["variables"][key])
+    del config["variable"][key]
+    return var.value, config
 
 
 def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
@@ -44,10 +50,10 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
     # build_path: str = config["location"]
 
     # obtaining the variables for a server build
-    repository = Variable(config["variables"]["repository"]).value
-    oasislmf_version = Variable(config["variables"]["oasislmf_version"]).value
-    data_bucket = Variable(config["variables"]["data_bucket"]).value
-    data_directory = Variable(config["variables"]["data_directory"]).value
+    repository, config = _pop_variable(config=config, key="repository")
+    oasislmf_version, config = _pop_variable(config=config, key="oasislmf_version")
+    data_bucket, config = _pop_variable(config=config, key="data_bucket")
+    data_directory, config = _pop_variable(config=config, key="data_directory")
 
     # getting the AWS credentials for the configuration of the model by getting s3 data
     aws_access_key = Variable(config["variables"]["aws_access_key"]).value
