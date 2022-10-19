@@ -16,7 +16,7 @@ class MdkTestModelRunStep(Step):
     """
     EXPECTED_PARAMS = ["git_branch", "parent_dir", "test_dir", "run_dir", "expected_md5"]
 
-    def __init__(self, input_params: dict, terraform_data: dict, ) -> None:
+    def __init__(self, input_params: dict, terraform_data: dict) -> None:
         """
         The constructor for the MdkTestModelRunStep class.
 
