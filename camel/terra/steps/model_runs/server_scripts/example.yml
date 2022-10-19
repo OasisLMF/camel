@@ -4,14 +4,15 @@ variables:
     aws_secret_access_key: =>aws_secret_access_key
     subnet_id: =>subnet_id
     server_security_group: =>security_group_id
-    repository: "git@github.com:OasisLMF/Catrisks.git"
-    oasislmf_version: "1.26.3"
-    data_bucket: "oasislmf-model-library-catrisks-afeq"
-    data_directory: "/home/ubuntu/Catrisks/AFEQ/"
     instance_type: "t2.large"
     server_tag: "catrisks afeq camel run"
     key_name: "OasisProject"
     root_block_size: "15"
+server_variables:
+    repository: "git@github.com:OasisLMF/Catrisks.git"
+    oasislmf_version: "1.26.3"
+    data_bucket: "oasislmf-model-library-catrisks-afeq"
+    data_directory: "/home/ubuntu/Catrisks/AFEQ/"
 local_vars:
   - name: output
     path: /home/ubuntu/

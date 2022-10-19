@@ -14,7 +14,7 @@ import os
 import time
 from pathlib import Path
 from subprocess import Popen
-from typing import List, Tuple
+from typing import List
 
 from gerund.commands.bash_script import BashScript
 from gerund.commands.terminal_command import TerminalCommand
@@ -28,12 +28,6 @@ from camel.terra.components.server_build_bash_generator import ServerBuildBashGe
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
-
-
-def _pop_variable(config: dict, key: str) -> Tuple[str, dict]:
-    var = Variable(config["variables"][key])
-    del config["variable"][key]
-    return var.value, config
 
 
 def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
@@ -50,14 +44,21 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
     # build_path: str = config["location"]
 
     # obtaining the variables for a server build
-    repository, config = _pop_variable(config=config, key="repository")
-    oasislmf_version, config = _pop_variable(config=config, key="oasislmf_version")
-    data_bucket, config = _pop_variable(config=config, key="data_bucket")
-    data_directory, config = _pop_variable(config=config, key="data_directory")
+    repository = Variable(config["server_variables"]["repository"]).value
+    oasislmf_version = Variable(config["server_variables"]["oasislmf_version"]).value
+
+    # getting optional s3 data
+    data_bucket = config["server_variables"].get("data_bucket")
+    data_directory = config["server_variables"].get("data_directory")
+
+    if data_bucket is not None:
+        data_bucket = Variable(data_bucket).value
+    if data_directory is not None:
+        data_directory = Variable(data_directory).value
 
     # getting the AWS credentials for the configuration of the model by getting s3 data
-    aws_access_key = Variable(config["variables"]["aws_access_key"]).value
-    aws_secret_access_key = Variable(config["variables"]["aws_secret_access_key"]).value
+    aws_access_key = Variable(config["server_variables"]["aws_access_key"]).value
+    aws_secret_access_key = Variable(config["server_variables"]["aws_secret_access_key"]).value
 
     # configuring the bash commands to install what's needed in the model server and get the data for the model
     server_build_commands = ServerBuildBashGenerator()
