@@ -11,7 +11,7 @@ class TestMdkTestModelRunStep(TestCase):
     @patch("camel.terra.steps.model_runs.mdk_test_model_run.RunScriptOnServerStep")
     def setUp(self, mock_script_run_step, mock_dirname, mock__scan_input_params) -> None:
         mock_dirname.return_value = "test_dir"
-        self.test = MdkTestModelRunStep(input_params={}, terraform_data={})
+        self.test = MdkTestModelRunStep(input_params={"variables": {}}, terraform_data={})
         self.mock_script_run_step = mock_script_run_step
 
     def tearDown(self) -> None:
@@ -22,9 +22,9 @@ class TestMdkTestModelRunStep(TestCase):
     @patch("camel.terra.steps.model_runs.mdk_test_model_run.RunScriptOnServerStep")
     def test___init__(self, mock_script_run_step, mock_dirname, mock__scan_input_params):
         mock_dirname.return_value = "test_dir"
-        test = MdkTestModelRunStep(input_params={}, terraform_data={})
-        mock_script_run_step.assert_called_once_with(input_params={},
-                                                     terraform_data={"script_name": "run_mdk_test_1"},
+        test = MdkTestModelRunStep(input_params={"variables": {}}, terraform_data={})
+        mock_script_run_step.assert_called_once_with(input_params={"variables": {}, "script_name": "run_mdk_test_1"},
+                                                     terraform_data={},
                                                      location="test_dir/server_scripts/")
         mock__scan_input_params.assert_called_once_with(input_params={}, expected_params=self.test.EXPECTED_PARAMS)
         self.assertEqual(mock_script_run_step.return_value, test.run_on_server_step)
