@@ -1,3 +1,6 @@
+"""
+This file defines the step manager for managing steps in a terraform run.
+"""
 from typing import Optional
 
 from gerund.components.command_string import CommandString
@@ -6,6 +9,7 @@ from gerund.components.variable import Variable
 from camel.terra.steps.base import Step
 from camel.terra.steps.conditional import ConditionalStep
 from camel.terra.steps.destroy_build import DestroyBuild
+from camel.terra.steps.model_runs import get_generic_model
 from camel.terra.steps.printout import PrintoutStep
 from camel.terra.steps.run_command_on_server import RunCommandOnServerStep
 from camel.terra.steps.run_script_on_server import RunScriptOnServerStep
@@ -75,6 +79,10 @@ class StepManager:
             step_process = RunCommandOnServerStep(terraform_data=self.terraform_data,
                                                   command=str(command_string),
                                                   environment_variables=environment_variables)
+        elif "test_model" in step_name:
+            step_data["variables"] = StepManager.translate_dictionary(config=step_data.get("variables", {}))
+            step_process = get_generic_model(model_type=step_name, input_params=step_data,
+                                             terraform_data=self.terraform_data)
         return step_process
 
     def process_step(self, step_data: dict) -> None:

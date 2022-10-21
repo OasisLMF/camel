@@ -44,10 +44,17 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
     # build_path: str = config["location"]
 
     # obtaining the variables for a server build
-    repository = Variable(config["variables"]["repository"]).value
-    oasislmf_version = Variable(config["variables"]["oasislmf_version"]).value
-    data_bucket = Variable(config["variables"]["data_bucket"]).value
-    data_directory = Variable(config["variables"]["data_directory"]).value
+    repository = Variable(config["server_variables"]["repository"]).value
+    oasislmf_version = Variable(config["server_variables"]["oasislmf_version"]).value
+
+    # getting optional s3 data
+    data_bucket = config["server_variables"].get("data_bucket")
+    data_directory = config["server_variables"].get("data_directory")
+
+    if data_bucket is not None:
+        data_bucket = Variable(data_bucket).value
+    if data_directory is not None:
+        data_directory = Variable(data_directory).value
 
     # getting the AWS credentials for the configuration of the model by getting s3 data
     aws_access_key = Variable(config["variables"]["aws_access_key"]).value

@@ -31,7 +31,7 @@ class RunScriptOnServerStep(Step):
         """
         self.server_ip: Optional[str] = None
         self.script_name: Optional[str] = None
-        self.location = location
+        self.location: str = location
         self.parameters: Optional[dict] = None
         self.environment_variables: Optional[dict] = None
         self._process_inputs(input_data=input_params, terraform_dict=terraform_data)
@@ -78,6 +78,3 @@ class RunScriptOnServerStep(Step):
         run_script = TerminalCommand(command=command, environment_variables=self.environment_variables,
                                      ip_address=self.server_ip)
         run_script.wait()
-
-        # run_script = Popen(f"ssh -A -o StrictHostKeyChecking=no ubuntu@{self.server_ip} '{command}'", shell=True)
-        # run_script.wait()
