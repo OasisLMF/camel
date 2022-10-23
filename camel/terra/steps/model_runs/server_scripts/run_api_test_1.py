@@ -84,7 +84,7 @@ def main():
         elif "FAILED" not in contents:
             print("The API run produced the expected results!")
         else:
-            print("MD5 verification failed! The API run did not produced the expected results!")
+            print("MD5 verification failed! The API run did not produce the expected results!")
 
 
 if __name__ == "__main__":
