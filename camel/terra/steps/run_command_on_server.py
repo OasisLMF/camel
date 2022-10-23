@@ -1,11 +1,9 @@
 """
 This file defines the step that runs a command on another server.
 """
-from subprocess import Popen
+from gerund.commands.terminal_command import TerminalCommand
 
 from camel.terra.steps.base import Step
-from gerund.commands.terminal_command import TerminalCommand
-from gerund.components.variable_map import VariableMap
 
 
 class RunCommandOnServerStep(Step):
@@ -36,10 +34,6 @@ class RunCommandOnServerStep(Step):
 
         Returns: None
         """
-        VariableMap().ip_address = self.server_ip
-        add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
-        add_to_known_hosts.wait()
-
         command = f"cd /home/ubuntu/ && {self.command}"
         terminal_command = TerminalCommand(command=command,
                                            environment_variables=self.environment_variables,

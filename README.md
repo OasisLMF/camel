@@ -97,40 +97,50 @@ work on storing these config files in the profile storage just like the SSH conf
 terraform configs for running builds. A example of a terraform config file takes the form below:
 
 ```commandline
-location: model_runs/BGEQ
-oasis_version: "1.26"
+location: model_runs/aws_generic
 variables:
-    aws_access_key: "=>aws_access_key"
-    aws_secret_access_key: "=>aws_secret_access_key"
-    subnet_id: some_subnet_id
-    server_security_group: some_security_group_id
+    aws_access_key: =>aws_access_key
+    aws_secret_access_key: =>aws_secret_access_key
+    subnet_id: =>subnet_id
+    server_security_group: =>security_group_id
+    instance_type: "t2.large"
+    server_tag: "some model camel run"
+    key_name: "OasisProject"
+    root_block_size: "15"
+server_variables:
+    repository: "git@github.com:OasisLMF/example.git"
+    oasislmf_version: "1.26.3"
+    data_bucket: "example-data-bucket"
+    data_directory: "/home/ubuntu/Catrisks/example/"
 local_vars:
-    - name: output
-      path: "/home/ubuntu/"
-      ip_address: true
+  - name: output
+    path: /home/ubuntu/
+    ip_address: true
 steps:
-    - name: run_server_command
-      command: echo 'export OASIS_UI_VERSION="1.11.3"' >> ~/.bashrc && echo 'export OASIS_WORKER_VERSION="1.26.2"' >> ~/.bashrc && echo 'export OASIS_PLATFORM_VERSION="1.26.2"' >>~/.bashrc
-    - name: run_script
-      script_name: run_model
-      variables:
-              key: "=>aws_access_key"
-              secret_key: "=>aws_secret_access_key"
-    - name: conditional
-      operator: "=="
-      variable: ">>output"
-      value: "FINISHED"
-      step_data:
-              name: print
-              statement: "the process is finished"
-    - name: run_server_command
-      command: 'cd {=>directory} && echo "{>>output}"'
-    - name: conditional
-      operator: "=="
-      variable: ">>output"
-      value: "FINISHED"
-      step_data:
-              name: destroy_build
+  - name: run_api_test_1
+    env_vars:
+      OASIS_WORKER_VERSION: "1.26.3"
+      OASIS_UI_VERSION: "1.11.3"
+      OASIS_PLATFORM_VERSION: "1.26.3"
+    script_name: run_api_test_1
+    variables:
+      git_branch: "develop"
+      parent_dir: "/home/ubuntu/Catrisks"
+      test_dir: "/home/ubuntu/Catrisks/example/tests/test_1"
+      expected_md5: "/home/ubuntu/Catrisks/example/expected/1-26-3/expected.md5"
+      worker_name: "example_worker"
+      worker_dockerfile: "/home/ubuntu/Catrisks/docker/Dockerfile.catrisks_example_worker"
+      docker_compose_platform: "/home/ubuntu/Catrisks/docker/docker-compose.yml"
+      docker_compose_worker: "/home/ubuntu/Catrisks/docker/docker-compose_example.yml"
+      docker_compose_ui: "/home/ubuntu/Catrisks/docker/docker-compose_ui.yml"
+  - name: conditional
+    operator: ==
+    variable: '>>output'
+    value: FINISHED
+    step_data:
+      name: print
+      statement: the process is finished
+
 ```
 What we first need to note is the ```location``` field. This is the location of the build in the camel repo. The 
 base path of the ```location``` is [here](https://github.com/OasisLMF/camel/tree/main/camel/terra/terra_builds). Your

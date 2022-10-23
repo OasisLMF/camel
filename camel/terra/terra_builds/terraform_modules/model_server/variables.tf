@@ -1,17 +1,5 @@
 
 
-variable "aws_access_key" {
-  description = "Access key for AWS access"
-  type        = string
-  sensitive   = true
-}
-
-variable "aws_secret_access_key" {
-  description = "Secret access key for AWS access"
-  type        = string
-  sensitive   = true
-}
-
 variable "server_security_group" {
   description = "The security group that is applied to the main server for the platform"
   type        = string
@@ -27,7 +15,6 @@ variable "subnet_id" {
 variable "server_tag" {
   description = "the tag that will stay on the server when built"
   type        = string
-  default     = "paris windstorm model"
 }
 
 variable "instance_type" {
@@ -48,14 +35,14 @@ variable "root_block_size" {
   default     = "30"
 }
 
-variable "region" {
-  description = "the AWS region where the model server is going to run"
-  type        = string
-  default     = "eu-west-1"
-}
-
 #variable "model_server_ami" {
 #  description = "the AMI of the model server"
 #  type        = string
 #  default     = data.aws_ami.ubuntu.id
 #}
+
+variable "region" {
+  description = "the AWS region where the model server is going to run"
+  type        = string
+  default     = "eu-west-1"
+}

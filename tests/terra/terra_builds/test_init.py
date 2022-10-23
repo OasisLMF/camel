@@ -22,7 +22,7 @@ class TerraBuildsTest(TestCase):
     def test_get_all_models(self):
         outcome = get_all_models()
         outcome.sort()
-        self.assertEqual(['BGEQ', 'pariswindstorm'], outcome)
+        self.assertEqual(['BGEQ', "aws_generic", 'pariswindstorm'], outcome)
 
 
 if __name__ == "__main__":
