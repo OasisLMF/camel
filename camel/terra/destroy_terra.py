@@ -11,6 +11,7 @@ from camel.terra.config_loader import ConfigEngine
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
+from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
@@ -67,6 +68,13 @@ def main() -> None:
     command = "".join(command_buffer)
 
     if project_adapter.continue_building is True:
+
+        new_state_key = config["server_variables"].get("state_s3_key")
+        edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{config['location']}")
+
+        if new_state_key is not None:
+            edit_state.update_state(s3_key=new_state_key)
+
         project_adapter.destroy_build()
         init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init', shell=True)
         init_terraform.wait()

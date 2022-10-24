@@ -93,7 +93,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
         command_buffer.append(f'-var="{key}={current_value}" ')
     command_buffer.append("-auto-approve")
 
-    new_state_key = variables.get("STATE_S3_KEY")
+    new_state_key = config["server_variables"].get("state_s3_key")
     edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
 
     if new_state_key is not None:
