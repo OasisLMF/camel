@@ -48,7 +48,9 @@ class ServerBuildBashGenerator(list):
         lines = [
             # "#!/bin/bash",
             "",
+            "sleep 5",
             "sudo apt-get update -y",
+            "sleep 5",
             "sudo apt-get install git -y",
             "sudo apt-get install vim -y",
             "sudo apt-get install tmux -y ",
