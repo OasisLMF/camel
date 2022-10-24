@@ -30,6 +30,25 @@ from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
+def _run_build_script(command: BashScript) -> None:
+    keep_going: bool = True
+    variable_map = VariableMap()
+    variable_map["output"] = {
+        "path": "/home/ubuntu/",
+        "ip_address": True
+    }
+
+    while keep_going is True:
+        time.sleep(2)
+        command.wait()
+        outcome = str(Variable(name=">>output"))
+        if outcome == "FINISHED":
+            print("build script has run")
+            break
+        else:
+            print("build script has not run retrying")
+
+
 def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
     """
     Runs the bash script on the model server to setup the model run.
@@ -70,7 +89,8 @@ def run_server_config_commands(file_path: str, ip_address: str, config: dict) ->
                                           data_directory=data_directory)
     # run the bash commands on the newly built model server
     command = BashScript(commands=server_build_commands.stripped, ip_address=ip_address)
-    command.wait()
+    _run_build_script(command=command)
+    # command.wait()
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
