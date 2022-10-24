@@ -60,6 +60,7 @@ def _run_build_script(command: BashScript) -> None:
             break
         else:
             print("build script has not run retrying")
+            command._path = None
             count += 1
 
 
