@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 import time
+import sys
 from pathlib import Path
 from subprocess import Popen
 from typing import List
@@ -31,6 +32,15 @@ from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
 def _run_build_script(command: BashScript) -> None:
+    """
+    Continuously loops until the server build bash script as run on the model server.
+
+    Args:
+        command: (BashScript) the build bash script to be run on the model server
+
+    Returns: None
+    """
+    count: int = 0
     keep_going: bool = True
     variable_map = VariableMap()
     variable_map["output"] = {
@@ -39,6 +49,9 @@ def _run_build_script(command: BashScript) -> None:
     }
 
     while keep_going is True:
+        if count >= 5:
+            sys.exit("model build script tried to run 5 times and failed, model server cannot run a model because"
+                     "build script has note been executed")
         time.sleep(2)
         command.wait()
         outcome = str(Variable(name=">>output"))
@@ -47,14 +60,14 @@ def _run_build_script(command: BashScript) -> None:
             break
         else:
             print("build script has not run retrying")
+            count += 1
 
 
-def run_server_config_commands(file_path: str, ip_address: str, config: dict) -> None:
+def run_server_config_commands(ip_address: str, config: dict) -> None:
     """
     Runs the bash script on the model server to setup the model run.
 
     Args:
-        file_path: (str) the path to where the terra builds are
         ip_address: (str) the IP address of the model server where the model is being run on
         config: (dict) the config data around the build
 
@@ -208,8 +221,7 @@ def main() -> None:
         add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
         add_to_known_hosts.wait()
 
-        run_server_config_commands(file_path=file_path,
-                                   ip_address=VariableMap().ip_address,
+        run_server_config_commands(ip_address=VariableMap().ip_address,
                                    config=config)
 
         time.sleep(10)
