@@ -1,4 +1,4 @@
 {
-  "state_location": "eu-west-1/terraform.tfstate",
+  "state_location": "eu-west-1/model_run/pariswindstorm/terraform.tfstate",
   "repository": "https://github.com/OasisLMF/ParisWindstormModel"
 }
