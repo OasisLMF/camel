@@ -91,7 +91,7 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
 
     # getting the AWS credentials for the configuration of the model by getting s3 data
     aws_access_key = Variable(config["build_variables"]["aws_access_key"]).value
-    aws_secret_access_key = Variable(config["variables"]["aws_secret_access_key"]).value
+    aws_secret_access_key = Variable(config["build_variables"]["aws_secret_access_key"]).value
 
     # configuring the bash commands to install what's needed in the model server and get the data for the model
     server_build_commands = ServerBuildBashGenerator()
