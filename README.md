@@ -98,7 +98,7 @@ terraform configs for running builds. A example of a terraform config file takes
 
 ```commandline
 location: model_runs/aws_generic
-variables:
+build_variables:
     aws_access_key: =>aws_access_key
     aws_secret_access_key: =>aws_secret_access_key
     subnet_id: =>subnet_id
@@ -107,7 +107,7 @@ variables:
     server_tag: "some model camel run"
     key_name: "OasisProject"
     root_block_size: "15"
-server_variables:
+model_variables:
     repository: "git@github.com:OasisLMF/example.git"
     oasislmf_version: "1.26.3"
     data_bucket: "example-data-bucket"

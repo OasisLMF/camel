@@ -80,11 +80,11 @@ def main():
     with open("{}/check.md5".format(output_dir), "r") as check_file:
         contents = check_file.read()
         if "OK" not in contents:
-            print("MD5 verification failed! The MDK run did not produced the expected results!")
+            print("MD5 verification failed! The API run did not produced the expected results!")
         elif "FAILED" not in contents:
-            print("The MDK run produced the expected results!")
+            print("The API run produced the expected results!")
         else:
-            print("MD5 verification failed! The MDK run did not produced the expected results!")
+            print("MD5 verification failed! The API run did not produce the expected results!")
 
 
 if __name__ == "__main__":
