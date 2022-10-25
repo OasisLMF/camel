@@ -77,12 +77,12 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
     # build_path: str = config["location"]
 
     # obtaining the variables for a server build
-    repository = Variable(config["server_variables"]["repository"]).value
-    oasislmf_version = Variable(config["server_variables"]["oasislmf_version"]).value
+    repository = Variable(config["model_variables"]["repository"]).value
+    oasislmf_version = Variable(config["model_variables"]["oasislmf_version"]).value
 
     # getting optional s3 data
-    data_bucket = config["server_variables"].get("data_bucket")
-    data_directory = config["server_variables"].get("data_directory")
+    data_bucket = config["model_variables"].get("data_bucket")
+    data_directory = config["model_variables"].get("data_directory")
 
     if data_bucket is not None:
         data_bucket = Variable(data_bucket).value
@@ -90,8 +90,8 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
         data_directory = Variable(data_directory).value
 
     # getting the AWS credentials for the configuration of the model by getting s3 data
-    aws_access_key = Variable(config["variables"]["aws_access_key"]).value
-    aws_secret_access_key = Variable(config["variables"]["aws_secret_access_key"]).value
+    aws_access_key = Variable(config["build_variables"]["aws_access_key"]).value
+    aws_secret_access_key = Variable(config["build_variables"]["aws_secret_access_key"]).value
 
     # configuring the bash commands to install what's needed in the model server and get the data for the model
     server_build_commands = ServerBuildBashGenerator()
@@ -120,14 +120,14 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     """
     build_path: str = config["location"]
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
-    variables = config["variables"]
+    variables = config["build_variables"]
 
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
     command_buffer.append("-auto-approve")
 
-    new_state_key = config["server_variables"].get("state_s3_key")
+    new_state_key = config["model_variables"].get("state_s3_key")
     edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
 
     if new_state_key is not None:
