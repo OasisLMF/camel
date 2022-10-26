@@ -84,6 +84,7 @@ class ServerBuildBashGenerator(list):
             f"git clone {repository}",
             "",
             data_line,
+            "PATH=$PATH:~/.local/bin/",
             "echo FINISHED > output.txt"
         ]
         for line in lines:
