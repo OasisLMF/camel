@@ -58,7 +58,7 @@ def main() -> None:
     project_adapter = TerraApplyProjectAdapter(config=config)
 
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
-    variables = config["variables"]
+    variables = config["build_variables"]
 
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
@@ -69,7 +69,7 @@ def main() -> None:
 
     if project_adapter.continue_building is True:
 
-        new_state_key = config["server_variables"].get("state_s3_key")
+        new_state_key = config["model_variables"].get("state_s3_key")
         edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{config['location']}")
 
         if new_state_key is not None:
