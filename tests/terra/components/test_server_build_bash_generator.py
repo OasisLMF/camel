@@ -53,6 +53,7 @@ class TestServerBuildBashGenerator(TestCase):
             'pip3 install git+https://github.com/OasisLMF/gerund',
             'ssh-keyscan -H "github.com" >> ~/.ssh/known_hosts',
             'git clone test/repo',
+            'PATH=$PATH:~/.local/bin/',
             'echo FINISHED > output.txt'
         ]
 
