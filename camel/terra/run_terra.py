@@ -29,6 +29,7 @@ from camel.terra.components.server_build_bash_generator import ServerBuildBashGe
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+from camel.storage.adapters.builds_access import BuildsAccessAdapter
 
 
 def _run_build_script(command: BashScript) -> None:
@@ -215,7 +216,10 @@ def main() -> None:
         with open(project_adapter.terraform_data_path, "r") as file:
             terraform_data = json.loads(file.read())
 
+        # updates the local variables with the terraform outputs
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
+        builds_storage_adapter: BuildsAccessAdapter = BuildsAccessAdapter()
+        # builds_storage_adapter.add_new_build(state_path=, ip_address=VariableMap().ip_address, build_name=)
 
         _establish_connection(ip_address=VariableMap().ip_address)
 
