@@ -219,8 +219,8 @@ def main() -> None:
         # updates the local variables with the terraform outputs
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
         builds_storage_adapter: BuildsAccessAdapter = BuildsAccessAdapter()
-        builds_storage_adapter.add_new_build(state_path="~/camel_builds.json",
-                                             ip_address=config["model_variables"]["state_s3_key"],
+        builds_storage_adapter.add_new_build(state_path=config["model_variables"]["state_s3_key"],
+                                             ip_address=terraform_data["main_server_ip"]["value"][0],
                                              build_name="standard_model_run")
         # builds_storage_adapter.add_new_build(state_path=, ip_address=VariableMap().ip_address, build_name=)
 
