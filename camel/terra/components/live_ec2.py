@@ -3,8 +3,9 @@ This file contains the class that represents the live ec2 instances that are cur
 """
 import json
 from datetime import datetime
-from subprocess import Popen, PIPE
+# from subprocess import Popen, PIPE
 from typing import Optional, List
+from gerund.commands.terminal_command import TerminalCommand
 
 
 class LiveEc2:
@@ -212,7 +213,18 @@ class LiveEc2InstanceList:
         Returns:
             The raw data from AWS.
         """
-        get_instances_process = Popen(["aws", "ec2", "describe-instances", f"--region {region}"], stdout=PIPE)
-        get_instances_process = Popen(f"aws ec2 describe-instances --region {region}", stdout=PIPE, shell=True)
-        get_instances_process.wait()
-        return json.loads(get_instances_process.communicate()[0].decode("utf-8"))
+        # the keys need to be defined in local storage
+        env_vars = {
+            "AWS_ACCESS_KEY_ID": "=>aws_access_key",
+            "AWS_SECRET_ACCESS_KEY": "=>aws_secret_access_key"
+        }
+        command = TerminalCommand(command=f"aws ec2 describe-instances --region {region}",
+                                  environment_variables=env_vars)
+        list_output = command.wait(capture_output=True)
+        raw_output = "\n".join(list_output)
+        return json.loads(raw_output)
+        # get_instances_process = Popen(f'export AWS_ACCESS_KEY_ID="{aws_access_key}" &&  '
+        #                               f'export AWS_SECRET_ACCESS_KEY="{aws_secret_access_key}" && '
+        #                               f'aws ec2 describe-instances --region {region}', stdout=PIPE, shell=True)
+        # get_instances_process.wait()
+        # return json.loads(get_instances_process.communicate()[0].decode("utf-8"))

@@ -57,6 +57,7 @@ setup(
             "cml-terra-destroy=camel.terra.destroy_terra:main",
             "cml-terra-install=camel.terra.install_terraform:main",
             "cml-terra-all=camel.terra.entry_points.get_all:main",
+            "cml-terra-get=camel.terra.entry_points.get_terraform_instances:main",
 
             "cml-tconfig=camel.terra_configs.entry_points.help:main",
             "cml-tconfig-get=camel.terra_configs.entry_points.get_configs:main",
