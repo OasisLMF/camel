@@ -76,7 +76,7 @@ def main() -> None:
             edit_state.update_state(s3_key=new_state_key)
 
         project_adapter.destroy_build()
-        init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init', shell=True)
+        init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init -reconfigure', shell=True)
         init_terraform.wait()
         run_terraform = Popen(command, shell=True)
         run_terraform.wait()
