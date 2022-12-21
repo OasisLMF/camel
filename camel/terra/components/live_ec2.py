@@ -21,10 +21,13 @@ class LiveEc2:
         launch_time (str): The time the instance was launched.
         monitoring (dict): The monitoring for the instance.
         placement (dict): The location where the instance launched, if applicable.
-        private_dns_name (str): The private DNS hostname name assigned to the instance. This DNS hostname can only be used inside the Amazon EC2 network. This element remains empty until the instance enters a running state.
+        private_dns_name (str): The private DNS hostname name assigned to the instance. This DNS hostname can only be
+        used inside the Amazon EC2 network. This element remains empty until the instance enters a running state.
         private_ip_address (str): The private IPv4 address assigned to the instance.
         product_codes (list): Any product codes associated with the AMI used to launch the instance.
-        public_dns_name (str): The public DNS name assigned to the instance. This name is not available until the instance enters the running state. For EC2-VPC, this name is only available if you've enabled DNS hostnames for your VPC.
+        public_dns_name (str): The public DNS name assigned to the instance. This name is not available until the
+        instance enters the running state. For EC2-VPC, this name is only available if you've enabled DNS hostnames for
+        your VPC.
         state (dict): The current state of the instance.
         state_transition_reason (str): The reason for the most recent state transition. This might be an empty string.
         subnet_id (str): The ID of the subnet in which the instance is running.
@@ -37,7 +40,8 @@ class LiveEc2:
         hypervisor (str): The hypervisor type of the instance.
         network_interfaces (list): The network interfaces for the instance.
         root_device_name (str): The device name of the root device volume (for example, /dev/sda1 or /dev/xvda).
-        root_device_type (str): The root device type used by the AMI. The AMI can use an EBS volume or an instance store volume.
+        root_device_type (str): The root device type used by the AMI. The AMI can use an EBS volume or an instance
+        store volume.
         security_groups (list): [EC2-VPC] The security groups for the instance.
         source_dest_check (bool): Indicates whether source/destination checking is enabled.
         tags (list): Any tags assigned to the instance.
