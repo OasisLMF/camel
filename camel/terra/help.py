@@ -1,8 +1,9 @@
 """
 This file defines the entry point for the cml-terra command printing out all of the available terra commands.
 """
-from camel.storage.components.profile import Profile
 from termcolor import colored
+
+from camel.storage.components.profile import Profile
 
 
 def main() -> None:
@@ -19,3 +20,4 @@ def main() -> None:
     print(colored("cml-terra-destroy => destroys the terraform build in the config file", 'yellow'))
     print(colored("cml-terra-install => installs the terraform software to be used", 'yellow'))
     print(colored("cml-terra-all => gets all the automatically supported models and builds", 'yellow'))
+    print(colored("cml-terra-get => gets all the running EC2 instances for a specific region", 'yellow'))
