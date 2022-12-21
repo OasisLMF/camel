@@ -4,3 +4,4 @@ requests==2.28.1
 git+https://github.com/OasisLMF/gerund
 boto3==1.26.34
 flake8==5.0.4
+coverage==6.4.4
