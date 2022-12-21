@@ -223,11 +223,14 @@ class LiveEc2InstanceList:
         command = f'export AWS_ACCESS_KEY_ID="{storage["aws_access_key"]}" && ' \
                   f'export AWS_SECRET_ACCESS_KEY="{storage["aws_secret_access_key"]}" && ' \
                   f'aws ec2 describe-instances --region {region}'
+
+        # command = f'export AWS_ACCESS_KEY_ID="{storage["aws_access_key"]}" && export AWS_SECRET_ACCESS_KEY="{storage["aws_secret_access_key"]}" && aws ec2 describe-instances --region {region}'
         # command = TerminalCommand(command=f"aws ec2 describe-instances --region {region}",
         #                           environment_variables=env_vars)
         # list_output = command.wait(capture_output=True)
         # raw_output = "\n".join(list_output)
         # return json.loads(raw_output)
+        # command = f"aws ec2 describe-instances --region {region}"
         get_instances_process = Popen(command, stdout=PIPE, shell=True)
-        get_instances_process.wait()
+        _ = get_instances_process.wait()
         return json.loads(get_instances_process.communicate()[0].decode("utf-8"))
