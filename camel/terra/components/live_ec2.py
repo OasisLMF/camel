@@ -7,6 +7,8 @@ from subprocess import Popen, PIPE
 from typing import Optional, List
 from gerund.commands.terminal_command import TerminalCommand
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
+from botocore.config import Config
+import boto3
 
 
 class LiveEc2:
@@ -215,14 +217,24 @@ class LiveEc2InstanceList:
             The raw data from AWS.
         """
         # the keys need to be defined in local storage
-        env_vars = {
-            "AWS_ACCESS_KEY_ID": "=>aws_access_key",
-            "AWS_SECRET_ACCESS_KEY": "=>aws_secret_access_key"
-        }
-        storage = LocalProfileVariablesStorage()
-        command = f'export AWS_ACCESS_KEY_ID="{storage["aws_access_key"]}" && ' \
-                  f'export AWS_SECRET_ACCESS_KEY="{storage["aws_secret_access_key"]}" && ' \
-                  f'aws ec2 describe-instances --region {region}'
+        my_config = Config(
+            region_name=region,
+            signature_version='v4',
+            retries={
+                'max_attempts': 10,
+                'mode': 'standard'
+            }
+        )
+        ec2 = boto3.client('ec2', config=my_config)
+        return ec2.describe_instances()
+        # env_vars = {
+        #     "AWS_ACCESS_KEY_ID": "=>aws_access_key",
+        #     "AWS_SECRET_ACCESS_KEY": "=>aws_secret_access_key"
+        # }
+        # storage = LocalProfileVariablesStorage()
+        # command = f'export AWS_ACCESS_KEY_ID="{storage["aws_access_key"]}" && ' \
+        #           f'export AWS_SECRET_ACCESS_KEY="{storage["aws_secret_access_key"]}" && ' \
+        #           f'aws ec2 describe-instances --region {region}'
 
         # command = f'export AWS_ACCESS_KEY_ID="{storage["aws_access_key"]}" && export AWS_SECRET_ACCESS_KEY="{storage["aws_secret_access_key"]}" && aws ec2 describe-instances --region {region}'
         # command = TerminalCommand(command=f"aws ec2 describe-instances --region {region}",
@@ -231,6 +243,11 @@ class LiveEc2InstanceList:
         # raw_output = "\n".join(list_output)
         # return json.loads(raw_output)
         # command = f"aws ec2 describe-instances --region {region}"
-        get_instances_process = Popen(command, stdout=PIPE, shell=True)
-        _ = get_instances_process.wait()
-        return json.loads(get_instances_process.communicate()[0].decode("utf-8"))
+        # get_instances_process = Popen(command, stdout=PIPE, shell=True)
+        # _ = get_instances_process.wait()
+        # return json.loads(get_instances_process.communicate()[0].decode("utf-8"))
+
+
+if __name__ == "__main__":
+    raw_data = LiveEc2InstanceList.get_raw_data_from_aws(region="eu-west-1")
+    print(LiveEc2InstanceList(raw_data).instances)
