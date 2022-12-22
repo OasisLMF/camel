@@ -46,3 +46,8 @@ variable "region" {
   type        = string
   default     = "eu-west-1"
 }
+
+variable "state_tag" {
+  description = "name of the path to the terraform state to tether the EC2 to the build"
+  type        = string
+}

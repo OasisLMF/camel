@@ -11,8 +11,8 @@ command. Examples of code being packaged as objects and abstracted out is:
 import argparse
 import json
 import os
-import time
 import sys
+import time
 from pathlib import Path
 from subprocess import Popen
 from typing import List
@@ -23,13 +23,13 @@ from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
+from camel.storage.adapters.builds_access import BuildsAccessAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
-from camel.storage.adapters.builds_access import BuildsAccessAdapter
 
 
 def _run_build_script(command: BashScript) -> None:
@@ -122,6 +122,8 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     build_path: str = config["location"]
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["build_variables"]
+
+    variables["state_tag"] = config["model_variables"].get("state_s3_key")
 
     for key in variables:
         current_value = Variable(name=variables[key])
