@@ -19,5 +19,5 @@ def main() -> None:
 
     for instance in LiveEc2InstanceList(raw_data).instances:
         if instance.tf_state is not None:
-            print(instance.tf_state)
+            print(instance)
         # print(instance)

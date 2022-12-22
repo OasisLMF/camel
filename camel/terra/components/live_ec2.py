@@ -138,7 +138,7 @@ class LiveEc2:
         for tag in self.tags:
             if ".tf" in tag.value:
                 return tag.value
-        return False
+        return None
 
     @property
     def tags(self) -> List["LiveEc2Tag"]:
