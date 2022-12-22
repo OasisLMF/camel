@@ -59,6 +59,7 @@ def main() -> None:
 
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
     variables = config["build_variables"]
+    variables["state_tag"] = config["model_variables"].get("state_s3_key")
 
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
