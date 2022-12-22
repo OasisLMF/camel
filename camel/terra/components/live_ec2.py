@@ -104,7 +104,11 @@ class LiveEc2:
         Returns:
             str: The string representation of the object.
         """
-        return f"{self.public_ip_address} ({self.instance_id}) - {self.instance_type} - {self.launch_time} - {self.state}"
+        tf_state = self.tf_state
+        if tf_state is None:
+            tf_state = "tf state not found"
+        return f"{self.public_ip_address} ({self.instance_id})" \
+               f" - {self.instance_type} - {self.launch_time} - {self.state} - {tf_state}"
 
     def __repr__(self) -> str:
         """
@@ -113,7 +117,28 @@ class LiveEc2:
         Returns:
             str: The string representation of the object.
         """
-        return f"{self.public_ip_address} ({self.instance_id}) - {self.instance_type} - {self.launch_time} - {self.state}"
+        return self.__str__()
+
+    def check_tag(self, value: str) -> bool:
+        """
+        Checks to see if there is a value existing in the tags of the EC2 instance.
+
+        Args:
+            value: the value to be checked
+
+        Returns: True if the value exists in the tags, False otherwise
+        """
+        for i in self.tags:
+            if i.value == value:
+                return True
+        return False
+
+    @property
+    def tf_state(self) -> Optional[str]:
+        for tag in self.tags:
+            if ".tf" in tag.value:
+                return tag.value
+        return False
 
     @property
     def tags(self) -> List["LiveEc2Tag"]:
