@@ -6,6 +6,8 @@ from typing import Optional, List
 
 import boto3
 from botocore.config import Config
+from gerund.components.variable import Variable
+from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 
 
 class LiveEc2:
@@ -217,13 +219,18 @@ class LiveEc2InstanceList:
         Returns:
             The raw data from AWS.
         """
-        my_config = Config(
-            region_name=region,
-            signature_version='v4',
-            retries={
-                'max_attempts': 10,
-                'mode': 'standard'
-            }
-        )
-        ec2 = boto3.client('ec2', config=my_config)
+        LocalProfileVariablesStorage()
+        # my_config = Config(
+        #     region_name=region,
+        #     signature_version='v4',
+        #     retries={
+        #         'max_attempts': 10,
+        #         'mode': 'standard'
+        #     }
+        # )
+        ec2 = boto3.client('ec2',
+                           aws_access_key_id=Variable(name="=>aws_access_key"),
+                           aws_secret_access_key=Variable(name="=>aws_secret_access_key"),
+                           region_name=region
+                           )
         return ec2.describe_instances()
