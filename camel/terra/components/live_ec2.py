@@ -107,7 +107,7 @@ class LiveEc2:
         tf_state = self.tf_state
         if tf_state is None:
             tf_state = "tf state not found"
-        return f"{self.public_ip_address} ({self.instance_id})" \
+        return f"{self.private_ip_address} ({self.instance_id})" \
                f" - {self.instance_type} - {self.launch_time} - {self.state} - {tf_state}"
 
     def __repr__(self) -> str:
