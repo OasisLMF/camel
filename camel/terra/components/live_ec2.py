@@ -229,8 +229,8 @@ class LiveEc2InstanceList:
         #     }
         # )
         ec2 = boto3.client('ec2',
-                           aws_access_key_id=Variable(name="=>aws_access_key"),
-                           aws_secret_access_key=Variable(name="=>aws_secret_access_key"),
+                           aws_access_key_id=str(Variable(name="=>aws_access_key")),
+                           aws_secret_access_key=str(Variable(name="=>aws_secret_access_key")),
                            region_name=region
                            )
         return ec2.describe_instances()
