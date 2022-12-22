@@ -23,6 +23,7 @@ module "model_server" {
   key_name              = var.key_name
   root_block_size       = var.root_block_size
   region                = var.region
+  state_tag             = var.state_tag
 #  model_server_ami      = var.model_server_ami
 }
 
