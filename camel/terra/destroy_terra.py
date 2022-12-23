@@ -7,11 +7,10 @@ from pathlib import Path
 from subprocess import Popen
 from typing import Any
 
-from camel.terra.config_loader import ConfigEngine
-from camel.storage.components.profile_storage import LocalProfileVariablesStorage
-from camel.terra_configs.components.config_mapper import TerraConfigMapper
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
+from camel.storage.components.profile_storage import LocalProfileVariablesStorage
+from camel.terra.config_loader import ConfigEngine
+from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
@@ -28,6 +27,27 @@ def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
         if current_value is None:
             raise ValueError(f"{current_value[2:]} not found in profile storage")
     return current_value
+
+
+def _get_init_config(config: dict) -> str:
+    """
+    Extracts the backend terraform config command from the config file.
+
+    Args:
+        config: (dict) the config file loaded for the model run
+
+    Returns: (str) the backend terraform config command
+    """
+    backend_config = config["build_state"]
+    backend_bucket = backend_config["bucket"]
+    backend_key = backend_config["key"]
+    backend_region = backend_config["region"]
+
+    backend_config_bucket = f' -backend-config="bucket={backend_bucket}"'
+    backend_config_key = f' -backend-config="key={backend_key}"'
+    backend_config_region = f' -backend-config="region={backend_region}"'
+
+    return f'terraform init -reconfigure {backend_config_bucket} {backend_config_key} {backend_config_region}'
 
 
 def main() -> None:
@@ -70,14 +90,10 @@ def main() -> None:
 
     if project_adapter.continue_building is True:
 
-        new_state_key = config["model_variables"].get("state_s3_key")
-        edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{config['location']}")
-
-        if new_state_key is not None:
-            edit_state.update_state(s3_key=new_state_key)
+        config_command: str = _get_init_config(config=config)
 
         project_adapter.destroy_build()
-        init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init -reconfigure', shell=True)
+        init_terraform = Popen(f'cd {file_path}/{config["location"]} && {config_command}', shell=True)
         init_terraform.wait()
         run_terraform = Popen(command, shell=True)
         run_terraform.wait()

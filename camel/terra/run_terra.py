@@ -23,9 +23,7 @@ from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
-from camel.storage.adapters.builds_access import BuildsAccessAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
@@ -63,6 +61,27 @@ def _run_build_script(command: BashScript) -> None:
             print("build script has not run retrying")
             command._path = None
             count += 1
+
+
+def _get_init_config(config: dict) -> str:
+    """
+    Extracts the backend terraform config command from the config file.
+
+    Args:
+        config: (dict) the config file loaded for the model run
+
+    Returns: (str) the backend terraform config command
+    """
+    backend_config = config["build_state"]
+    backend_bucket = backend_config["bucket"]
+    backend_key = backend_config["key"]
+    backend_region = backend_config["region"]
+
+    backend_config_bucket = f' -backend-config="bucket={backend_bucket}"'
+    backend_config_key = f' -backend-config="key={backend_key}"'
+    backend_config_region = f' -backend-config="region={backend_region}"'
+
+    return f'terraform init -reconfigure {backend_config_bucket} {backend_config_key} {backend_config_region}'
 
 
 def run_server_config_commands(ip_address: str, config: dict) -> None:
@@ -105,7 +124,6 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
     # run the bash commands on the newly built model server
     command = BashScript(commands=server_build_commands.stripped, ip_address=ip_address)
     _run_build_script(command=command)
-    # command.wait()
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
@@ -123,31 +141,23 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["build_variables"]
 
-    variables["state_tag"] = config["model_variables"].get("state_s3_key")
+    variables["state_tag"] = config["build_state"]["key"]
 
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
     command_buffer.append("-auto-approve")
 
-    new_state_key = config["model_variables"].get("state_s3_key")
-    edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
-
-    if new_state_key is not None:
-        edit_state.update_state(s3_key=new_state_key)
-
     command = "".join(command_buffer)
+    config_command: str = _get_init_config(config=config)
 
-    init_terraform = Popen(f'cd {file_path}/{build_path} && terraform init -reconfigure', shell=True)
+    init_terraform = Popen(f'cd {file_path}/{build_path} && {config_command}', shell=True)
     init_terraform.wait()
     run_terraform = Popen(command, shell=True)
     run_terraform.wait()
 
     output_terra = Popen(f'cd {file_path}/{build_path} && terraform output -json > {output_path}', shell=True)
     output_terra.wait()
-
-    if new_state_key is not None:
-        edit_state.revert_main_back_to_initial_state()
 
 
 def _establish_connection(ip_address: str) -> None:
@@ -220,11 +230,6 @@ def main() -> None:
 
         # updates the local variables with the terraform outputs
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
-        builds_storage_adapter: BuildsAccessAdapter = BuildsAccessAdapter()
-        builds_storage_adapter.add_new_build(state_path=config["model_variables"]["state_s3_key"],
-                                             ip_address=VariableMap().ip_address,
-                                             build_name="standard_model_run")
-        # builds_storage_adapter.add_new_build(state_path=, ip_address=VariableMap().ip_address, build_name=)
 
         _establish_connection(ip_address=VariableMap().ip_address)
 

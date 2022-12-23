@@ -6,12 +6,16 @@ provider "aws" {
   region     = var.region
 }
 
+#terraform {
+#    backend "s3" {
+#    bucket = "oasislmf-terraform"
+#    key    = "eu-west-1/model_run/pariswindstorm/terraform.tfstate"
+#    region = "eu-west-1"
+#  }
+#}
+
 terraform {
-    backend "s3" {
-    bucket = "oasislmf-terraform"
-    key    = "eu-west-1/model_run/pariswindstorm/terraform.tfstate"
-    region = "eu-west-1"
-  }
+    backend "s3" {}
 }
 
 module "model_server" {
