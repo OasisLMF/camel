@@ -75,7 +75,7 @@ def _get_init_config(config: dict) -> str:
     Returns: (str) the backend terraform config command
     """
     backend_config = config["build_state"]
-    backend_bucket = backend_config["backend"]
+    backend_bucket = backend_config["bucket"]
     backend_key = backend_config["key"]
     backend_region = backend_config["region"]
 
