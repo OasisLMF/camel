@@ -98,6 +98,10 @@ terraform configs for running builds. A example of a terraform config file takes
 
 ```commandline
 location: model_runs/aws_generic
+build_state:
+    bucket: oasislmf-terraform
+    key: eu-west-1/model_run/pariswindstorm/terraform.tfstate
+    region: eu-west-1
 build_variables:
     aws_access_key: =>aws_access_key
     aws_secret_access_key: =>aws_secret_access_key
