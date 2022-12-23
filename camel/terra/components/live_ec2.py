@@ -135,6 +135,11 @@ class LiveEc2:
 
     @property
     def tf_state(self) -> Optional[str]:
+        """
+        Returns the terraform state of the instance.
+
+        Returns: the terraform state of the instance if present, None otherwise.
+        """
         for tag in self.tags:
             if ".tf" in tag.value:
                 return tag.value
