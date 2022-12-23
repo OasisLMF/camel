@@ -23,9 +23,7 @@ from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
-from camel.storage.adapters.builds_access import BuildsAccessAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
@@ -126,7 +124,6 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
     # run the bash commands on the newly built model server
     command = BashScript(commands=server_build_commands.stripped, ip_address=ip_address)
     _run_build_script(command=command)
-    # command.wait()
 
 
 def _run_terraform_build_commands(file_path: str, config: dict, output_path: str) -> None:
@@ -151,12 +148,6 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
         command_buffer.append(f'-var="{key}={current_value}" ')
     command_buffer.append("-auto-approve")
 
-    # new_state_key = config["model_variables"].get("state_s3_key")
-    # edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
-
-    # if new_state_key is not None:
-    #     edit_state.update_state(s3_key=new_state_key)
-
     command = "".join(command_buffer)
     config_command: str = _get_init_config(config=config)
 
@@ -167,9 +158,6 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
 
     output_terra = Popen(f'cd {file_path}/{build_path} && terraform output -json > {output_path}', shell=True)
     output_terra.wait()
-
-    # if new_state_key is not None:
-    #     edit_state.revert_main_back_to_initial_state()
 
 
 def _establish_connection(ip_address: str) -> None:
@@ -242,11 +230,6 @@ def main() -> None:
 
         # updates the local variables with the terraform outputs
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
-        builds_storage_adapter: BuildsAccessAdapter = BuildsAccessAdapter()
-        builds_storage_adapter.add_new_build(state_path=config["build_state"]["key"],
-                                             ip_address=VariableMap().ip_address,
-                                             build_name="standard_model_run")
-        # builds_storage_adapter.add_new_build(state_path=, ip_address=VariableMap().ip_address, build_name=)
 
         _establish_connection(ip_address=VariableMap().ip_address)
 

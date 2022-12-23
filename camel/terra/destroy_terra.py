@@ -7,11 +7,10 @@ from pathlib import Path
 from subprocess import Popen
 from typing import Any
 
-from camel.terra.config_loader import ConfigEngine
-from camel.storage.components.profile_storage import LocalProfileVariablesStorage
-from camel.terra_configs.components.config_mapper import TerraConfigMapper
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
+from camel.storage.components.profile_storage import LocalProfileVariablesStorage
+from camel.terra.config_loader import ConfigEngine
+from camel.terra_configs.components.config_mapper import TerraConfigMapper
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
