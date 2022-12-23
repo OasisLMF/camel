@@ -144,14 +144,14 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     command_buffer = [f'cd {file_path}/{build_path} ', '&& ', 'terraform apply ']
     variables = config["build_variables"]
 
-    variables["state_tag"] = config["model_variables"].get("state_s3_key")
+    variables["state_tag"] = config["build_state"]["key"]
 
     for key in variables:
         current_value = Variable(name=variables[key])
         command_buffer.append(f'-var="{key}={current_value}" ')
     command_buffer.append("-auto-approve")
 
-    new_state_key = config["model_variables"].get("state_s3_key")
+    # new_state_key = config["model_variables"].get("state_s3_key")
     # edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{build_path}")
 
     # if new_state_key is not None:
@@ -243,7 +243,7 @@ def main() -> None:
         # updates the local variables with the terraform outputs
         VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
         builds_storage_adapter: BuildsAccessAdapter = BuildsAccessAdapter()
-        builds_storage_adapter.add_new_build(state_path=config["model_variables"]["state_s3_key"],
+        builds_storage_adapter.add_new_build(state_path=config["build_state"]["key"],
                                              ip_address=VariableMap().ip_address,
                                              build_name="standard_model_run")
         # builds_storage_adapter.add_new_build(state_path=, ip_address=VariableMap().ip_address, build_name=)
