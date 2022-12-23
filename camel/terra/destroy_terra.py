@@ -90,12 +90,6 @@ def main() -> None:
 
     if project_adapter.continue_building is True:
 
-        new_state_key = config["model_variables"].get("state_s3_key")
-        # edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{config['location']}")
-
-        # if new_state_key is not None:
-        #     edit_state.update_state(s3_key=new_state_key)
-
         config_command: str = _get_init_config(config=config)
 
         project_adapter.destroy_build()
