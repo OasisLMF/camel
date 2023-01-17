@@ -5,12 +5,39 @@ import argparse
 import os
 from pathlib import Path
 from subprocess import Popen
-from typing import Any
+from typing import Any, Dict
+
+import boto3
+from gerund.components.variable import Variable
 
 from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.config_loader import ConfigEngine
 from camel.terra_configs.components.config_mapper import TerraConfigMapper
+
+
+def _delete_tf_state_file(config: dict) -> None:
+    """
+    Deletes the state from s3.
+
+    Args:
+        config: (dict) the config for the build being destroyed
+
+    Returns: None
+    """
+    backend_config: Dict[str, str] = config["build_state"]
+    backend_bucket: str = Variable(backend_config["bucket"]).value
+    backend_key: str = Variable(backend_config["key"]).value
+    backend_region: str = Variable(backend_config["region"]).value
+
+    build_variables: Dict[str, str] = config["build_variables"]
+    aws_access_key: str = Variable(build_variables["aws_access_key"]).value
+    aws_secret_access_key: str = Variable(build_variables["aws_secret_access_key"]).value
+
+    client = boto3.client('s3', aws_access_key_id=aws_access_key,
+                          aws_secret_access_key=aws_secret_access_key,
+                          region_name=backend_region)
+    client.delete_object(Bucket=backend_bucket, Key=backend_key)
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
@@ -98,3 +125,4 @@ def main() -> None:
         run_terraform = Popen(command, shell=True)
         run_terraform.wait()
         project_adapter.declare_destroyed()
+        _delete_tf_state_file(config=config)
