@@ -10,10 +10,8 @@ command. Examples of code being packaged as objects and abstracted out is:
 """
 import argparse
 import json
-import os
 import sys
 import time
-from pathlib import Path
 from subprocess import Popen
 from typing import List
 
@@ -26,7 +24,7 @@ from camel.storage.components.profile_storage import LocalProfileVariablesStorag
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.config_loader import ConfigEngine
 from camel.terra.steps import StepManager
-from camel.terra_configs.components.config_mapper import TerraConfigMapper
+from camel.terra.utils import extract_paths, get_init_config, OUTPUT_FILE_PATH
 
 
 def _run_build_script(command: BashScript) -> None:
@@ -62,27 +60,6 @@ def _run_build_script(command: BashScript) -> None:
             count += 1
 
 
-def _get_init_config(config: dict) -> str:
-    """
-    Extracts the backend terraform config command from the config file.
-
-    Args:
-        config: (dict) the config file loaded for the model run
-
-    Returns: (str) the backend terraform config command
-    """
-    backend_config = config["build_state"]
-    backend_bucket = backend_config["bucket"]
-    backend_key = backend_config["key"]
-    backend_region = backend_config["region"]
-
-    backend_config_bucket = f' -backend-config="bucket={backend_bucket}"'
-    backend_config_key = f' -backend-config="key={backend_key}"'
-    backend_config_region = f' -backend-config="region={backend_region}"'
-
-    return f'terraform init -reconfigure {backend_config_bucket} {backend_config_key} {backend_config_region}'
-
-
 def run_server_config_commands(ip_address: str, config: dict) -> None:
     """
     Runs the bash script on the model server to setup the model run.
@@ -93,8 +70,6 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
 
     Returns: None
     """
-    # build_path: str = config["location"]
-
     # obtaining the variables for a server build
     repository = Variable(config["model_variables"]["repository"]).value
     oasislmf_version = Variable(config["model_variables"]["oasislmf_version"]).value
@@ -148,7 +123,7 @@ def _run_terraform_build_commands(file_path: str, config: dict, output_path: str
     command_buffer.append("-auto-approve")
 
     command = "".join(command_buffer)
-    config_command: str = _get_init_config(config=config)
+    config_command: str = get_init_config(config=config)
 
     init_terraform = Popen(f'cd {file_path}/{build_path} && {config_command}', shell=True)
     init_terraform.wait()
@@ -198,47 +173,40 @@ def main() -> None:
     args = config_parser.parse_args()
     LocalProfileVariablesStorage()
 
-    # gets the existing config if the --config_name is supplied
-    if args.config_name != "none":
-        print(f"running existing config: {args.config_name}")
-        config_map = TerraConfigMapper.get_cached_profile()
-        config_path: str = config_map.terra_builds_path + f"/{args.config_name}.yml"
-    else:
-        config_path: str = str(os.getcwd()) + f"/{args.config_path}"
-
-    # defines the file path of where all the terraform builds are defined in the pip package
-    file_path: str = str(Path(__file__).parent) + "/terra_builds"
+    config_map, config_path, file_path = extract_paths(config_name=args.config_name, config_path=args.config_path)
 
     # load and extract the data from the terra build config file
     config = ConfigEngine(config_path=config_path)
 
-        local_vars = config.get("local_vars", [])
-        variable_map = VariableMap()
+    local_vars = config.get("local_vars", [])
+    variable_map = VariableMap()
 
-        for local_var in local_vars:
-            variable_map[local_var["name"]] = local_var
+    for local_var in local_vars:
+        variable_map[local_var["name"]] = local_var
 
-        _run_terraform_build_commands(file_path=file_path, config=config,
-                                      output_path=project_adapter.terraform_data_path)
+    _run_terraform_build_commands(file_path=file_path, config=config,
+                                  output_path=OUTPUT_FILE_PATH)
 
-        with open(project_adapter.terraform_data_path, "r") as file:
-            terraform_data = json.loads(file.read())
+    with open(OUTPUT_FILE_PATH) as file:
+        terraform_data = json.loads(file.read())
 
-        # updates the local variables with the terraform outputs
-        VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
+    # updates the local variables with the terraform outputs
+    VariableMap().ip_address = terraform_data["main_server_ip"]["value"][0]
 
-        _establish_connection(ip_address=VariableMap().ip_address)
+    # add IP address to ssh key
+    add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
+    add_to_known_hosts.wait()
 
-        add_to_known_hosts = TerminalCommand(f'ssh-keyscan -H "{VariableMap().ip_address}" >> ~/.ssh/known_hosts')
-        add_to_known_hosts.wait()
+    # block until connection to server is available
+    _establish_connection(ip_address=VariableMap().ip_address)
 
-        run_server_config_commands(ip_address=VariableMap().ip_address,
-                                   config=config)
+    run_server_config_commands(ip_address=VariableMap().ip_address,
+                               config=config)
 
-        time.sleep(10)
+    time.sleep(10)
 
-        step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
+    step_manager = StepManager(terraform_data=terraform_data, file_path=file_path, config=config)
 
-        if config.steps is not None:
-            for step in config.steps:
-                step_manager.process_step(step_data=step)
+    if config.steps is not None:
+        for step in config.steps:
+            step_manager.process_step(step_data=step)

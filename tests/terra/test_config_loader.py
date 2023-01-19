@@ -70,7 +70,6 @@ class TestConfigEngine(TestCase):
     def test___init__(self):
         self.assertEqual({}, self.test)
         self.assertEqual(self.path, self.test.config_path)
-        self.assertEqual(None, self.test.location)
 
     def test__read(self):
         test = ConfigEngine(config_path=self.path)

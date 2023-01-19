@@ -35,7 +35,6 @@ class Profile:
         os.mkdir(self.profile_base_path)
         os.mkdir(self.keys_path)
         os.mkdir(self.terra_builds_path)
-        os.mkdir(self.process_flags_path)
         os.mkdir(self.configs_path)
 
     def delete_profile(self) -> None:
@@ -101,10 +100,6 @@ class Profile:
     @property
     def terra_builds_path(self) -> str:
         return self.profile_base_path + "terra_builds/"
-
-    @property
-    def process_flags_path(self) -> str:
-        return self.profile_base_path + "process_flags/"
 
     @property
     def configs_path(self) -> str:

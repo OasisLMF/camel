@@ -21,7 +21,7 @@ class TerraConfigMapper(Profile):
 
     def get_configs(self) -> List[str]:
         """
-        Gets all the names of the stashed terraform configs for the
+        Gets all the names of the stashed terraform configs.
 
         :return: (List[str]) the names of all the stashed terraform config files
         """
