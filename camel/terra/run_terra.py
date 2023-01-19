@@ -22,7 +22,6 @@ from gerund.commands.terminal_command import TerminalCommand
 from gerund.components.variable import Variable
 from gerund.components.variable_map import VariableMap
 
-from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
 from camel.terra.config_loader import ConfigEngine
@@ -212,10 +211,7 @@ def main() -> None:
 
     # load and extract the data from the terra build config file
     config = ConfigEngine(config_path=config_path)
-    project_adapter = TerraApplyProjectAdapter(config=config)
 
-    if project_adapter.continue_building is True:
-        project_adapter.start_build()
         local_vars = config.get("local_vars", [])
         variable_map = VariableMap()
 
@@ -246,5 +242,3 @@ def main() -> None:
         if config.steps is not None:
             for step in config.steps:
                 step_manager.process_step(step_data=step)
-
-        project_adapter.finish_build()
