@@ -195,5 +195,11 @@ you want to add the config in the model package. If you put in ```y``` to this a
 We are looking into handling profiles and aws authentication using the following guide:
 https://blog.gruntwork.io/authenticating-to-aws-with-the-credentials-file-d16c0fbcbf9e
 
+## Contributing guidelines
+We are looking for contributors to help us develop camel. If you are interested in contributing please contact us on
+the oasis slack channel or email us at ```maxwell.flitton@oasislmf.org```. We will be looking into supporting other
+cloud providers in the future such as Azure and GCP as of right now we only support AWS.
 
-test
+### Code style
+The code style we are using is PEP8. We are using flake8 to check the code style. The project is also object orientated
+where we usually have one class per file. We also have isolated modules where one module 
