@@ -195,5 +195,106 @@ you want to add the config in the model package. If you put in ```y``` to this a
 We are looking into handling profiles and aws authentication using the following guide:
 https://blog.gruntwork.io/authenticating-to-aws-with-the-credentials-file-d16c0fbcbf9e
 
+## Contributing guidelines
+We are looking for contributors to help us develop camel. If you are interested in contributing please contact us on
+the oasis slack channel or email us at ```maxwell.flitton@oasislmf.org```. We will be looking into supporting other
+cloud providers in the future such as Azure and GCP as of right now we only support AWS.
 
-test
+### Code style
+The code style we are using is PEP8. We are using flake8 to check the code style. The project is also object orientated
+where we usually have one class per file. We also have isolated modules where one module focuses on one responsibility.
+A standard module takes the following form:
+```
+├── adapters
+│   ├── __init__.py
+│   ├── . . .
+├── components
+│   ├── __init__.py
+│   ├── . . .
+├── entry_points
+│   ├── . . .
+│   ├── __init__.py
+```
+components are objects that handle the logic of the program. They are usually called by the entry points. As the
+components are called by the entry points we can isolate the logic. Therefore, when we look at the entry points we can
+purely focus on the logic of the program. The adapters are used to handle the communication between modules. 
+To concrete the example, if we were to build an object that manages the storage for a profile, the object that
+handles the saving and getting of information from the storage would be a component. The entry point would be the 
+management of that component based on the user input. 
+An object would take the following form:
+```python
+"""
+This file defines the class around managing data for a profile.
+"""
+import os
+from pathlib import Path
+
+class Profile:
+    """
+    This class is responsible for managing the data around a user profile.
+
+    Attributes:
+        name (str): the name of the profile
+    """
+    ROOT_PATH: str = str(Path.home()) + "/.camel_storage/"
+
+    def __init__(self, name: str) -> None:
+        """
+        The constructor for the Profile class.
+
+        Args:
+            name: (str) the name of the profile being loaded
+        """
+        self.name: str = name
+
+    def create_profile(self) -> None:
+        """
+        Creates the directories for a new profile.
+
+        Returns: None
+        """
+        os.mkdir(self.profile_base_path)
+        os.mkdir(self.keys_path)
+        os.mkdir(self.terra_builds_path)
+        os.mkdir(self.configs_path)
+    . . .
+```
+Here we can see that we use Google style docstrings. We also have type hints. We also require that a docstring is
+at the top of the file describing what the file is for. We also require that every function and class has a docstring.
+
+### Testing
+Each object should have a test file. The test file should be in the same directory as the object but in the ```tests```
+directory. Below is an example of a test file for a component that creates a bash script:
+```python
+from unittest import main, TestCase
+
+from camel.terra.components.server_build_bash_generator import ServerBuildBashGenerator
+
+
+class TestServerBuildBashGenerator(TestCase):
+
+    def setUp(self) -> None:
+        self.test = ServerBuildBashGenerator()
+
+    def tearDown(self) -> None:
+        pass
+
+    def test___init__(self):
+        self.assertEqual([], self.test)
+
+    def test_write_line(self):
+        self.test.write_line(line="this is the first line")
+        self.test.write_line(line="this is the second line")
+
+        expected_outcome = ['this is the first line\n', 'this is the second line\n']
+        self.assertEqual(expected_outcome, self.test)
+
+    def test_generate_script(self):
+        self.test.generate_script(repository="test/repo", oasislmf_version="1.26",
+                                  aws_key="AWS_KEY", aws_secret_key="AWS_SECRET_KEY")
+        self.assertEqual("".join(self.test), str(self.test))
+
+if __name__ == "__main__":
+    main()
+```
+
