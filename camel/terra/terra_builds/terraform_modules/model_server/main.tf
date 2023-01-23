@@ -29,6 +29,7 @@ resource "aws_instance" "main_server" {
 
   tags = {
     Name = var.server_tag
+    Build = var.state_tag
   }
 
 #  user_data = file("./placeholder.sh")

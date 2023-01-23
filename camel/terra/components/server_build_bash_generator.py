@@ -42,7 +42,7 @@ class ServerBuildBashGenerator(list):
         if data_bucket is None:
             data_line = ""
         else:
-            data_line = f"aws s3 cp --recursive s3://{data_bucket} {data_directory}"
+            data_line = f"aws s3 sync s3://{data_bucket} {data_directory}"
         profile = "default"
 
         lines = [
@@ -84,6 +84,7 @@ class ServerBuildBashGenerator(list):
             f"git clone {repository}",
             "",
             data_line,
+            "PATH=$PATH:~/.local/bin/",
             "echo FINISHED > output.txt"
         ]
         for line in lines:

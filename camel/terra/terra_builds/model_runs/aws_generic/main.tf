@@ -6,12 +6,16 @@ provider "aws" {
   region     = var.region
 }
 
+#terraform {
+#    backend "s3" {
+#    bucket = "oasislmf-terraform"
+#    key    = "eu-west-1/model_run/pariswindstorm/terraform.tfstate"
+#    region = "eu-west-1"
+#  }
+#}
+
 terraform {
-    backend "s3" {
-    bucket = "oasislmf-terraform"
-    key    = "eu-west-1/model_run/pariswindstorm/terraform.tfstate"
-    region = "eu-west-1"
-  }
+    backend "s3" {}
 }
 
 module "model_server" {
@@ -23,6 +27,7 @@ module "model_server" {
   key_name              = var.key_name
   root_block_size       = var.root_block_size
   region                = var.region
+  state_tag             = var.state_tag
 #  model_server_ami      = var.model_server_ami
 }
 

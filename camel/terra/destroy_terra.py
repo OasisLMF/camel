@@ -2,16 +2,39 @@
 This script defines the entry point for terra-destroy.
 """
 import argparse
-import os
-from pathlib import Path
 from subprocess import Popen
-from typing import Any
+from typing import Any, Dict
 
-from camel.terra.config_loader import ConfigEngine
+import boto3
+from gerund.components.variable import Variable
+
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
-from camel.terra_configs.components.config_mapper import TerraConfigMapper
-from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
-from camel.terra.adapters.edit_state_position import EditStatePositionAdapter
+from camel.terra.config_loader import ConfigEngine
+from camel.terra.utils import extract_paths, get_init_config
+
+
+def _delete_tf_state_file(config: dict) -> None:
+    """
+    Deletes the state from s3.
+
+    Args:
+        config: (dict) the config for the build being destroyed
+
+    Returns: None
+    """
+    backend_config: Dict[str, str] = config["build_state"]
+    backend_bucket: str = Variable(backend_config["bucket"]).value
+    backend_key: str = Variable(backend_config["key"]).value
+    backend_region: str = Variable(backend_config["region"]).value
+
+    build_variables: Dict[str, str] = config["build_variables"]
+    aws_access_key: str = Variable(build_variables["aws_access_key"]).value
+    aws_secret_access_key: str = Variable(build_variables["aws_secret_access_key"]).value
+
+    client = boto3.client('s3', aws_access_key_id=aws_access_key,
+                          aws_secret_access_key=aws_secret_access_key,
+                          region_name=backend_region)
+    client.delete_object(Bucket=backend_bucket, Key=backend_key)
 
 
 def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
@@ -45,20 +68,13 @@ def main() -> None:
 
     args = config_parser.parse_args()
 
-    if args.config_name != "none":
-        print(f"destroying existing config: {args.config_name}")
-        config_map = TerraConfigMapper.get_cached_profile()
-        config_path: str = config_map.terra_builds_path + f"/{args.config_name}.yml"
-    else:
-        config_path: str = str(os.getcwd()) + f"/{args.config_path}"
-
-    file_path: str = str(Path(__file__).parent) + "/terra_builds"
+    config_map, config_path, file_path = extract_paths(config_name=args.config_name, config_path=args.config_path)
 
     config = ConfigEngine(config_path=config_path)
-    project_adapter = TerraApplyProjectAdapter(config=config)
 
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
-    variables = config["variables"]
+    variables = config["build_variables"]
+    variables["state_tag"] = config["model_variables"].get("state_s3_key")
 
     for key in variables:
         current_value = _extract_variable(key=key, lookup_dict=variables, label="terraform variables")
@@ -67,17 +83,9 @@ def main() -> None:
 
     command = "".join(command_buffer)
 
-    if project_adapter.continue_building is True:
-
-        new_state_key = config["server_variables"].get("state_s3_key")
-        edit_state = EditStatePositionAdapter(build_path=f"{file_path}/{config['location']}")
-
-        if new_state_key is not None:
-            edit_state.update_state(s3_key=new_state_key)
-
-        project_adapter.destroy_build()
-        init_terraform = Popen(f'cd {file_path}/{config["location"]} && terraform init', shell=True)
-        init_terraform.wait()
-        run_terraform = Popen(command, shell=True)
-        run_terraform.wait()
-        project_adapter.declare_destroyed()
+    config_command: str = get_init_config(config=config)
+    init_terraform = Popen(f'cd {file_path}/{config["location"]} && {config_command}', shell=True)
+    init_terraform.wait()
+    run_terraform = Popen(command, shell=True)
+    run_terraform.wait()
+    _delete_tf_state_file(config=config)
