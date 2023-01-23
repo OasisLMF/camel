@@ -1,14 +1,9 @@
 """
 This file defines the class around managing config variables for a terra build.
 """
-from enum import Enum
 from typing import Optional, List
 
 import yaml
-
-
-class LocationEnum(Enum):
-    EU_WEST_ONE = "eu_west_1"
 
 
 class ConfigEngine(dict):
@@ -17,7 +12,6 @@ class ConfigEngine(dict):
 
     Attributes:
         config_path (str): the path to the yml file to be loaded
-        location (Optional[LocationEnum]): the location of where the build is happening (currently has no effect)
     """
     def __init__(self, config_path: str) -> None:
         """
@@ -27,7 +21,6 @@ class ConfigEngine(dict):
         """
         super().__init__({})
         self.config_path: str = config_path
-        self.location: Optional[LocationEnum] = None
         self._read()
 
     def _read(self) -> None:

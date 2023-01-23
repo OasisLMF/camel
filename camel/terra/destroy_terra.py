@@ -2,18 +2,15 @@
 This script defines the entry point for terra-destroy.
 """
 import argparse
-import os
-from pathlib import Path
 from subprocess import Popen
 from typing import Any, Dict
 
 import boto3
 from gerund.components.variable import Variable
 
-from camel.basecamp.projects.adapters.terra_apply import TerraApplyProjectAdapter
 from camel.storage.components.profile_storage import LocalProfileVariablesStorage
 from camel.terra.config_loader import ConfigEngine
-from camel.terra_configs.components.config_mapper import TerraConfigMapper
+from camel.terra.utils import extract_paths, get_init_config
 
 
 def _delete_tf_state_file(config: dict) -> None:
@@ -56,27 +53,6 @@ def _extract_variable(key: str, lookup_dict: dict, label: str) -> Any:
     return current_value
 
 
-def _get_init_config(config: dict) -> str:
-    """
-    Extracts the backend terraform config command from the config file.
-
-    Args:
-        config: (dict) the config file loaded for the model run
-
-    Returns: (str) the backend terraform config command
-    """
-    backend_config = config["build_state"]
-    backend_bucket = backend_config["bucket"]
-    backend_key = backend_config["key"]
-    backend_region = backend_config["region"]
-
-    backend_config_bucket = f' -backend-config="bucket={backend_bucket}"'
-    backend_config_key = f' -backend-config="key={backend_key}"'
-    backend_config_region = f' -backend-config="region={backend_region}"'
-
-    return f'terraform init -reconfigure {backend_config_bucket} {backend_config_key} {backend_config_region}'
-
-
 def main() -> None:
     """
     Loads the data from the terra_config.yml config file in the current directory and run a terraform apply command.
@@ -92,17 +68,9 @@ def main() -> None:
 
     args = config_parser.parse_args()
 
-    if args.config_name != "none":
-        print(f"destroying existing config: {args.config_name}")
-        config_map = TerraConfigMapper.get_cached_profile()
-        config_path: str = config_map.terra_builds_path + f"/{args.config_name}.yml"
-    else:
-        config_path: str = str(os.getcwd()) + f"/{args.config_path}"
-
-    file_path: str = str(Path(__file__).parent) + "/terra_builds"
+    config_map, config_path, file_path = extract_paths(config_name=args.config_name, config_path=args.config_path)
 
     config = ConfigEngine(config_path=config_path)
-    project_adapter = TerraApplyProjectAdapter(config=config)
 
     command_buffer = [f'cd {file_path}/{config["location"]} ', '&& ', 'terraform destroy ']
     variables = config["build_variables"]
@@ -115,14 +83,9 @@ def main() -> None:
 
     command = "".join(command_buffer)
 
-    if project_adapter.continue_building is True:
-
-        config_command: str = _get_init_config(config=config)
-
-        project_adapter.destroy_build()
-        init_terraform = Popen(f'cd {file_path}/{config["location"]} && {config_command}', shell=True)
-        init_terraform.wait()
-        run_terraform = Popen(command, shell=True)
-        run_terraform.wait()
-        project_adapter.declare_destroyed()
-        _delete_tf_state_file(config=config)
+    config_command: str = get_init_config(config=config)
+    init_terraform = Popen(f'cd {file_path}/{config["location"]} && {config_command}', shell=True)
+    init_terraform.wait()
+    run_terraform = Popen(command, shell=True)
+    run_terraform.wait()
+    _delete_tf_state_file(config=config)
