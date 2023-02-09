@@ -18,6 +18,7 @@ class TestStepManager(TestCase):
         self.step_data = {
             "name": "placeholder",
             "script_name": "some_script",
+            "script_location": "some_dir_location",
             "variables": self.config,
             "statement": "some_statement",
             "command": "some command"
@@ -46,7 +47,7 @@ class TestStepManager(TestCase):
     @patch("camel.terra.steps.DestroyBuild")
     @patch("camel.terra.steps.PrintoutStep")
     @patch("camel.terra.steps.RunScriptOnServerStep")
-    def test__get_step(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+    def test__get_step_run_script(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
                        mock_get_generic_model):
         outcome = self.test._get_step(step_data=self.step_data)
         self.assertEqual(None, outcome)
@@ -60,29 +61,74 @@ class TestStepManager(TestCase):
             location="some_path/some_location"
         )
 
-        self.step_data["name"] = "print"
+    @patch("camel.terra.steps.get_generic_model")
+    @patch("camel.terra.steps.RunCommandOnServerStep")
+    @patch("camel.terra.steps.DestroyBuild")
+    @patch("camel.terra.steps.PrintoutStep")
+    @patch("camel.terra.steps.RunScriptOnServerStep")
+    def test__get_step_run_local_script(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+                       mock_get_generic_model):
+        self.step_data["name"] = "run_local_script"
         outcome = self.test._get_step(step_data=self.step_data)
-        self.assertEqual(mock_print.return_value, outcome)
-        mock_print.assert_called_once_with(string="some_statement")
+        self.assertEqual(mock_run_script_on_server.return_value, outcome)
+        mock_run_script_on_server.assert_called_once_with(
+            input_params=self.step_data,
+            terraform_data=self.terraform_data,
+            location="some_dir_location/some_location"
+        )
 
-        self.step_data["name"] = "destroy_build"
-        outcome = self.test._get_step(step_data=self.step_data)
-        self.assertEqual(mock_destroy.return_value, outcome)
-        mock_destroy.assert_called_once_with(config=self.config, file_path=self.file_path)
+    @patch("camel.terra.steps.get_generic_model")
+    @patch("camel.terra.steps.RunCommandOnServerStep")
+    @patch("camel.terra.steps.DestroyBuild")
+    @patch("camel.terra.steps.PrintoutStep")
+    @patch("camel.terra.steps.RunScriptOnServerStep")
+    def test__get_step_print(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+                          mock_get_generic_model):
+          self.step_data["name"] = "print"
+          self.step_data["variables"]["location"] = "some_location"
+          outcome = self.test._get_step(step_data=self.step_data)
+          self.assertEqual(mock_print.return_value, outcome)
+          mock_print.assert_called_once_with(string="some_statement")
 
-        self.step_data["name"] = "run_server_command"
-        outcome = self.test._get_step(step_data=self.step_data)
-        self.assertEqual(mock_run_command.return_value, outcome)
-        mock_run_command.assert_called_once_with(terraform_data=self.test.terraform_data,
-                                                 command="some command",
-                                                 environment_variables={})
+    @patch("camel.terra.steps.get_generic_model")
+    @patch("camel.terra.steps.RunCommandOnServerStep")
+    @patch("camel.terra.steps.DestroyBuild")
+    @patch("camel.terra.steps.PrintoutStep")
+    @patch("camel.terra.steps.RunScriptOnServerStep")
+    def test__get_step_run_server_command(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+                            mock_get_generic_model):
+            self.step_data["name"] = "run_server_command"
+            outcome = self.test._get_step(step_data=self.step_data)
+            self.assertEqual(mock_run_command.return_value, outcome)
+            mock_run_command.assert_called_once_with(terraform_data=self.test.terraform_data,
+                                                     command="some command",
+                                                     environment_variables={})
 
-        self.step_data["name"] = "test_model_run_one"
-        outcome = self.test._get_step(step_data=self.step_data)
-        self.assertEqual(mock_get_generic_model.return_value, outcome)
-        mock_get_generic_model.assert_called_once_with(model_type="test_model_run_one",
-                                                       input_params=self.step_data,
-                                                       terraform_data=self.terraform_data)
+    @patch("camel.terra.steps.get_generic_model")
+    @patch("camel.terra.steps.RunCommandOnServerStep")
+    @patch("camel.terra.steps.DestroyBuild")
+    @patch("camel.terra.steps.PrintoutStep")
+    @patch("camel.terra.steps.RunScriptOnServerStep")
+    def test__get_step_test_model(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+                            mock_get_generic_model):
+            self.step_data["name"] = "test_model"
+            outcome = self.test._get_step(step_data=self.step_data)
+            self.assertEqual(mock_get_generic_model.return_value, outcome)
+            mock_get_generic_model.assert_called_once_with(model_type="test_model",
+                                                           input_params=self.step_data,
+                                                           terraform_data=self.terraform_data)
+
+    @patch("camel.terra.steps.get_generic_model")
+    @patch("camel.terra.steps.RunCommandOnServerStep")
+    @patch("camel.terra.steps.DestroyBuild")
+    @patch("camel.terra.steps.PrintoutStep")
+    @patch("camel.terra.steps.RunScriptOnServerStep")
+    def test__get_step_destroy_build(self, mock_run_script_on_server, mock_print, mock_destroy, mock_run_command,
+                            mock_get_generic_model):
+            self.step_data["name"] = "destroy_build"
+            outcome = self.test._get_step(step_data=self.step_data)
+            self.assertEqual(mock_destroy.return_value, outcome)
+            mock_destroy.assert_called_once_with(config=self.config, file_path=self.file_path)
 
     @patch("camel.terra.steps.Variable")
     @patch("camel.terra.steps.ConditionalStep")
