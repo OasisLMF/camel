@@ -69,16 +69,28 @@ class StepManager:
             step_process = RunScriptOnServerStep(input_params=step_data,
                                                  terraform_data=self.terraform_data,
                                                  location=f'{self.file_path}/{self.config["location"]}')
+
+        elif step_name == "run_local_script":
+            step_data["script_name"] = Variable(name=step_data["script_name"])
+            script_location = Variable(name=step_data["script_location"])
+            step_data["variables"] = StepManager.translate_dictionary(config=step_data.get("variables", {}))
+            step_process = RunScriptOnServerStep(input_params=step_data,
+                                                 terraform_data=self.terraform_data,
+                                                 location=f'{script_location}/')
+
         elif step_name == "print":
             step_process = PrintoutStep(string=step_data["statement"])
+
         elif step_name == "destroy_build":
             step_process = DestroyBuild(config=self.config, file_path=self.file_path)
+
         elif step_name == "run_server_command":
             command_string = CommandString(command=step_data["command"])
             environment_variables: dict = step_data.get("env_vars", {})
             step_process = RunCommandOnServerStep(terraform_data=self.terraform_data,
                                                   command=str(command_string),
                                                   environment_variables=environment_variables)
+
         elif "test_model" in step_name:
             step_data["variables"] = StepManager.translate_dictionary(config=step_data.get("variables", {}))
             step_process = get_generic_model(model_type=step_name, input_params=step_data,
