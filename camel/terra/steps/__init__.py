@@ -76,7 +76,7 @@ class StepManager:
             step_data["variables"] = StepManager.translate_dictionary(config=step_data.get("variables", {}))
             step_process = RunScriptOnServerStep(input_params=step_data,
                                                  terraform_data=self.terraform_data,
-                                                 location=f'{script_location}/{self.config["location"]}')
+                                                 location=f'{script_location}/')
 
         elif step_name == "print":
             step_process = PrintoutStep(string=step_data["statement"])
