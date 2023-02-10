@@ -74,7 +74,7 @@ class TestStepManager(TestCase):
         mock_run_script_on_server.assert_called_once_with(
             input_params=self.step_data,
             terraform_data=self.terraform_data,
-            location="some_dir_location/some_location"
+            location="some_dir_location/"
         )
 
     @patch("camel.terra.steps.get_generic_model")

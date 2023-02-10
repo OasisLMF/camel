@@ -131,14 +131,14 @@ steps:
     script_name: run_api_test_1
     variables:
       git_branch: "develop"
-      parent_dir: "/home/ubuntu/Catrisks"
-      test_dir: "/home/ubuntu/Catrisks/example/tests/test_1"
-      expected_md5: "/home/ubuntu/Catrisks/example/expected/1-26-3/expected.md5"
+      parent_dir: "/home/ubuntu/some_provider"
+      test_dir: "/home/ubuntu/some_provider/example/tests/test_1"
+      expected_md5: "/home/ubuntu/some_provider/example/expected/1-26-3/expected.md5"
       worker_name: "example_worker"
-      worker_dockerfile: "/home/ubuntu/Catrisks/docker/Dockerfile.catrisks_example_worker"
-      docker_compose_platform: "/home/ubuntu/Catrisks/docker/docker-compose.yml"
-      docker_compose_worker: "/home/ubuntu/Catrisks/docker/docker-compose_example.yml"
-      docker_compose_ui: "/home/ubuntu/Catrisks/docker/docker-compose_ui.yml"
+      worker_dockerfile: "/home/ubuntu/some_provider/docker/Dockerfile.some_provider_example_worker"
+      docker_compose_platform: "/home/ubuntu/some_provider/docker/docker-compose.yml"
+      docker_compose_worker: "/home/ubuntu/some_provider/docker/docker-compose_example.yml"
+      docker_compose_ui: "/home/ubuntu/some_provider/docker/docker-compose_ui.yml"
 ```
 Here we can see that we are running a script called `run_api_test_1.py`. We can also see that we have called our 
 step ```some_test_model```. If our step name contains ```test_model``` then the step will look for scripts
