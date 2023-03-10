@@ -62,7 +62,7 @@ class RunScriptOnServerStep(Step):
         add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
         add_to_known_hosts.wait()
 
-        copy_to_server = Popen(f"scp -o StrictHostKeyChecking=no  {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py",
+        copy_to_server = Popen(f"scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py",
                                shell=True)
         copy_to_server.wait()
 
