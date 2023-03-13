@@ -59,12 +59,14 @@ class RunScriptOnServerStep(Step):
         Returns: None
         """
         VariableMap().ip_address = self.server_ip
-        add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
-        add_to_known_hosts.wait()
-
-        copy_to_server = Popen(f"scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py -y",
-                               shell=True)
+        command: str = f"scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py"
+        print(f"\n\n\nhere is the command: {command}\n\n\n")
+        copy_to_server = TerminalCommand(command=command)
         copy_to_server.wait()
+
+        # copy_to_server = Popen(f"scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py",
+        #                        shell=True)
+        # copy_to_server.wait()
 
         command = f"cd /home/ubuntu/ && python3 {self.script_name}.py"
         buffer = list()
