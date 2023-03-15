@@ -2,11 +2,11 @@
 This file defines the step that runs a script on another server.
 """
 from typing import Optional
-from subprocess import Popen
+
+from gerund.commands.terminal_command import TerminalCommand
+from gerund.components.variable_map import VariableMap
 
 from camel.terra.steps.base import Step
-from gerund.components.variable_map import VariableMap
-from gerund.commands.terminal_command import TerminalCommand
 
 
 class RunScriptOnServerStep(Step):
@@ -59,11 +59,10 @@ class RunScriptOnServerStep(Step):
         Returns: None
         """
         VariableMap().ip_address = self.server_ip
-        add_to_known_hosts = Popen(f'ssh-keyscan -H "{self.server_ip}" >> ~/.ssh/known_hosts', shell=True)
-        add_to_known_hosts.wait()
-
-        copy_to_server = Popen(f"scp {self.location}/{self.script_name}.py ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py",
-                               shell=True)
+        command: str = f"scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null " \
+                       f"{self.location}/{self.script_name}.py " \
+                       f"ubuntu@{self.server_ip}:/home/ubuntu/{self.script_name}.py"
+        copy_to_server = TerminalCommand(command=command)
         copy_to_server.wait()
 
         command = f"cd /home/ubuntu/ && python3 {self.script_name}.py"
