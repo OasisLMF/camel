@@ -35,4 +35,4 @@ class ConfigEngine(dict):
 
     @property
     def steps(self) -> Optional[List[dict]]:
-        return self.get("steps")
+        return self.get("../steps")
