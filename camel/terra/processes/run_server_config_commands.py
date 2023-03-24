@@ -46,7 +46,7 @@ def run_server_config_commands(ip_address: str, config: dict) -> None:
                 "awscli"]
     failed_packages = []
     for package in packages:
-        install_package = InstallCommand(package=package, ip_address=ip_address)
+        install_package = InstallCommand(package=package, ip_address=ip_address).install_package()
         if install_package is False:
             failed_packages.append(package)
 
